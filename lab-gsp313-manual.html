@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manual GSP313 — Implement Load Balancing on Compute Engine</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap');
+
+  :root {
+    --bg:        #f6f8fa;
+    --surface:   #ffffff;
+    --surface2:  #f0f2f5;
+    --border:    #d0d7de;
+    --accent:    #0969da;
+    --accent-bg: #dbeafe;
+    --warn:      #9a6700;
+    --warn-bg:   #fff8c5;
+    --ctx:       #bc4c00;
+    --ctx-bg:    #fff1e5;
+    --success:   #1a7f37;
+    --text:      #1f2328;
+    --muted:     #656d76;
+    --code-bg:   #f6f8fa;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    font-size: 15px;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: linear-gradient(135deg, #ffffff 0%, #eef4ff 50%, #ffffff 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 3rem 2rem 2.5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 60% 80% at 50% -10%, rgba(9,105,218,0.08), transparent);
+    pointer-events: none;
+  }
+  .lab-badge {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    background: var(--accent-bg);
+    color: var(--accent);
+    border: 1px solid #93c5fd;
+    border-radius: 4px;
+    padding: 3px 10px;
+    margin-bottom: 1rem;
+  }
+  header h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(1.5rem, 4vw, 2.3rem);
+    font-weight: 700;
+    color: #1f2328;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+  header h1 span { color: var(--accent); }
+  .header-sub {
+    margin-top: 0.6rem;
+    color: var(--muted);
+    font-size: 0.88rem;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* ── CONTAINER ── */
+  .container {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem 4rem;
+  }
+
+  /* ── AVISO INICIAL ── */
+  .alert-box {
+    background: var(--warn-bg);
+    border: 1px solid #fde047;
+    border-left: 4px solid var(--warn);
+    border-radius: 8px;
+    padding: 1rem 1.2rem;
+    margin-bottom: 2rem;
+    font-size: 0.9rem;
+    color: #713f12;
+  }
+  .alert-box strong {
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--warn);
+    margin-bottom: 0.4rem;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* ── SETUP CARD ── */
+  .setup-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 2.5rem;
+  }
+  .setup-card-header {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 1rem 1.4rem;
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+  }
+  .setup-icon {
+    font-size: 1rem;
+  }
+  .setup-card-header h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .setup-body { padding: 1.4rem; }
+  .setup-body p { font-size: 0.9rem; color: var(--muted); margin-bottom: 0.8rem; }
+
+  /* ── TASK CARD ── */
+  .task {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 2rem;
+  }
+  .task-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.1rem 1.4rem;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface2);
+    flex-wrap: wrap;
+  }
+  .task-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    border-radius: 4px;
+    padding: 3px 8px;
+    flex-shrink: 0;
+  }
+  .t1 .task-num { background: #dcfce7; color: #1a7f37; border: 1px solid #86efac; }
+  .t2 .task-num { background: #dbeafe; color: #1d4ed8; border: 1px solid #93c5fd; }
+  .t3 .task-num { background: #ede9fe; color: #6e40c9; border: 1px solid #c4b5fd; }
+  .task-header h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--text);
+    flex: 1;
+  }
+  .task-body { padding: 1.4rem; }
+
+  /* ── CONTEXT BOX ── */
+  .context-box {
+    background: var(--ctx-bg);
+    border-left: 3px solid var(--ctx);
+    border-radius: 0 8px 8px 0;
+    padding: 0.9rem 1.1rem;
+    margin-bottom: 1.4rem;
+    font-size: 0.88rem;
+    line-height: 1.65;
+    color: #7c2d12;
+  }
+  .context-box strong {
+    display: block;
+    color: var(--ctx);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* ── SUBTASK (partes A/B/C) ── */
+  .subtask {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-top: 1.2rem;
+  }
+  .subtask-header {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.65rem 1rem;
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+  }
+  .subtask-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    background: #ede9fe;
+    color: #6e40c9;
+    border: 1px solid #c4b5fd;
+    border-radius: 4px;
+    padding: 2px 7px;
+  }
+  .subtask-header span.title {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .subtask-body { padding: 1rem 1.1rem 1.1rem; }
+  .subtask-body p { font-size: 0.88rem; color: var(--muted); margin-bottom: 0.7rem; }
+
+  /* ── SECTION LABEL ── */
+  .section-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.6rem;
+    margin-top: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+  .section-label:first-child { margin-top: 0; }
+
+  /* ── CODE BLOCK ── */
+  .code-block {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .code-block + .code-block { margin-top: 0.8rem; }
+  .code-block-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.4rem 0.9rem;
+    background: #eaedf0;
+    border-bottom: 1px solid var(--border);
+  }
+  .code-lang {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .copy-btn {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    border-radius: 4px;
+    padding: 2px 8px;
+    cursor: pointer;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .copy-btn:hover { color: var(--accent); border-color: var(--accent); }
+  .copy-btn.copied { color: var(--success); border-color: var(--success); }
+  pre {
+    padding: 1rem;
+    overflow-x: auto;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    line-height: 1.75;
+    color: #1f2328;
+    white-space: pre;
+  }
+  .comment { color: #6e7781; font-style: italic; }
+  .kw { color: #cf222e; }
+  .str { color: #0a3069; }
+  .flag { color: #6e40c9; }
+  .val { color: #0550ae; }
+
+  /* ── INLINE CODE ── */
+  code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.82rem;
+    background: var(--code-bg);
+    color: #0550ae;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1px 6px;
+  }
+
+  /* ── CHIP LIST (recursos criados) ── */
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 0.7rem;
+  }
+  .chip {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    font-weight: 600;
+    background: var(--accent-bg);
+    color: var(--accent);
+    border: 1px solid #93c5fd;
+    border-radius: 20px;
+    padding: 2px 10px;
+  }
+  .chip.green { background: #dcfce7; color: #1a7f37; border-color: #86efac; }
+  .chip.purple { background: #ede9fe; color: #6e40c9; border-color: #c4b5fd; }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center;
+    padding: 2rem;
+    font-size: 0.78rem;
+    color: var(--muted);
+    border-top: 1px solid var(--border);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  @media (max-width: 600px) {
+    .container { padding: 1.5rem 1rem 3rem; }
+    pre { font-size: 0.72rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="lab-badge">GSP313 &nbsp;·&nbsp; Compute Engine</div>
+  <h1>Implement <span>Load Balancing</span><br>on Compute Engine</h1>
+  <p class="header-sub">Método: 100% Google Cloud Shell (Terminal)</p>
+</header>
+
+<div class="container">
+
+  <!-- AVISO -->
+  <div class="alert-box">
+    <strong>⚠ Antes de começar</strong>
+    Substitua os valores de <code>REGION</code> e <code>ZONE</code> na Etapa de Configuração abaixo pelos dados exatos que o Qwiklabs forneceu para a sua sessão ativa (barra lateral esquerda).
+  </div>
+
+  <!-- SETUP -->
+  <div class="setup-card">
+    <div class="setup-card-header">
+      <span class="setup-icon">⚙️</span>
+      <h2>Requisito: Configurar Variáveis de Ambiente</h2>
+    </div>
+    <div class="setup-body">
+      <p>Abra o <strong>Google Cloud Shell</strong> e execute os comandos abaixo <strong>primeiro</strong>. Todas as tarefas seguintes dependem dessas variáveis.</p>
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="code-lang">bash · Cloud Shell</span>
+          <button class="copy-btn" onclick="copyCode(this)">COPIAR</button>
+        </div>
+        <pre>export REGION=<span class="comment"># ex: us-east1</span>
+export ZONE=<span class="comment">  # ex: us-east1-b</span></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- TASK 1 -->
+  <div class="task t1">
+    <div class="task-header">
+      <span class="task-num">TASK 1</span>
+      <h2>Criar Instâncias e Regra de Firewall</h2>
+    </div>
+    <div class="task-body">
+      <div class="context-box">
+        <strong>📋 Objetivo</strong>
+        Criar três VMs (<code>web1</code>, <code>web2</code>, <code>web3</code>) com o Apache pré-instalado via script de inicialização, e liberar a porta 80 no firewall com uma tag de rede.
+      </div>
+
+      <div class="section-label">Recursos que serão criados</div>
+      <div class="chips">
+        <span class="chip green">vm: web1</span>
+        <span class="chip green">vm: web2</span>
+        <span class="chip green">vm: web3</span>
+        <span class="chip">firewall: www-firewall-network-lb</span>
+      </div>
+
+      <div class="section-label" style="margin-top:1.2rem;">Comando unificado — cole no Cloud Shell</div>
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="code-lang">bash · Cloud Shell</span>
+          <button class="copy-btn" onclick="copyCode(this)">COPIAR</button>
+        </div>
+        <pre>gcloud compute instances create web1 \
+  --zone=$ZONE \
+  --machine-type=e2-small \
+  --tags=network-lb-tag \
+  --metadata=startup-script='#!/bin/bash
+  apt-get update
+  apt-get install apache2 -y
+  service apache2 restart
+  echo "<h3>Web Server: web1</h3>" | tee /var/www/html/index.html'
+
+gcloud compute instances create web2 \
+  --zone=$ZONE \
+  --machine-type=e2-small \
+  --tags=network-lb-tag \
+  --metadata=startup-script='#!/bin/bash
+  apt-get update
+  apt-get install apache2 -y
+  service apache2 restart
+  echo "<h3>Web Server: web2</h3>" | tee /var/www/html/index.html'
+
+gcloud compute instances create web3 \
+  --zone=$ZONE \
+  --machine-type=e2-small \
+  --tags=network-lb-tag \
+  --metadata=startup-script='#!/bin/bash
+  apt-get update
+  apt-get install apache2 -y
+  service apache2 restart
+  echo "<h3>Web Server: web3</h3>" | tee /var/www/html/index.html'
+
+gcloud compute firewall-rules create www-firewall-network-lb \
+  --allow=tcp:80 \
+  --target-tags=network-lb-tag</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- TASK 2 -->
+  <div class="task t2">
+    <div class="task-header">
+      <span class="task-num">TASK 2</span>
+      <h2>Configurar o Network Load Balancer</h2>
+    </div>
+    <div class="task-body">
+      <div class="context-box">
+        <strong>📋 Objetivo</strong>
+        Criar um balanceador de carga regional (Layer 4 — TCP/UDP), reservar um IP externo estático, configurar um health check HTTP e anexar as três instâncias criadas na Task 1 ao pool de destino.
+      </div>
+
+      <div class="section-label">Recursos que serão criados</div>
+      <div class="chips">
+        <span class="chip">ip: network-lb-ip-1</span>
+        <span class="chip">health-check: basic-check</span>
+        <span class="chip">target-pool: www-pool</span>
+        <span class="chip">forwarding-rule: www-rule</span>
+      </div>
+
+      <div class="section-label" style="margin-top:1.2rem;">Comando unificado — cole no Cloud Shell</div>
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="code-lang">bash · Cloud Shell</span>
+          <button class="copy-btn" onclick="copyCode(this)">COPIAR</button>
+        </div>
+        <pre>gcloud compute addresses create network-lb-ip-1 \
+  --region=$REGION
+
+gcloud compute http-health-checks create basic-check
+
+gcloud compute target-pools create www-pool \
+  --region=$REGION \
+  --http-health-check=basic-check
+
+gcloud compute target-pools add-instances www-pool \
+  --instances=web1,web2,web3 \
+  --instances-zone=$ZONE \
+  --region=$REGION
+
+gcloud compute forwarding-rules create www-rule \
+  --region=$REGION \
+  --ports=80 \
+  --address=network-lb-ip-1 \
+  --target-pool=www-pool</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- TASK 3 -->
+  <div class="task t3">
+    <div class="task-header">
+      <span class="task-num">TASK 3</span>
+      <h2>Criar um HTTP Load Balancer (Layer 7)</h2>
+    </div>
+    <div class="task-body">
+      <div class="context-box">
+        <strong>📋 Objetivo</strong>
+        Configurar um balanceador de carga HTTP global (Layer 7) com grupo de instâncias gerenciado, health check, backend service e regras de roteamento de URL. Execute cada parte separadamente e aguarde a conclusão antes de avançar.
+      </div>
+
+      <!-- PARTE A -->
+      <div class="subtask">
+        <div class="subtask-header">
+          <span class="subtask-badge">PARTE A</span>
+          <span class="title">Infraestrutura Base — Template, Grupo e Firewall</span>
+        </div>
+        <div class="subtask-body">
+          <p>Cria o template de instância, o grupo gerenciado com 2 VMs e libera o intervalo de IPs do health checker do Google.</p>
+          <div class="chips" style="margin-bottom:0.8rem;">
+            <span class="chip purple">instance-template: lb-backend-template</span>
+            <span class="chip purple">managed-group: lb-backend-group</span>
+            <span class="chip">firewall: fw-allow-health-check</span>
+          </div>
+          <div class="code-block">
+            <div class="code-block-header">
+              <span class="code-lang">bash · Cloud Shell</span>
+              <button class="copy-btn" onclick="copyCode(this)">COPIAR</button>
+            </div>
+            <pre>gcloud compute instance-templates create lb-backend-template \
+  --region=$REGION \
+  --network=default \
+  --subnet=default \
+  --tags=allow-health-check \
+  --machine-type=e2-medium \
+  --image-family=debian-11 \
+  --image-project=debian-cloud \
+  --metadata=startup-script='#!/bin/bash
+  apt-get update
+  apt-get install apache2 -y
+  a2ensite default-ssl
+  a2enmod ssl
+  vm_hostname="$(curl -H "Metadata-Flavor:Google" \
+    http://169.254.169.254/computeMetadata/v1/instance/name)"
+  echo "Page served from: $vm_hostname" | tee /var/www/html/index.html
+  systemctl restart apache2'
+
+gcloud compute instance-groups managed create lb-backend-group \
+  --template=lb-backend-template \
+  --size=2 \
+  --zone=$ZONE
+
+gcloud compute firewall-rules create fw-allow-health-check \
+  --network=default \
+  --action=allow \
+  --direction=ingress \
+  --source-ranges=130.211.0.0/22,35.191.0.0/16 \
+  --target-tags=allow-health-check \
+  --rules=tcp:80</pre>
+          </div>
+        </div>
+      </div>
+
+      <!-- PARTE B -->
+      <div class="subtask">
+        <div class="subtask-header">
+          <span class="subtask-badge">PARTE B</span>
+          <span class="title">Saúde e Backend Service</span>
+        </div>
+        <div class="subtask-body">
+          <p>Cria o health check HTTP, define a porta nomeada no grupo e registra o backend service global.</p>
+          <div class="chips" style="margin-bottom:0.8rem;">
+            <span class="chip purple">health-check: http-basic-check</span>
+            <span class="chip purple">backend-service: web-backend-service</span>
+          </div>
+          <div class="code-block">
+            <div class="code-block-header">
+              <span class="code-lang">bash · Cloud Shell</span>
+              <button class="copy-btn" onclick="copyCode(this)">COPIAR</button>
+            </div>
+            <pre>gcloud compute health-checks create http http-basic-check \
+  --port=80
+
+gcloud compute instance-groups managed set-named-ports lb-backend-group \
+  --named-ports http:80 \
+  --zone=$ZONE
+
+gcloud compute backend-services create web-backend-service \
+  --protocol=HTTP \
+  --port-name=http \
+  --health-checks=http-basic-check \
+  --global
+
+gcloud compute backend-services add-backend web-backend-service \
+  --instance-group=lb-backend-group \
+  --instance-group-zone=$ZONE \
+  --global</pre>
+          </div>
+        </div>
+      </div>
+
+      <!-- PARTE C -->
+      <div class="subtask">
+        <div class="subtask-header">
+          <span class="subtask-badge">PARTE C</span>
+          <span class="title">Roteamento e IP Global — Finalização</span>
+        </div>
+        <div class="subtask-body">
+          <p>Cria o URL map, o proxy HTTP, reserva o IP global e cria a forwarding rule que expõe o load balancer na internet.</p>
+          <div class="chips" style="margin-bottom:0.8rem;">
+            <span class="chip purple">url-map: web-map-http</span>
+            <span class="chip purple">proxy: http-lb-proxy</span>
+            <span class="chip">ip: lb-ipv4-1</span>
+            <span class="chip">forwarding-rule: http-content-rule</span>
+          </div>
+          <div class="code-block">
+            <div class="code-block-header">
+              <span class="code-lang">bash · Cloud Shell</span>
+              <button class="copy-btn" onclick="copyCode(this)">COPIAR</button>
+            </div>
+            <pre>gcloud compute url-maps create web-map-http \
+  --default-service web-backend-service
+
+gcloud compute target-http-proxies create http-lb-proxy \
+  --url-map web-map-http
+
+gcloud compute addresses create lb-ipv4-1 \
+  --ip-version=IPV4 \
+  --global
+
+gcloud compute forwarding-rules create http-content-rule \
+  --address=lb-ipv4-1 \
+  --global \
+  --target-http-proxy=http-lb-proxy \
+  --ports=80</pre>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  Manual Técnico Homologado &nbsp;·&nbsp; GSP313 Challenge Lab &nbsp;·&nbsp; Compute Engine Load Balancing
+</footer>
+
+<script>
+  function copyCode(btn) {
+    const pre = btn.closest('.code-block').querySelector('pre');
+    navigator.clipboard.writeText(pre.innerText).then(() => {
+      btn.textContent = 'COPIADO ✓';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = 'COPIAR';
+        btn.classList.remove('copied');
+      }, 2000);
+    });
+  }
+</script>
+</body>
+</html>
