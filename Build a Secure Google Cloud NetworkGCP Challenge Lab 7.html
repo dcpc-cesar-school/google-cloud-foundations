@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GCP Challenge Lab Guide - Completo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #f3f4f6;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .card {
+            transition: all 0.3s ease;
+            border-left: 6px solid #4285f4;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        .step-badge {
+            background: #4285f4;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+        .tag-highlight {
+            background: #fff7ed;
+            border: 1px solid #fdba74;
+            color: #c2410c;
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: bold;
+            display: inline-block;
+            margin: 2px 0;
+        }
+        .img-box {
+            background: #ffffff;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+        .img-caption {
+            background: #f9fafb;
+            padding: 8px;
+            font-size: 0.75rem;
+            color: #6b7280;
+            border-top: 1px solid #e5e7eb;
+            text-align: center;
+        }
+        .terminal {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Consolas', monospace;
+            font-size: 0.85rem;
+            position: relative;
+        }
+        .terminal::before {
+            content: "● ● ●";
+            color: #555;
+            position: absolute;
+            top: 5px;
+            left: 10px;
+            font-size: 8px;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-10">
+
+    <div class="max-w-5xl mx-auto">
+        <!-- Header -->
+        <header class="text-center mb-12">
+            <div class="inline-block p-3 bg-white rounded-full shadow-sm mb-4">
+                <i class="fab fa-google-cloud text-5xl text-blue-500"></i>
+            </div>
+            <h1 class="text-4xl font-extrabold text-gray-900 mb-2">Build a Secure Google Cloud Network</h1>
+            <p class="text-lg text-gray-600 font-medium italic">GCP Challenge Lab - Guia de Execução Completo</p>
+        </header>
+
+        <!-- TASK 1 -->
+        <div class="card bg-white rounded-2xl shadow-sm p-8 mb-8 border-l-blue-600">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-bold text-gray-800"><i class="fas fa-network-wired mr-3 text-blue-600"></i>TASK 1: Limpeza da VPC</h2>
+                <span class="step-badge">Fase Inicial</span>
+            </div>
+            <div class="space-y-4 text-gray-700">
+                <p class="flex items-start"><i class="fas fa-check-circle mt-1 mr-3 text-blue-500"></i> <span>Aceda a <strong>VPC Network</strong> e selecione a rede <span class="font-mono bg-gray-100 px-2">acme-vpc</span>.</span></p>
+                <p class="flex items-start"><i class="fas fa-check-circle mt-1 mr-3 text-blue-500"></i> <span>No menu à esquerda, clique em <strong>Firewall</strong>.</span></p>
+                <div class="bg-red-50 p-4 rounded-xl border border-red-100 flex items-center">
+                    <i class="fas fa-exclamation-triangle text-red-500 mr-4 text-xl"></i>
+                    <div>
+                        <p class="font-bold text-red-800">Atenção:</p>
+                        <p class="text-red-700">Localize a regra <strong>open-access</strong> e clique em <strong>DELETE</strong>.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TASK 2 -->
+        <div class="card bg-white rounded-2xl shadow-sm p-8 mb-8 border-l-green-500">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-bold text-gray-800"><i class="fas fa-server mr-3 text-green-600"></i>TASK 2: Preparar o Bastion</h2>
+                <span class="step-badge" style="background: #10b981;">Compute Engine</span>
+            </div>
+            <div class="space-y-4 text-gray-700">
+                <p class="flex items-start"><i class="fas fa-arrow-right mt-1 mr-3 text-green-500"></i> <span>Navegue até <strong>Compute Engine</strong> > <strong>VM Instances</strong>.</span></p>
+                <p class="flex items-start"><i class="fas fa-arrow-right mt-1 mr-3 text-green-500"></i> <span>Na linha da VM <strong>bastion</strong>, clique nos <strong>três pontinhos (⋮)</strong> à direita.</span></p>
+                <p class="flex items-start"><i class="fas fa-play-circle mt-1 mr-3 text-green-600 text-lg"></i> <strong>Clique em START e confirme no botão azul para iniciar a instância.</strong></p>
+            </div>
+        </div>
+
+        <!-- TASK 3 -->
+        <div class="card bg-white rounded-2xl shadow-sm p-8 mb-8 border-l-yellow-500">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-2xl font-bold text-gray-800"><i class="fas fa-shield-alt mr-3 text-yellow-600"></i>TASK 3: Firewall IAP (Bastion)</h2>
+                <span class="step-badge" style="background: #f59e0b;">Segurança</span>
+            </div>
+            
+            <div class="img-box">
+                <div class="p-6 bg-gray-50 flex items-center justify-center italic text-gray-500">
+                    <i class="fas fa-image mr-2"></i> [Referência: Instruções de Firewall IAP - Range 35.235.240.0/20]
+                </div>
+                <div class="img-caption">Conforme a página 2 do PDF: Use o range indicado para TCP forwarding.</div>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6 mt-6">
+                <div class="space-y-3">
+                    <p class="font-bold text-yellow-800 underline">1. Criar Regra de Firewall:</p>
+                    <ul class="list-none space-y-2 text-sm">
+                        <li><strong>Nome:</strong> <code class="bg-gray-100 px-1">firew1</code></li>
+                        <li><strong>Network:</strong> <code class="bg-gray-100 px-1">acme-vpc</code></li>
+                        <li><strong>Target Tags:</strong> <span class="tag-highlight">permit-ssh-iap-ingress-q1-326</span></li>
+                        <li><strong>Source IPv4:</strong> <code class="bg-blue-100 px-1">35.235.240.0/20</code></li>
+                        <li><strong>Protocols:</strong> TCP: 22</li>
+                    </ul>
+                </div>
+                <div class="space-y-3">
+                    <p class="font-bold text-yellow-800 underline">2. Editar Instância Bastion:</p>
+                    <p class="text-sm">Vá em VM Instances > <strong>bastion</strong> > <strong>Edit</strong>.</p>
+                    <p class="text-sm">No campo <strong>Network Tags</strong>, cole exatamente a tag abaixo:</p>
+                    <span class="tag-highlight">permit-ssh-iap-ingress-q1-326</span>
+                    <p class="text-xs text-gray-500 mt-2 font-bold">⚠️ Não esqueça de clicar em SAVE ao final da página.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- TASK 4 -->
+        <div class="card bg-white rounded-2xl shadow-sm p-8 mb-8 border-l-red-500">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-2xl font-bold text-gray-800"><i class="fas fa-globe mr-3 text-red-600"></i>TASK 4: HTTP (Juice-Shop)</h2>
+                <span class="step-badge" style="background: #ef4444;">Web Traffic</span>
+            </div>
+
+            <div class="space-y-6 text-gray-700">
+                <div>
+                    <p class="font-bold mb-2">1. Configuração do Firewall:</p>
+                    <div class="grid grid-cols-2 gap-4 bg-gray-50 p-4 rounded-xl border border-gray-100 text-sm">
+                        <div><strong>Nome:</strong> firew2</div>
+                        <div><strong>Rede:</strong> acme-vpc</div>
+                        <div><strong>Tag:</strong> <span class="tag-highlight">permit-http-ingress-q1-326</span></div>
+                        <div><strong>IP Source:</strong> 0.0.0.0/0</div>
+                        <div><strong>Porta:</strong> TCP: 80</div>
+                    </div>
+                </div>
+
+                <div>
+                    <p class="font-bold mb-2">2. Configuração na VM:</p>
+                    <p class="text-sm mb-2">Clique na VM <strong>Juice-Shop</strong> > <strong>Edit</strong>.</p>
+                    <p class="text-sm">Adicione a Tag de Rede:</p>
+                    <span class="tag-highlight">permit-http-ingress-q1-326</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- TASK 5 -->
+        <div class="card bg-white rounded-2xl shadow-sm p-8 mb-8 border-l-purple-500">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-2xl font-bold text-gray-800"><i class="fas fa-project-diagram mr-3 text-purple-600"></i>TASK 5: SSH Interno (MGMT)</h2>
+                <span class="step-badge" style="background: #a855f7;">Rede Privada</span>
+            </div>
+
+            <div class="img-box">
+                <div class="p-8 flex flex-col items-center justify-center">
+                    <table class="w-full text-xs border-collapse border border-gray-200">
+                        <thead>
+                            <tr class="bg-gray-100">
+                                <th class="border border-gray-200 p-2">Subnet Name</th>
+                                <th class="border border-gray-200 p-2 text-blue-600 font-bold">Primary IPv4 Range</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="border border-gray-200 p-2">acme-mgmt-subnet</td>
+                                <td class="border border-gray-200 p-2 font-mono">192.168.10.0/24</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="img-caption">Referência da Página 4 do PDF: Copie o IP da Subnet acme-mgmt-subnet.</div>
+            </div>
+
+            <div class="space-y-4 text-sm mt-6">
+                <div class="p-4 bg-purple-50 rounded-xl border border-purple-100">
+                    <p class="font-bold text-purple-800 mb-2">Nova Regra de Firewall (fw3):</p>
+                    <ul class="space-y-1">
+                        <li><strong>Target Tags:</strong> <span class="tag-highlight">permit-ssh-internal-ingress-q1-326</span></li>
+                        <li><strong>Source IP:</strong> <code class="bg-white border px-1">192.168.10.0/24</code> (IP da MGMT Subnet)</li>
+                        <li><strong>Portas:</strong> TCP: 22</li>
+                    </ul>
+                </div>
+                <p class="font-bold mt-4"><i class="fas fa-edit mr-2"></i>Aplicar no Juice-Shop:</p>
+                <p>Edite a instância <strong>juice-shop</strong> e adicione a tag: <span class="tag-highlight">permit-ssh-internal-ingress-q1-326</span></p>
+            </div>
+        </div>
+
+        <!-- TASK 6 -->
+        <div class="card bg-white rounded-2xl shadow-sm p-8 mb-12 border-l-gray-800">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-bold text-gray-800"><i class="fas fa-terminal mr-3 text-gray-700"></i>TASK 6: Validação Final</h2>
+                <span class="step-badge" style="background: #374151;">Terminal</span>
+            </div>
+
+            <div class="space-y-4">
+                <p class="text-gray-700 text-sm">Abra o <strong>SSH</strong> da VM <strong>bastion</strong> e execute os seguintes passos no terminal:</p>
+                
+                <div class="terminal">
+                    <span class="text-blue-400">gcloud</span> compute ssh juice-shop --internal-ip
+                </div>
+
+                <div class="grid grid-cols-3 gap-2 text-center text-xs font-bold uppercase tracking-wider">
+                    <div class="p-3 bg-gray-100 rounded-lg">1. Digite <span class="text-blue-600">Y</span></div>
+                    <div class="p-3 bg-gray-100 rounded-lg">2. Pressione <span class="text-blue-600">ENTER</span> (2x)</div>
+                    <div class="p-3 bg-gray-100 rounded-lg">3. Digite <span class="text-blue-600">Y</span></div>
+                </div>
+
+                <div class="p-4 bg-green-50 rounded-xl border border-green-200 text-green-800 flex items-center">
+                    <i class="fas fa-check-double mr-4 text-xl"></i>
+                    <p class="text-sm font-medium">Se o prompt mudar de <strong>bastion</strong> para <strong>juice-shop</strong>, o laboratório está 100% correto!</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="text-center text-gray-500 text-sm border-t pt-8">
+            <p>Tutorial baseado no documento "Build a Secure Google Cloud Network_ Challenge Lab 7.pdf"</p>
+            <div class="flex justify-center space-x-6 mt-4">
+                <a href="https://www.youtube.com/watch?v=y4NQp3PPz5k" target="_blank" class="hover:text-blue-500 transition-colors"><i class="fab fa-youtube mr-1"></i> Ver no YouTube</a>
+            </div>
+        </footer>
+    </div>
+
+</body>
+</html>
