@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manual GSP323 — Prepare Data for ML APIs</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap');
+
+  :root {
+    --bg:       #f6f8fa;
+    --surface:  #ffffff;
+    --surface2: #f0f2f5;
+    --border:   #d0d7de;
+    --accent:   #0969da;
+    --accent-dim: #dbeafe;
+    --warn:     #9a6700;
+    --warn-bg:  #fff8c5;
+    --ctx:      #bc4c00;
+    --ctx-bg:   #fff1e5;
+    --success:  #1a7f37;
+    --text:     #1f2328;
+    --muted:    #656d76;
+    --code-bg:  #f6f8fa;
+    --tag-bg:   #dbeafe;
+    --task1:    #1a7f37;
+    --task2:    #9a6700;
+    --task34:   #6e40c9;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    font-size: 15px;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: linear-gradient(135deg, #ffffff 0%, #eef4ff 50%, #ffffff 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 3rem 2rem 2.5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 60% 80% at 50% -10%, rgba(9,105,218,0.08), transparent);
+    pointer-events: none;
+  }
+  .lab-badge {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    background: var(--tag-bg);
+    color: var(--accent);
+    border: 1px solid var(--accent-dim);
+    border-radius: 4px;
+    padding: 3px 10px;
+    margin-bottom: 1rem;
+  }
+  header h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(1.6rem, 4vw, 2.4rem);
+    font-weight: 700;
+    color: #1f2328;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+  header h1 span { color: var(--accent); }
+  .header-sub {
+    margin-top: 0.6rem;
+    color: var(--muted);
+    font-size: 0.9rem;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* ── LAYOUT ── */
+  .container {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem 4rem;
+  }
+
+  /* ── VARIABLES TABLE ── */
+  .vars-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 2.5rem;
+  }
+  .vars-section h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 0.8rem 1.2rem;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface2);
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  th {
+    background: var(--surface2);
+    color: var(--accent);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-align: left;
+    padding: 0.65rem 1.2rem;
+    border-bottom: 1px solid var(--border);
+  }
+  td {
+    padding: 0.75rem 1.2rem;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.9rem;
+    vertical-align: middle;
+  }
+  tr:last-child td { border-bottom: none; }
+  td:first-child { color: var(--muted); font-weight: 500; }
+  td code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.82rem;
+    background: var(--code-bg);
+    color: #79c0ff;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 2px 7px;
+  }
+
+  /* ── TASK CARD ── */
+  .task {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 2.5rem;
+  }
+  .task-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.1rem 1.4rem;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface2);
+  }
+  .task-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    border-radius: 4px;
+    padding: 3px 8px;
+    flex-shrink: 0;
+  }
+  .task-1 .task-num { background: #dcfce7; color: #1a7f37; border: 1px solid #86efac; }
+  .task-2 .task-num { background: #fef9c3; color: #854d0e; border: 1px solid #fde047; }
+  .task-34 .task-num { background: #ede9fe; color: #6e40c9; border: 1px solid #c4b5fd; }
+  .task-header h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #1f2328;
+  }
+  .mode-badge {
+    margin-left: auto;
+    font-size: 0.68rem;
+    font-weight: 600;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.06em;
+    border-radius: 20px;
+    padding: 3px 10px;
+    border: 1px solid;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .mode-gui { color: #1a7f37; border-color: #86efac; background: #dcfce7; }
+  .mode-hybrid { color: #854d0e; border-color: #fde047; background: #fef9c3; }
+  .mode-cli { color: #6e40c9; border-color: #c4b5fd; background: #ede9fe; }
+
+  .task-body { padding: 1.4rem; }
+
+  /* ── CONTEXT BOX ── */
+  .context-box {
+    background: var(--ctx-bg);
+    border-left: 3px solid var(--ctx);
+    border-radius: 0 8px 8px 0;
+    padding: 1rem 1.2rem;
+    margin-bottom: 1.4rem;
+    font-size: 0.88rem;
+    line-height: 1.65;
+    color: #7c2d12;
+  }
+  .context-box strong {
+    display: block;
+    color: var(--ctx);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* ── WHY CLI BOX ── */
+  .why-box {
+    background: rgba(47,129,247,0.06);
+    border: 1px solid rgba(47,129,247,0.2);
+    border-radius: 8px;
+    padding: 1rem 1.2rem;
+    margin-bottom: 1.4rem;
+  }
+  .why-box strong.why-title {
+    display: block;
+    color: var(--accent);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .why-list { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
+  .why-list li {
+    font-size: 0.88rem;
+    color: #a8c7f5;
+    padding-left: 0.8rem;
+    border-left: 2px solid rgba(47,129,247,0.3);
+  }
+  .why-list li strong { color: #79c0ff; font-weight: 600; }
+
+  /* ── WARN BOX ── */
+  .warn-box {
+    background: var(--warn-bg);
+    border-left: 3px solid var(--warn);
+    border-radius: 0 8px 8px 0;
+    padding: 1rem 1.2rem;
+    margin-top: 1.4rem;
+    font-size: 0.88rem;
+    line-height: 1.65;
+    color: #d4a97a;
+  }
+  .warn-box strong {
+    display: block;
+    color: var(--warn);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* ── STEPS ── */
+  .steps { list-style: none; display: flex; flex-direction: column; gap: 0.75rem; }
+  .steps > li {
+    display: flex;
+    gap: 0.9rem;
+    align-items: flex-start;
+  }
+  .step-num {
+    flex-shrink: 0;
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    background: var(--accent-dim);
+    color: #79c0ff;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    margin-top: 2px;
+  }
+  .step-content { flex: 1; font-size: 0.9rem; }
+  .step-content strong { color: #e6edf3; }
+  .step-content p { margin-bottom: 0.5rem; }
+
+  /* ── PARAMS LIST ── */
+  .params {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.9rem 1.1rem;
+    margin-top: 0.5rem;
+    list-style: none;
+    display: flex; flex-direction: column; gap: 0.45rem;
+  }
+  .params li { display: flex; align-items: flex-start; gap: 0.5rem; font-size: 0.85rem; }
+  .param-key {
+    color: var(--muted);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    white-space: nowrap;
+    padding-top: 1px;
+    min-width: 0;
+  }
+  .param-val {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    color: #a5d6ff;
+    word-break: break-all;
+  }
+
+  /* ── CODE BLOCK ── */
+  .code-block {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin: 0.9rem 0 0;
+    overflow: hidden;
+  }
+  .code-block-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.4rem 0.9rem;
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+  }
+  .code-lang {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .copy-btn {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    border-radius: 4px;
+    padding: 2px 8px;
+    cursor: pointer;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .copy-btn:hover { color: var(--accent); border-color: var(--accent); }
+  .copy-btn.copied { color: var(--success); border-color: var(--success); }
+  pre {
+    padding: 1rem;
+    overflow-x: auto;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    line-height: 1.7;
+    color: #e6edf3;
+  }
+  pre .comment { color: #6e7681; font-style: italic; }
+  pre .cmd { color: #79c0ff; }
+  pre .str { color: #a5d6ff; }
+  pre .var { color: #ffa657; }
+  pre .flag { color: #d2a8ff; }
+  pre .section { color: #e3b341; font-weight: 600; }
+
+  /* ── SECTION DIVIDER ── */
+  .section-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.75rem;
+    margin-top: 1.4rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center;
+    padding: 2rem;
+    font-size: 0.78rem;
+    color: var(--muted);
+    border-top: 1px solid var(--border);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  @media (max-width: 600px) {
+    .task-header { flex-wrap: wrap; }
+    .mode-badge { margin-left: 0; }
+    td, th { padding: 0.6rem 0.9rem; }
+    .container { padding: 1.5rem 1rem 3rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="lab-badge">Lab ID: LAB_268 &nbsp;·&nbsp; GSP323</div>
+  <h1>Prepare Data for <span>ML APIs</span></h1>
+  <p class="header-sub">Manual de Execução Híbrido — Console + Cloud Shell</p>
+</header>
+
+<div class="container">
+
+  <!-- VARIÁVEIS -->
+  <div class="vars-section">
+    <h2>⚙ Variáveis da Sessão — identifique na barra lateral do Qwiklabs</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Variável do Sistema</th>
+          <th>Valor desta sessão (exemplo)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Região padrão</td><td><code>us-east1</code></td></tr>
+        <tr><td>Dataset BigQuery</td><td><code>lab_268</code></td></tr>
+        <tr><td>Tabela BigQuery</td><td><code>customers_546</code></td></tr>
+        <tr><td>Cloud Storage Bucket</td><td><code>gs://qwiklabs-gcp-02-d21a8ff873bb-marking</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- TASK 1 -->
+  <div class="task task-1">
+    <div class="task-header">
+      <span class="task-num">TASK 1</span>
+      <h2>Configuração do Dataflow</h2>
+      <span class="mode-badge mode-gui">100% Console Visual</span>
+    </div>
+    <div class="task-body">
+      <div class="context-box">
+        <strong>📋 Objetivo</strong>
+        Realizar ETL de dados brutos de clientes: ler um CSV no Cloud Storage, transformá-lo com uma função JavaScript (UDF) e injetar o resultado estruturado em uma tabela do BigQuery — tudo gerenciado de forma serverless pelo Dataflow.
+      </div>
+
+      <div class="section-label">Passo a passo na interface</div>
+      <ol class="steps">
+        <li>
+          <span class="step-num">1</span>
+          <div class="step-content">
+            <p>Acesse <strong>Cloud Storage › Buckets</strong> e crie o bucket com o nome da sua sessão (<code>qwiklabs-gcp-02-d21a8ff873bb-marking</code>) na região <strong>us-east1</strong>.</p>
+          </div>
+        </li>
+        <li>
+          <span class="step-num">2</span>
+          <div class="step-content">
+            <p>Acesse <strong>BigQuery › SQL Studio</strong>, clique nos três pontos do projeto e crie o dataset com ID <code>lab_268</code> na região <strong>us-east1</strong>.</p>
+          </div>
+        </li>
+        <li>
+          <span class="step-num">3</span>
+          <div class="step-content">
+            <p>Dentro do dataset, crie a tabela <code>customers_546</code>. Mude o Schema para <strong>Edit as Text</strong> e insira a estrutura JSON fornecida pelo enunciado do lab.</p>
+          </div>
+        </li>
+        <li>
+          <span class="step-num">4</span>
+          <div class="step-content">
+            <p>Navegue até <strong>Dataflow › Jobs › Create job from template</strong> e selecione o modelo <strong>Text Files on Cloud Storage to BigQuery</strong>.</p>
+          </div>
+        </li>
+        <li>
+          <span class="step-num">5</span>
+          <div class="step-content">
+            <p>Preencha os parâmetros obrigatórios:</p>
+            <ul class="params">
+              <li><span class="param-key">JavaScript UDF path</span><span class="param-val">gs://spls/gsp323/lab.js</span></li>
+              <li><span class="param-key">JSONPath (schema)</span><span class="param-val">gs://spls/gsp323/lab.schema</span></li>
+              <li><span class="param-key">JavaScript UDF name</span><span class="param-val">transform</span></li>
+              <li><span class="param-key">BigQuery output table</span><span class="param-val">NOME_DO_SEU_PROJETO:lab_268.customers_546</span></li>
+              <li><span class="param-key">Cloud Storage input file(s)</span><span class="param-val">gs://spls/gsp323/lab.csv</span></li>
+              <li><span class="param-key">Temporary directory</span><span class="param-val">gs://NOME_DO_SEU_BUCKET-marking/bigquery_temp</span></li>
+              <li><span class="param-key">Temporary location</span><span class="param-val">gs://NOME_DO_SEU_BUCKET-marking/temp</span></li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <span class="step-num">6</span>
+          <div class="step-content">
+            <p>Expanda <strong>Optional Parameters</strong>, localize <strong>Machine type</strong>, desmarque o padrão e selecione <code>e2-standard-2</code>. Clique em <strong>Run Job</strong>.</p>
+          </div>
+        </li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- TASK 2 -->
+  <div class="task task-2">
+    <div class="task-header">
+      <span class="task-num">TASK 2</span>
+      <h2>Cluster Dataproc e Job Spark</h2>
+      <span class="mode-badge mode-hybrid">Execução Híbrida</span>
+    </div>
+    <div class="task-body">
+      <div class="context-box">
+        <strong>📋 Objetivo</strong>
+        Instanciar um cluster Hadoop/Spark via Dataproc, ingerir dados textuais no HDFS do nó principal e disparar um job Spark em lote para calcular a relevância de páginas com o algoritmo SparkPageRank.
+      </div>
+
+      <div class="why-box">
+        <strong class="why-title">⚡ Por que usar o terminal aqui?</strong>
+        <ul class="why-list">
+          <li><strong>Erro de subrede:</strong> a interface força a subrede <em>default</em>, que o Qwiklabs altera ou remove, travando o provisionamento. A CLI herda a VPC correta automaticamente.</li>
+          <li><strong>Incompatibilidade de imagem:</strong> o SparkPageRank usa dependências Scala antigas que quebram no Dataproc 2.2+. A CLI permite travar a versão homologada <code>2.0-debian10</code>.</li>
+        </ul>
+      </div>
+
+      <div class="section-label">Passo 1 — Criar o cluster (Cloud Shell)</div>
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="code-lang">bash · Cloud Shell</span>
+          <button class="copy-btn" onclick="copyCode(this)">COPIAR</button>
+        </div>
+        <pre>gcloud dataproc clusters create spark-cluster \
+  --region us-east1 \
+  --zone us-east1-b \
+  --master-machine-type n2d-standard-2 \
+  --master-boot-disk-size 100gb \
+  --master-boot-disk-type pd-standard \
+  --worker-machine-type n2d-standard-2 \
+  --worker-boot-disk-size 100gb \
+  --worker-boot-disk-type pd-standard \
+  --num-workers 2 \
+  --image-version 2.0-debian10 \
+  --scopes https://www.googleapis.com/auth/cloud-platform</pre>
+      </div>
+
+      <div class="section-label" style="margin-top:1.4rem;">Passo 2 — Ingerir dados no HDFS (SSH do nó master)</div>
+      <p style="font-size:0.88rem; color:var(--muted); margin-bottom:0.5rem;">Acesse <strong>Dataproc › Clusters › VM Instances</strong> e abra o SSH do nó terminado em <code>-m</code>.</p>
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="code-lang">bash · SSH master</span>
+          <button class="copy-btn" onclick="copyCode(this)">COPIAR</button>
+        </div>
+        <pre>hdfs dfs -cp gs://spls/gsp323/data.txt /data.txt</pre>
+      </div>
+
+      <div class="section-label" style="margin-top:1.4rem;">Passo 3 — Submeter o Job Spark (Console Visual)</div>
+      <p style="font-size:0.88rem; color:var(--muted); margin-bottom:0.5rem;">Acesse <strong>Dataproc › Jobs › Submit job</strong> e preencha:</p>
+      <ul class="params" style="margin-top:0;">
+        <li><span class="param-key">Region</span><span class="param-val">us-east1</span></li>
+        <li><span class="param-key">Cluster</span><span class="param-val">spark-cluster</span></li>
+        <li><span class="param-key">Job type</span><span class="param-val">Spark</span></li>
+        <li><span class="param-key">Main class or jar</span><span class="param-val">org.apache.spark.examples.SparkPageRank</span></li>
+        <li><span class="param-key">Jar files</span><span class="param-val">file:///usr/lib/spark/examples/jars/spark-examples.jar</span></li>
+        <li><span class="param-key">Arguments</span><span class="param-val">/data.txt</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- TASKS 3 e 4 -->
+  <div class="task task-34">
+    <div class="task-header">
+      <span class="task-num">TASKS 3 &amp; 4</span>
+      <h2>Chamada das APIs de IA</h2>
+      <span class="mode-badge mode-cli">100% Terminal (Bypass)</span>
+    </div>
+    <div class="task-body">
+      <div class="context-box">
+        <strong>📋 Objetivo</strong>
+        Task 3: consumir a <strong>Cloud Speech-to-Text API</strong> para transcrever um arquivo FLAC. Task 4: usar a <strong>Cloud Natural Language API</strong> para análise de entidades em texto. Ambas as respostas JSON são salvas no Cloud Storage e expostas publicamente para o validador do lab.
+      </div>
+
+      <div class="why-box">
+        <strong class="why-title">⚡ Por que usar o terminal aqui?</strong>
+        <ul class="why-list">
+          <li><strong>Cabeçalho de cota obrigatório:</strong> chamadas fora do terminal geram erro 403. O <code>curl</code> injeta <code>Authorization</code> e <code>X-Goog-User-Project</code> manualmente, garantindo cobrança na conta efêmera do lab.</li>
+          <li><strong>Bloqueio de política pública (Uniform Access):</strong> o Qwiklabs ativa <em>Public Access Prevention</em> por padrão, bloqueando <code>gsutil acl</code> e cliques na interface. A solução é atualizar via IAM no terminal.</li>
+        </ul>
+      </div>
+
+      <div class="section-label">Script unificado — cole no Cloud Shell e pressione Enter</div>
+      <div class="code-block">
+        <div class="code-block-header">
+          <span class="code-lang">bash · Cloud Shell</span>
+          <button class="copy-btn" onclick="copyCode(this)">COPIAR</button>
+        </div>
+        <pre><span class="comment"># === PASSO A: DEFINIÇÃO DE VARIÁVEIS ===</span>
+export PROJECT_ID=$(gcloud config get-value project)
+export BUCKET_NAME=qwiklabs-gcp-02-d21a8ff873bb-marking
+
+<span class="comment"># === PASSO B: TASK 3 — Speech-to-Text API ===</span>
+curl -s -X POST \
+  -H "Authorization: Bearer $(gcloud auth print-access-token)" \
+  -H "X-Goog-User-Project: $PROJECT_ID" \
+  -H "Content-Type: application/json; charset=utf-8" \
+  --data-binary '{
+    "config": {"encoding":"FLAC","languageCode":"en-US"},
+    "audio": {"uri":"gs://spls/gsp323/task3.flac"}
+  }' \
+  "https://speech.googleapis.com/v1/speech:recognize" \
+  > task3-gcs-858.result
+
+gsutil -h "Content-Type: application/json" \
+  cp task3-gcs-858.result gs://$BUCKET_NAME/task3-gcs-858.result
+
+<span class="comment"># === PASSO C: TASK 4 — Natural Language API ===</span>
+curl -s -X POST \
+  -H "Authorization: Bearer $(gcloud auth print-access-token)" \
+  -H "X-Goog-User-Project: $PROJECT_ID" \
+  -H "Content-Type: application/json; charset=utf-8" \
+  --data-binary '{
+    "document": {
+      "type": "PLAIN_TEXT",
+      "content": "Old Norse texts portray Odin as one-eyed and long-bearded, frequently wielding a spear named Gungnir and wearing a cloak and a broad hat."
+    },
+    "encodingType": "UTF8"
+  }' \
+  "https://language.googleapis.com/v1/documents:analyzeEntities" \
+  > task4-cnl-901.result
+
+gsutil -h "Content-Type: application/json" \
+  cp task4-cnl-901.result gs://$BUCKET_NAME/task4-cnl-901.result
+
+<span class="comment"># === PASSO D: BYPASS DE SEGURANÇA — liberar validador ===</span>
+gcloud storage buckets update gs://$BUCKET_NAME --no-public-access-prevention
+gsutil iam ch allUsers:objectViewer gs://$BUCKET_NAME</pre>
+      </div>
+
+      <div class="warn-box">
+        <strong>⚠ O que alterar em um NOVO laboratório?</strong>
+        <ol style="margin-top:0.5rem; padding-left:1.2rem; display:flex; flex-direction:column; gap:0.4rem;">
+          <li><strong>Nome do Bucket (linha 3):</strong> substitua <code>qwiklabs-gcp-02-d21a8ff873bb-marking</code> pelo ID do bucket da nova sessão (barra lateral esquerda do Qwiklabs).</li>
+          <li><strong>Sufixo da Task 3 (linhas com <code>858</code>):</strong> veja no enunciado da Task 3 o nome exato do arquivo de saída e ajuste o número.</li>
+          <li><strong>Sufixo da Task 4 (linhas com <code>901</code>):</strong> veja no enunciado da Task 4 o nome exato do arquivo de saída e ajuste o número.</li>
+        </ol>
+        <p style="margin-top:0.6rem; font-style:italic; font-size:0.84rem;">A variável <code>PROJECT_ID</code> é detectada automaticamente — não precisa ser alterada.</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  Manual Técnico Homologado &nbsp;·&nbsp; GSP323 Challenge Lab &nbsp;·&nbsp; LAB_268
+</footer>
+
+<script>
+  function copyCode(btn) {
+    const pre = btn.closest('.code-block').querySelector('pre');
+    const text = pre.innerText;
+    navigator.clipboard.writeText(text).then(() => {
+      btn.textContent = 'COPIADO ✓';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = 'COPIAR';
+        btn.classList.remove('copied');
+      }, 2000);
+    });
+  }
+</script>
+</body>
+</html>
