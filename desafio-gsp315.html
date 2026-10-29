@@ -1,0 +1,90 @@
+<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>GSP315 – Estratégia de resolução</title><style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:linear-gradient(135deg,#4285f4 0%,#34a853 100%);min-height:100vh;padding:40px 16px;color:#202124;line-height:1.55}
+.container{background:#fff;padding:40px 36px;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,.3);max-width:900px;margin:0 auto}
+a.voltar{display:inline-block;margin-bottom:20px;color:#1a73e8;text-decoration:none;font-weight:600}
+h1{color:#4285f4;font-size:2em;margin-bottom:6px}
+.sub{color:#5f6368;margin-bottom:24px}
+.chips span{display:inline-block;background:#e8f0fe;color:#1a73e8;border-radius:16px;padding:4px 12px;margin:0 6px 6px 0;font-size:.9em}
+h2{color:#1a73e8;font-size:1.4em;margin:34px 0 12px;padding-bottom:8px;border-bottom:3px solid #4285f4}
+h2 .pts{float:right;background:#34a853;color:#fff;border-radius:14px;padding:2px 12px;font-size:.7em;margin-top:6px}
+h3{color:#202124;font-size:1.05em;margin:18px 0 8px}
+p{margin:8px 0}
+ol,ul{margin:8px 0 8px 24px}
+li{margin:5px 0}
+.box{border-radius:12px;padding:14px 18px;margin:14px 0}
+.regra{background:#e6f4ea;border-left:0}
+.cmd{background:#fef7e0}
+.alerta{background:#fce8e6}
+.box b.t{display:block;margin-bottom:4px}
+code,.v{font-family:Consolas,'Courier New',monospace;font-size:.92em}
+code{background:#f1f3f4;padding:1px 6px;border-radius:4px}
+.v{background:#fff3cd;padding:1px 6px;border-radius:4px;border:1px dashed #f9ab00}
+pre{background:#202124;color:#e8eaed;padding:14px 16px;border-radius:10px;overflow-x:auto;margin:10px 0;font-size:.88em;line-height:1.45}
+table{border-collapse:collapse;width:100%;margin:10px 0;font-size:.95em}
+th,td{border:1px solid #dadce0;padding:7px 10px;text-align:left;vertical-align:top}
+th{background:#f1f3f4}
+.caminho{color:#188038;font-weight:600}
+footer{margin-top:36px;color:#5f6368;font-size:.85em;text-align:center}
+@media(max-width:600px){.container{padding:24px 16px}h1{font-size:1.5em}}
+</style></head><body><div class="container">
+<a class="voltar" href="index.html">← Voltar para a página inicial</a>
+<h1>⚙️ GSP315 – Como configurar um ambiente de desenvolvimento de apps no Google Cloud</h1>
+<p class="sub">Selo de habilidade: Como configurar um ambiente de desenvolvimento de apps no Google Cloud</p>
+<div class="chips"><span>4 tarefas</span><span>100 pontos</span><span>Cloud Storage</span><span>Pub/Sub</span><span>Cloud Run functions</span><span>IAM</span><span>100% console</span></div>
+<h2>Antes de começar</h2>
+<div class="box regra"><b class="t">Regras de ouro</b>
+<ul>
+<li>Abra o lab em janela anônima e use só o usuário e a senha do laboratório.</li>
+<li>Os valores em <span class="v">amarelo</span> (nomes, região e zona) mudam a cada execução: copie do <b>painel do lab</b>, à esquerda do roteiro.</li>
+<li>Faça pelo <b>console</b>. Use comandos apenas onde esta página indicar, e sempre no Cloud Shell do projeto do lab.</li>
+<li>Ao final de cada tarefa, clique em <b>Verificar meu progresso</b>. Se não passar, leia a mensagem, corrija e verifique de novo.</li>
+<li>Não clique em <b>Terminar o laboratório</b> antes de todas as tarefas estarem verificadas.</li>
+</ul></div>
+<p>Cenário: projeto de fotos "Recordações" da Jooli Inc. No painel do lab, anote: nome do <span class="v">BUCKET</span>, do <span class="v">TÓPICO</span>, da <span class="v">FUNÇÃO</span>, a <span class="v">REGIÃO</span> e o e-mail do <span class="v">USUÁRIO 2</span> (engenheiro anterior).</p>
+<h2>Tarefa 1: criar o bucket<span class="pts">25 pontos</span></h2>
+
+<ol>
+<li><span class="caminho">Menu › Cloud Storage › Buckets › Criar</span>.</li>
+<li><b>Nome:</b> <span class="v">BUCKET</span> (exatamente como no painel).</li>
+<li><b>Local:</b> tipo <b>Região</b> › <span class="v">REGIÃO</span>.</li>
+<li>Mantenha o resto padrão e clique em <b>Criar</b>. Se aparecer o aviso de acesso público, confirme a opção padrão.</li>
+</ol>
+<h2>Tarefa 2: criar o tópico do Pub/Sub<span class="pts">25 pontos</span></h2>
+
+<ol>
+<li><span class="caminho">Menu › Pub/Sub › Tópicos › Criar tópico</span>.</li>
+<li><b>ID do tópico:</b> <span class="v">TÓPICO</span>. Clique em <b>Criar</b>.</li>
+</ol>
+<h2>Tarefa 3: criar a função que gera miniaturas<span class="pts">30 pontos</span></h2>
+
+<p><b>O que o roteiro pede:</b> função do Cloud Run (2ª geração), Node.js 22, acionada quando um arquivo é criado no bucket da tarefa 1.</p>
+<ol>
+<li><span class="caminho">Menu › Cloud Run › Escrever uma função</span> (ou <span class="caminho">Cloud Run functions › Criar função</span>).</li>
+<li><b>Nome do serviço:</b> <span class="v">FUNÇÃO</span> · <b>Região:</b> <span class="v">REGIÃO</span> · <b>Ambiente de execução:</b> <b>Node.js 22</b>.</li>
+<li><b>Gatilho:</b> Adicionar gatilho › <b>Gatilho do Cloud Storage</b>. Tipo de evento: <b>google.cloud.storage.object.v1.finalized</b> (objeto criado). Bucket: <span class="v">BUCKET</span>.</li>
+<li>Se o console pedir para <b>ativar APIs</b> ou <b>conceder papéis</b> a contas de serviço, aceite.</li>
+<li><b>Autenticação:</b> mantenha o padrão. Clique em <b>Criar</b>/<b>Próximo</b> para abrir o editor de código.</li>
+<li><b>Ponto de entrada (função a ser executada):</b> <span class="v">FUNÇÃO</span>.</li>
+<li>Substitua o conteúdo de <code>index.js</code> e <code>package.json</code> pelos códigos do roteiro (use o botão de copiar do roteiro: o nome da função e do tópico já vêm preenchidos lá).</li>
+<li>Clique em <b>Salvar e implantar</b> e aguarde o ícone verde.</li>
+</ol>
+<h3>Testar</h3>
+<ol>
+<li>Baixe a imagem do roteiro (<code>map.jpg</code>) ou use um PNG/JPG seu.</li>
+<li><span class="caminho">Cloud Storage › Buckets › BUCKET › Fazer upload de arquivos</span>.</li>
+<li>Clique em <b>Atualizar</b>: aparece o arquivo <code>..._64x64_thumbnail.jpg</code>. Não é preciso esperar a miniatura para verificar o progresso.</li>
+</ol>
+<div class="box alerta"><b class="t">Se der erro de permissão</b>
+Aguarde 2 a 3 minutos (as permissões demoram a propagar) e implante de novo. O roteiro lista os papéis necessários: Agente de Serviço e Receptor de Eventos do Eventarc, Criador do Token da Conta de Serviço e Publicador do Pub/Sub.
+Se o gatilho não aparecer na aba <b>Gatilhos</b> da função, recrie o gatilho.</div>
+<h2>Tarefa 4: remover o engenheiro anterior<span class="pts">20 pontos</span></h2>
+
+<ol>
+<li><span class="caminho">Menu › IAM e administrador › IAM</span>.</li>
+<li>Localize o <span class="v">USUÁRIO 2</span>, que tem o papel <b>Leitor</b>.</li>
+<li>Clique no lápis (<b>Editar principal</b>) › lixeira ao lado do papel <b>Leitor</b> › <b>Salvar</b>.</li>
+</ol>
+<div class="box alerta"><b class="t">Cuidado</b> Não remova a sua conta (papel Proprietário).</div>
+<footer>Estratégia de resolução preparada para a turma. Siga sempre o roteiro do laboratório: os nomes, a região e a zona mostrados no painel do lab têm prioridade sobre qualquer exemplo desta página.</footer>
+</div></body></html>
