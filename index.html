@@ -62,6 +62,7 @@
         .card .icone { font-size: 1.5em; flex-shrink: 0; }
         .card .texto { flex: 1; min-width: 0; }
         .card .titulo { font-weight: 600; font-size: 1.05em; }
+        .card .selo { text-transform: uppercase; color: var(--cor); font-weight: 700; letter-spacing: 0.03em; }
         .card .sub { color: #5f6368; font-size: 0.88em; margin-top: 2px; }
         .card .seta { color: var(--cor); font-size: 1.3em; flex-shrink: 0; }
 
@@ -72,6 +73,7 @@
             cursor: not-allowed;
         }
         .card.indisponivel .icone { filter: grayscale(1); opacity: 0.55; }
+        .card.indisponivel .selo { color: #9aa0a6; }
         .card.indisponivel .sub { color: #9aa0a6; }
         .tag {
             flex-shrink: 0;
@@ -109,8 +111,8 @@
                     <div class="card indisponivel" aria-disabled="true">
                         <span class="icone">📖</span>
                         <div class="texto">
-                            <div class="titulo">Noções básicas da computação em nuvem</div>
-                            <div class="sub">Curso · Fundamentos da computação do Google Cloud · Selo 1</div>
+                            <div class="titulo"><span class="selo">Selo 1</span> – Noções básicas da computação em nuvem</div>
+                            <div class="sub">Curso · Fundamentos da computação do Google Cloud</div>
                         </div>
                         <span class="tag">Não disponível</span>
                     </div>
@@ -125,8 +127,8 @@
                     <a class="card" href="desafio-gsp313.html">
                         <span class="icone">🔀</span>
                         <div class="texto">
-                            <div class="titulo">GSP313 · Balanceamento de carga no Compute Engine</div>
-                            <div class="sub">Laboratório com desafio · Selo 2 · 📅 Encontro 1: 21/10</div>
+                            <div class="titulo"><span class="selo">Selo 2</span> – Balanceamento de carga no Compute Engine</div>
+                            <div class="sub">Laboratório com desafio GSP313 · 📅 Encontro 1: 21/10</div>
                         </div>
                         <span class="seta">›</span>
                     </a>
@@ -135,8 +137,8 @@
                     <div class="card indisponivel" aria-disabled="true">
                         <span class="icone">📖</span>
                         <div class="texto">
-                            <div class="titulo">Infraestrutura no Google Cloud</div>
-                            <div class="sub">Curso · Fundamentos da computação do Google Cloud · Selo 3</div>
+                            <div class="titulo"><span class="selo">Selo 3</span> – Infraestrutura no Google Cloud</div>
+                            <div class="sub">Curso · Fundamentos da computação do Google Cloud</div>
                         </div>
                         <span class="tag">Não disponível</span>
                     </div>
@@ -151,8 +153,8 @@
                     <a class="card" href="desafio-gsp315.html">
                         <span class="icone">⚙️</span>
                         <div class="texto">
-                            <div class="titulo">GSP315 · Ambiente de desenvolvimento de apps</div>
-                            <div class="sub">Laboratório com desafio · Selo 4 · 📅 Encontro 2: 28/10</div>
+                            <div class="titulo"><span class="selo">Selo 4</span> – Ambiente de desenvolvimento de apps</div>
+                            <div class="sub">Laboratório com desafio GSP315 · 📅 Encontro 2: 28/10</div>
                         </div>
                         <span class="seta">›</span>
                     </a>
@@ -161,8 +163,8 @@
                     <div class="card indisponivel" aria-disabled="true">
                         <span class="icone">📖</span>
                         <div class="texto">
-                            <div class="titulo">Rede e segurança no Google Cloud</div>
-                            <div class="sub">Curso · Fundamentos da computação do Google Cloud · Selo 5</div>
+                            <div class="titulo"><span class="selo">Selo 5</span> – Rede e segurança no Google Cloud</div>
+                            <div class="sub">Curso · Fundamentos da computação do Google Cloud</div>
                         </div>
                         <span class="tag">Não disponível</span>
                     </div>
@@ -177,8 +179,8 @@
                     <a class="card" href="desafio-gsp322.html">
                         <span class="icone">🔒</span>
                         <div class="texto">
-                            <div class="titulo">GSP322 · Como criar uma rede segura do Google Cloud</div>
-                            <div class="sub">Laboratório com desafio · Selo 6 · 📅 Encontro 3: 04/11</div>
+                            <div class="titulo"><span class="selo">Selo 6</span> – Como criar uma rede segura do Google Cloud</div>
+                            <div class="sub">Laboratório com desafio GSP322 · 📅 Encontro 3: 04/11</div>
                         </div>
                         <span class="seta">›</span>
                     </a>
@@ -187,8 +189,8 @@
                     <div class="card indisponivel" aria-disabled="true">
                         <span class="icone">📖</span>
                         <div class="texto">
-                            <div class="titulo">Dados, ML e IA no Google Cloud</div>
-                            <div class="sub">Curso · Fundamentos da computação do Google Cloud · Selo 7</div>
+                            <div class="titulo"><span class="selo">Selo 7</span> – Dados, ML e IA no Google Cloud</div>
+                            <div class="sub">Curso · Fundamentos da computação do Google Cloud</div>
                         </div>
                         <span class="tag">Não disponível</span>
                     </div>
@@ -203,8 +205,8 @@
                     <div class="card indisponivel" aria-disabled="true">
                         <span class="icone">🤖</span>
                         <div class="texto">
-                            <div class="titulo">GSP323 · Preparar dados para APIs de ML no Google Cloud</div>
-                            <div class="sub">Laboratório com desafio · Selo 8 · 📅 Encontro 4: 10/11</div>
+                            <div class="titulo"><span class="selo">Selo 8</span> – Preparar dados para APIs de ML no Google Cloud</div>
+                            <div class="sub">Laboratório com desafio GSP323 · 📅 Encontro 4: 10/11</div>
                         </div>
                         <span class="tag">Não disponível</span>
                     </div>
