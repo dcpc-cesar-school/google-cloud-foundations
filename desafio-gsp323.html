@@ -1,0 +1,120 @@
+<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>GSP323 – Estratégia de resolução</title><style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:linear-gradient(135deg,#4285f4 0%,#34a853 100%);min-height:100vh;padding:40px 16px;color:#202124;line-height:1.55}
+.container{background:#fff;padding:40px 36px;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,.3);max-width:900px;margin:0 auto}
+a.voltar{display:inline-block;margin-bottom:20px;color:#1a73e8;text-decoration:none;font-weight:600}
+h1{color:#4285f4;font-size:2em;margin-bottom:6px}
+.sub{color:#5f6368;margin-bottom:24px}
+.chips span{display:inline-block;background:#e8f0fe;color:#1a73e8;border-radius:16px;padding:4px 12px;margin:0 6px 6px 0;font-size:.9em}
+h2{color:#1a73e8;font-size:1.4em;margin:34px 0 12px;padding-bottom:8px;border-bottom:3px solid #4285f4}
+h2 .pts{float:right;background:#34a853;color:#fff;border-radius:14px;padding:2px 12px;font-size:.7em;margin-top:6px}
+h3{color:#202124;font-size:1.05em;margin:18px 0 8px}
+p{margin:8px 0}
+ol,ul{margin:8px 0 8px 24px}
+li{margin:5px 0}
+.box{border-radius:12px;padding:14px 18px;margin:14px 0}
+.regra{background:#e6f4ea;border-left:0}
+.cmd{background:#fef7e0}
+.alerta{background:#fce8e6}
+.box b.t{display:block;margin-bottom:4px}
+code,.v{font-family:Consolas,'Courier New',monospace;font-size:.92em}
+code{background:#f1f3f4;padding:1px 6px;border-radius:4px}
+.v{background:#fff3cd;padding:1px 6px;border-radius:4px;border:1px dashed #f9ab00}
+pre{background:#202124;color:#e8eaed;padding:14px 16px;border-radius:10px;overflow-x:auto;margin:10px 0;font-size:.88em;line-height:1.45}
+table{border-collapse:collapse;width:100%;margin:10px 0;font-size:.95em}
+th,td{border:1px solid #dadce0;padding:7px 10px;text-align:left;vertical-align:top}
+th{background:#f1f3f4}
+.caminho{color:#188038;font-weight:600}
+footer{margin-top:36px;color:#5f6368;font-size:.85em;text-align:center}
+@media(max-width:600px){.container{padding:24px 16px}h1{font-size:1.5em}}
+</style></head><body><div class="container">
+<a class="voltar" href="index.html">← Voltar para a página inicial</a>
+<h1>🤖 GSP323 – Preparar dados para APIs de ML no Google Cloud</h1>
+<p class="sub">Selo de habilidade: Preparar dados para APIs de ML no Google Cloud</p>
+<div class="chips"><span>4 tarefas</span><span>100 pontos</span><span>BigQuery</span><span>Dataflow</span><span>Spark (Dataproc)</span><span>Speech-to-Text</span><span>Natural Language</span></div>
+<h2>Antes de começar</h2>
+<div class="box regra"><b class="t">Regras de ouro</b>
+<ul>
+<li>Abra o lab em janela anônima e use só o usuário e a senha do laboratório.</li>
+<li>Os valores em <span class="v">amarelo</span> (nomes, região e zona) mudam a cada execução: copie do <b>painel do lab</b>, à esquerda do roteiro.</li>
+<li>Faça pelo <b>console</b>. Use comandos apenas onde esta página indicar, e sempre no Cloud Shell do projeto do lab.</li>
+<li>Ao final de cada tarefa, clique em <b>Verificar meu progresso</b>. Se não passar, leia a mensagem, corrija e verifique de novo.</li>
+<li>Não clique em <b>Terminar o laboratório</b> antes de todas as tarefas estarem verificadas.</li>
+</ul></div>
+<p>No painel do lab, anote: <span class="v">DATASET</span>, <span class="v">TABELA</span>, <span class="v">BUCKET</span>, <span class="v">REGIÃO</span> e os dois arquivos de resultado das tarefas 3 e 4 (<span class="v">ARQUIVO TAREFA 3</span> e <span class="v">ARQUIVO TAREFA 4</span>).</p>
+<div class="box cmd"><b class="t">Onde o console não basta</b>
+Tarefa 2: o roteiro exige um comando <code>hdfs</code> dentro do cluster. Tarefas 3 e 4: as APIs não têm tela de uso no console; são chamadas por comando no Cloud Shell e o resultado é enviado ao bucket.</div>
+<h2>Tarefa 1: job simples no Dataflow<span class="pts">25 pontos</span></h2>
+
+<h3>Preparar o destino (console)</h3>
+<ol>
+<li><span class="caminho">Menu › BigQuery › Explorer</span> › três pontos ao lado do projeto › <b>Criar conjunto de dados</b> › ID: <span class="v">DATASET</span>.</li>
+<li>No dataset › <b>Criar tabela</b> › nome <span class="v">TABELA</span>. Para o esquema, siga a <b>dica</b> que o roteiro mostra ao expandir.</li>
+<li><span class="caminho">Cloud Storage › Buckets › Criar</span> › nome <span class="v">BUCKET</span> (o roteiro pede este bucket).</li>
+</ol>
+<h3>Criar o job (console)</h3>
+<ol>
+<li><span class="caminho">Menu › Dataflow › Jobs › Criar job com base em modelo</span>.</li>
+<li><b>Nome do job:</b> livre · <b>Endpoint regional:</b> <span class="v">REGIÃO</span>.</li>
+<li><b>Modelo:</b> em "Processar dados em massa (lote)", escolha <b>Arquivos de texto do Cloud Storage para o BigQuery</b>.</li>
+<li>Preencha conforme a tabela do roteiro:
+<table><tr><th>Campo</th><th>Valor</th></tr>
+<tr><td>Arquivos de entrada</td><td><code>gs://spls/gsp323/lab.csv</code></td></tr>
+<tr><td>Esquema do BigQuery</td><td><code>gs://spls/gsp323/lab.schema</code></td></tr>
+<tr><td>Tabela de saída</td><td><span class="v">PROJETO:DATASET.TABELA</span></td></tr>
+<tr><td>Diretório temporário do BigQuery e local temporário</td><td>pastas no <span class="v">BUCKET</span>, como no roteiro</td></tr>
+<tr><td>UDF em JavaScript (parâmetros opcionais)</td><td><code>gs://spls/gsp323/lab.js</code>, nome <code>transform</code></td></tr>
+<tr><td>Tipo de máquina (parâmetros opcionais)</td><td>desmarque o padrão › <b>e2-standard-2</b></td></tr></table></li>
+<li><b>Executar job</b>. Aguarde o status <b>Concluído</b> antes de verificar.</li>
+</ol>
+<h2>Tarefa 2: job simples do Spark<span class="pts">25 pontos</span></h2>
+
+<h3>Criar o cluster (console)</h3>
+<ol>
+<li><span class="caminho">Menu › Managed Service for Spark (Dataproc) › Clusters › Criar cluster › Cluster no Compute Engine</span>.</li>
+<li><b>Região:</b> <span class="v">REGIÃO</span> · <b>Série de máquinas:</b> E2.</li>
+<li><b>Nó do administrador:</b> e2-standard-2, disco permanente equilibrado, 100 GB.</li>
+<li><b>Nós de trabalho:</b> 2, e2-standard-2, disco permanente equilibrado.</li>
+<li>Desmarque <b>Configurar todas as instâncias para que tenham apenas endereços IP internos</b>. Clique em <b>Criar</b>.</li>
+</ol>
+<div class="box cmd"><b class="t">Por comando (exigido pelo roteiro)</b>
+<span class="caminho">Compute Engine › Instâncias de VM</span> › <b>SSH</b> no nó administrador (nome terminado em <code>-m</code>) e rode:
+<pre>hdfs dfs -cp gs://spls/gsp323/data.txt /data.txt</pre></div>
+<h3>Enviar o job (console)</h3>
+<ol>
+<li>No cluster › <b>Enviar job</b>.</li>
+<li><b>Tipo:</b> Spark · <b>Classe principal:</b> <code>org.apache.spark.examples.SparkPageRank</code>.</li>
+<li><b>Arquivos jar:</b> <code>file:///usr/lib/spark/examples/jars/spark-examples.jar</code> · <b>Argumentos:</b> <code>/data.txt</code>.</li>
+<li><b>Máximo de reinicializações por hora:</b> 1. Envie e aguarde <b>Concluído</b>.</li>
+</ol>
+<h2>Tarefa 3: API Speech-to-Text<span class="pts">25 pontos</span></h2>
+
+<h3>Criar a chave de API (console)</h3>
+<ol><li><span class="caminho">Menu › APIs e serviços › Credenciais › Criar credenciais › Chave de API</span>. Copie a chave.</li></ol>
+<div class="box cmd"><b class="t">Por comando (Cloud Shell)</b>
+<pre>export API_KEY=SUA_CHAVE
+
+cat &gt; request.json &lt;&lt;EOF
+{"config": {"encoding": "FLAC", "languageCode": "en-US"},
+ "audio": {"uri": "gs://spls/gsp323/task3.flac"}}
+EOF
+
+curl -s -X POST -H "Content-Type: application/json" --data-binary @request.json \
+ "https://speech.googleapis.com/v1/speech:recognize?key=$API_KEY" &gt; result.json
+
+gcloud storage cp result.json ARQUIVO-DA-TAREFA-3</pre>
+Use o caminho exato do painel (gs://...) no último comando.</div>
+<p><b>Conferir (console):</b> no bucket, o objeto enviado deve ter <b>Content-Type</b> <code>application/json</code> (veja em "Editar metadados").</p>
+<h2>Tarefa 4: API Natural Language<span class="pts">25 pontos</span></h2>
+
+<div class="box cmd"><b class="t">Por comando (Cloud Shell)</b>
+<pre>gcloud ml language analyze-entities --content="Old Norse texts portray Odin as one-eyed and long-bearded, frequently wielding a spear named Gungnir and wearing a cloak and a broad hat." &gt; result.json
+
+gcloud storage cp result.json ARQUIVO-DA-TAREFA-4</pre></div>
+<p>Copie o texto sobre Odin direto do roteiro, para não errar nenhuma palavra. Confira o <b>Content-Type</b> <code>application/json</code> no bucket.</p>
+<div class="box alerta"><b class="t">Erros comuns</b><ul>
+<li>Verificar o progresso antes de o job terminar (Dataflow e Spark levam alguns minutos).</li>
+<li>Esquecer o comando <code>hdfs</code> antes do job Spark: o job falha por não achar <code>/data.txt</code>.</li>
+<li>Enviar o resultado para outro caminho que não o do painel.</li></ul></div>
+<footer>Estratégia de resolução preparada para a turma. Siga sempre o roteiro do laboratório: os nomes, a região e a zona mostrados no painel do lab têm prioridade sobre qualquer exemplo desta página.</footer>
+</div></body></html>
