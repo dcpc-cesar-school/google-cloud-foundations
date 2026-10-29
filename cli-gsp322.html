@@ -1,0 +1,100 @@
+<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>GSP322 – Versão por linha de comando</title><style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',Roboto,Helvetica,Arial,sans-serif;background:#f1f3f4;min-height:100vh;padding:32px 16px;color:#202124;line-height:1.55}
+.container{background:#fff;border:1px solid #dadce0;border-top:6px solid var(--cor);border-radius:12px;padding:32px 36px;max-width:900px;margin:0 auto}
+a.voltar{display:block;width:fit-content;margin-bottom:18px;color:var(--cor);text-decoration:none;font-weight:600}
+a.voltar:hover{text-decoration:underline}
+.fase{display:inline-block;font-size:.85em;font-weight:600;color:var(--cor);background:var(--claro);border-radius:999px;padding:3px 12px;margin-bottom:10px}
+h1{color:#202124;font-size:1.8em;line-height:1.25;margin-bottom:6px}
+.sub{color:#5f6368;margin-bottom:20px}
+.chips span{display:inline-block;background:#f1f3f4;color:#3c4043;border-radius:16px;padding:4px 12px;margin:0 6px 6px 0;font-size:.88em}
+h2{color:#202124;font-size:1.3em;margin:34px 0 12px;padding-bottom:8px;border-bottom:3px solid var(--cor)}
+h2 .pts{float:right;background:var(--cor);color:#fff;border-radius:14px;padding:2px 12px;font-size:.68em;margin-top:6px}
+h3{color:#202124;font-size:1.05em;margin:18px 0 8px}
+p{margin:8px 0}
+ol,ul{margin:8px 0 8px 24px}
+li{margin:5px 0}
+.box{border-radius:10px;padding:14px 18px;margin:14px 0;border:1px solid transparent}
+.regra{background:#f8f9fa;border-color:#e8eaed}
+.cmd{background:#fef7e0;border-color:#fde293}
+.alerta{background:#fce8e6;border-color:#f6aea9}
+.box b.t{display:block;margin-bottom:4px}
+code,.v{font-family:Consolas,'Courier New',monospace;font-size:.92em}
+code{background:#f1f3f4;padding:1px 6px;border-radius:4px}
+.v{background:#fff3cd;padding:1px 6px;border-radius:4px;border:1px dashed #f9ab00}
+pre{background:#202124;color:#e8eaed;padding:14px 16px;border-radius:10px;overflow-x:auto;margin:10px 0;font-size:.88em;line-height:1.45}
+table{border-collapse:collapse;width:100%;margin:10px 0;font-size:.95em}
+th,td{border:1px solid #dadce0;padding:7px 10px;text-align:left;vertical-align:top}
+th{background:#f1f3f4}
+.caminho{color:#188038;font-weight:600}
+.alt{margin-top:36px;text-align:center;font-size:.8em;color:#9aa0a6}
+.alt a{color:#9aa0a6}
+footer{margin-top:10px;color:#80868b;font-size:.85em;text-align:center}
+@media(max-width:600px){.container{padding:22px 16px}h1{font-size:1.45em}}
+</style></head><body style="--cor:#e69138;--claro:#fef3e6"><div class="container">
+<a class="voltar" href="desafio-gsp322.html">← Voltar ao guia pelo console</a>
+<div class="fase">Fase 3 · Selo 6 · 📅 Encontro 3: 04/11</div>
+<h1>🔒 GSP322 · Versão por linha de comando</h1>
+<p class="sub">Como criar uma rede segura do Google Cloud</p>
+<div class="chips"><span>6 verificações</span><span>100 pontos</span><span>100% Cloud Shell</span></div>
+<div class="box regra"><b class="t">Versão alternativa</b>
+O caminho recomendado é o <a href="desafio-gsp322.html">guia pelo console</a>. Use esta página só se preferir o terminal ou se travar em alguma tela do console.</div>
+
+<h2>Antes de começar</h2>
+<p>Abra o <b>Cloud Shell</b> e defina as variáveis com as três tags de rede do <b>painel do lab</b>:</p>
+<pre>export TAG_IAP=TAG-DO-SSH-PELO-IAP
+export TAG_HTTP=TAG-DO-HTTP
+export TAG_INTERNO=TAG-DO-SSH-INTERNO
+export ZONE=$(gcloud compute instances list --filter="name=bastion" --format="value(zone.basename())")
+export REGION=${ZONE%-*}
+echo $ZONE $REGION</pre>
+<p>Se o <code>echo</code> mostrar a zona e a região, pode seguir.</p>
+
+<h2>1. Remover as regras abertas demais<span class="pts">10 pontos</span></h2>
+<pre>gcloud compute firewall-rules list --filter="network:acme-vpc"</pre>
+<p>Procure a regra com origem <code>0.0.0.0/0</code> liberando tudo (normalmente <code>open-access</code>) e apague:</p>
+<pre>gcloud compute firewall-rules delete open-access --quiet</pre>
+
+<h2>2. Iniciar o bastion host<span class="pts">10 pontos</span></h2>
+<pre>gcloud compute instances start bastion --zone=$ZONE</pre>
+
+<h2>3. SSH pelo IAP para o bastion<span class="pts">20 pontos</span></h2>
+<pre>gcloud compute firewall-rules create permitir-ssh-iap \
+  --network=acme-vpc --direction=INGRESS --action=ALLOW \
+  --rules=tcp:22 --source-ranges=35.235.240.0/20 \
+  --target-tags=$TAG_IAP
+
+gcloud compute instances add-tags bastion --tags=$TAG_IAP --zone=$ZONE</pre>
+
+<h2>4. HTTP público para o juice-shop<span class="pts">20 pontos</span></h2>
+<pre>gcloud compute firewall-rules create permitir-http \
+  --network=acme-vpc --direction=INGRESS --action=ALLOW \
+  --rules=tcp:80 --source-ranges=0.0.0.0/0 \
+  --target-tags=$TAG_HTTP
+
+gcloud compute instances add-tags juice-shop --tags=$TAG_HTTP --zone=$ZONE</pre>
+
+<h2>5. SSH interno: do bastion para o juice-shop<span class="pts">20 pontos</span></h2>
+<pre>export MGMT=$(gcloud compute networks subnets describe acme-mgmt-subnet \
+  --region=$REGION --format="value(ipCidrRange)")
+echo $MGMT
+
+gcloud compute firewall-rules create permitir-ssh-interno \
+  --network=acme-vpc --direction=INGRESS --action=ALLOW \
+  --rules=tcp:22 --source-ranges=$MGMT \
+  --target-tags=$TAG_INTERNO
+
+gcloud compute instances add-tags juice-shop --tags=$TAG_INTERNO --zone=$ZONE</pre>
+
+<h2>6. Conectar ao juice-shop pelo bastion<span class="pts">20 pontos</span></h2>
+<p>Entre no bastion pelo IAP:</p>
+<pre>gcloud compute ssh bastion --zone=$ZONE --tunnel-through-iap</pre>
+<p>Responda <code>Y</code> e aperte <b>Enter</b> nas perguntas da chave. Já dentro do bastion, rode (troque <span class="v">ZONA</span> pela zona do lab):</p>
+<pre>gcloud compute ssh juice-shop --internal-ip --zone=ZONA</pre>
+<p>Quando o prompt mudar para <b>juice-shop</b>, volte ao lab e verifique o progresso.</p>
+<div class="box alerta"><b class="t">Erros comuns</b><ul>
+<li>Variáveis vazias: se abrir um novo Cloud Shell, rode os <code>export</code> de novo.</li>
+<li>Apagar regras que não são abertas demais: apague só a de origem <code>0.0.0.0/0</code> que libera tudo.</li></ul></div>
+
+<footer>Versão alternativa por linha de comando. Siga sempre o roteiro do laboratório: os nomes, a região e a zona mostrados no painel do lab têm prioridade sobre qualquer exemplo desta página.</footer>
+</div></body></html>
