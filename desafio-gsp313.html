@@ -1,21 +1,23 @@
 <!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>GSP313 – Estratégia de resolução</title><style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:linear-gradient(135deg,#4285f4 0%,#34a853 100%);min-height:100vh;padding:40px 16px;color:#202124;line-height:1.55}
-.container{background:#fff;padding:40px 36px;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,.3);max-width:900px;margin:0 auto}
-a.voltar{display:inline-block;margin-bottom:20px;color:#1a73e8;text-decoration:none;font-weight:600}
-h1{color:#4285f4;font-size:2em;margin-bottom:6px}
-.sub{color:#5f6368;margin-bottom:24px}
-.chips span{display:inline-block;background:#e8f0fe;color:#1a73e8;border-radius:16px;padding:4px 12px;margin:0 6px 6px 0;font-size:.9em}
-h2{color:#1a73e8;font-size:1.4em;margin:34px 0 12px;padding-bottom:8px;border-bottom:3px solid #4285f4}
-h2 .pts{float:right;background:#34a853;color:#fff;border-radius:14px;padding:2px 12px;font-size:.7em;margin-top:6px}
+body{font-family:'Segoe UI',Roboto,Helvetica,Arial,sans-serif;background:#f1f3f4;min-height:100vh;padding:32px 16px;color:#202124;line-height:1.55}
+.container{background:#fff;border:1px solid #dadce0;border-top:6px solid var(--cor);border-radius:12px;padding:32px 36px;max-width:900px;margin:0 auto}
+a.voltar{display:block;width:fit-content;margin-bottom:18px;color:var(--cor);text-decoration:none;font-weight:600}
+a.voltar:hover{text-decoration:underline}
+.fase{display:inline-block;font-size:.85em;font-weight:600;color:var(--cor);background:var(--claro);border-radius:999px;padding:3px 12px;margin-bottom:10px}
+h1{color:#202124;font-size:1.8em;line-height:1.25;margin-bottom:6px}
+.sub{color:#5f6368;margin-bottom:20px}
+.chips span{display:inline-block;background:#f1f3f4;color:#3c4043;border-radius:16px;padding:4px 12px;margin:0 6px 6px 0;font-size:.88em}
+h2{color:#202124;font-size:1.3em;margin:34px 0 12px;padding-bottom:8px;border-bottom:3px solid var(--cor)}
+h2 .pts{float:right;background:var(--cor);color:#fff;border-radius:14px;padding:2px 12px;font-size:.68em;margin-top:6px}
 h3{color:#202124;font-size:1.05em;margin:18px 0 8px}
 p{margin:8px 0}
 ol,ul{margin:8px 0 8px 24px}
 li{margin:5px 0}
-.box{border-radius:12px;padding:14px 18px;margin:14px 0}
-.regra{background:#e6f4ea;border-left:0}
-.cmd{background:#fef7e0}
-.alerta{background:#fce8e6}
+.box{border-radius:10px;padding:14px 18px;margin:14px 0;border:1px solid transparent}
+.regra{background:#f8f9fa;border-color:#e8eaed}
+.cmd{background:#fef7e0;border-color:#fde293}
+.alerta{background:#fce8e6;border-color:#f6aea9}
 .box b.t{display:block;margin-bottom:4px}
 code,.v{font-family:Consolas,'Courier New',monospace;font-size:.92em}
 code{background:#f1f3f4;padding:1px 6px;border-radius:4px}
@@ -25,13 +27,20 @@ table{border-collapse:collapse;width:100%;margin:10px 0;font-size:.95em}
 th,td{border:1px solid #dadce0;padding:7px 10px;text-align:left;vertical-align:top}
 th{background:#f1f3f4}
 .caminho{color:#188038;font-weight:600}
-footer{margin-top:36px;color:#5f6368;font-size:.85em;text-align:center}
-@media(max-width:600px){.container{padding:24px 16px}h1{font-size:1.5em}}
-</style></head><body><div class="container">
-<a class="voltar" href="index.html">← Voltar para a página inicial</a>
-<h1>🔀 GSP313 – Implementar o balanceamento de carga no Compute Engine</h1>
+.alt{margin-top:36px;text-align:center;font-size:.8em;color:#9aa0a6}
+.alt a{color:#9aa0a6}
+footer{margin-top:10px;color:#80868b;font-size:.85em;text-align:center}
+@media(max-width:600px){.container{padding:22px 16px}h1{font-size:1.45em}}
+</style></head><body style="--cor:#6aa84f;--claro:#e6f4ea"><div class="container">
+<a class="voltar" href="index.html">← Voltar às fases</a>
+<div class="fase">Fase 1 · Selo 2 · 📅 Encontro 1: 21/10</div>
+<h1>🔀 GSP313 · Implementar o balanceamento de carga no Compute Engine</h1>
 <p class="sub">Selo de habilidade: Implementação do Cloud Load Balancing no Compute Engine</p>
 <div class="chips"><span>3 tarefas</span><span>100 pontos</span><span>Compute Engine</span><span>Firewall</span><span>Balanceador de rede</span><span>Balanceador HTTP</span></div>
+<div class="box regra"><b class="t">🔎 Onde encontrar o lab</b><ul>
+<li><b>Link direto:</b> <a href="https://www.skills.google/paths/36/course_templates/648/labs/613025" target="_blank" rel="noopener">abrir o laboratório com desafio no Google Skills</a>.</li>
+<li><b>Pela busca:</b> entre em <a href="https://www.skills.google" target="_blank" rel="noopener">skills.google</a> e pesquise por <code>GSP313</code> ou pelo nome do selo, <i>Implementar o balanceamento de carga no Compute Engine</i>.</li>
+</ul>Entre com a mesma conta que você usa no curso.</div>
 <h2>Antes de começar</h2>
 <div class="box regra"><b class="t">Regras de ouro</b>
 <ul>
@@ -157,5 +166,6 @@ gcloud compute forwarding-rules create http-content-rule \
 <li>VM em zona errada ou sem a tag de rede: o firewall não se aplica.</li>
 <li>Esquecer a porta nomeada <code>http:80</code> no grupo: o serviço de back-end não encontra a porta.</li>
 <li>Testar o HTTP antes de 5 minutos e achar que falhou. Aguarde e atualize.</li></ul></div>
+<p class="alt">Prefere fazer pelo terminal? <a href="lab-gsp313-manual.html">Versão por linha de comando</a></p>
 <footer>Estratégia de resolução preparada para a turma. Siga sempre o roteiro do laboratório: os nomes, a região e a zona mostrados no painel do lab têm prioridade sobre qualquer exemplo desta página.</footer>
 </div></body></html>
