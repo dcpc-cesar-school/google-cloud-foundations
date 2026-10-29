@@ -1,0 +1,161 @@
+<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>GSP313 – Estratégia de resolução</title><style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:linear-gradient(135deg,#4285f4 0%,#34a853 100%);min-height:100vh;padding:40px 16px;color:#202124;line-height:1.55}
+.container{background:#fff;padding:40px 36px;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,.3);max-width:900px;margin:0 auto}
+a.voltar{display:inline-block;margin-bottom:20px;color:#1a73e8;text-decoration:none;font-weight:600}
+h1{color:#4285f4;font-size:2em;margin-bottom:6px}
+.sub{color:#5f6368;margin-bottom:24px}
+.chips span{display:inline-block;background:#e8f0fe;color:#1a73e8;border-radius:16px;padding:4px 12px;margin:0 6px 6px 0;font-size:.9em}
+h2{color:#1a73e8;font-size:1.4em;margin:34px 0 12px;padding-bottom:8px;border-bottom:3px solid #4285f4}
+h2 .pts{float:right;background:#34a853;color:#fff;border-radius:14px;padding:2px 12px;font-size:.7em;margin-top:6px}
+h3{color:#202124;font-size:1.05em;margin:18px 0 8px}
+p{margin:8px 0}
+ol,ul{margin:8px 0 8px 24px}
+li{margin:5px 0}
+.box{border-radius:12px;padding:14px 18px;margin:14px 0}
+.regra{background:#e6f4ea;border-left:0}
+.cmd{background:#fef7e0}
+.alerta{background:#fce8e6}
+.box b.t{display:block;margin-bottom:4px}
+code,.v{font-family:Consolas,'Courier New',monospace;font-size:.92em}
+code{background:#f1f3f4;padding:1px 6px;border-radius:4px}
+.v{background:#fff3cd;padding:1px 6px;border-radius:4px;border:1px dashed #f9ab00}
+pre{background:#202124;color:#e8eaed;padding:14px 16px;border-radius:10px;overflow-x:auto;margin:10px 0;font-size:.88em;line-height:1.45}
+table{border-collapse:collapse;width:100%;margin:10px 0;font-size:.95em}
+th,td{border:1px solid #dadce0;padding:7px 10px;text-align:left;vertical-align:top}
+th{background:#f1f3f4}
+.caminho{color:#188038;font-weight:600}
+footer{margin-top:36px;color:#5f6368;font-size:.85em;text-align:center}
+@media(max-width:600px){.container{padding:24px 16px}h1{font-size:1.5em}}
+</style></head><body><div class="container">
+<a class="voltar" href="index.html">← Voltar para a página inicial</a>
+<h1>🔀 GSP313 – Implementar o balanceamento de carga no Compute Engine</h1>
+<p class="sub">Selo de habilidade: Implementação do Cloud Load Balancing no Compute Engine</p>
+<div class="chips"><span>3 tarefas</span><span>100 pontos</span><span>Compute Engine</span><span>Firewall</span><span>Balanceador de rede</span><span>Balanceador HTTP</span></div>
+<h2>Antes de começar</h2>
+<div class="box regra"><b class="t">Regras de ouro</b>
+<ul>
+<li>Abra o lab em janela anônima e use só o usuário e a senha do laboratório.</li>
+<li>Os valores em <span class="v">amarelo</span> (nomes, região e zona) mudam a cada execução: copie do <b>painel do lab</b>, à esquerda do roteiro.</li>
+<li>Faça pelo <b>console</b>. Use comandos apenas onde esta página indicar, e sempre no Cloud Shell do projeto do lab.</li>
+<li>Ao final de cada tarefa, clique em <b>Verificar meu progresso</b>. Se não passar, leia a mensagem, corrija e verifique de novo.</li>
+<li>Não clique em <b>Terminar o laboratório</b> antes de todas as tarefas estarem verificadas.</li>
+</ul></div>
+<p>No painel do lab, anote a <span class="v">REGIÃO</span> e a <span class="v">ZONA</span>. Todos os recursos ficam nelas, salvo indicação diferente.</p>
+<div class="box cmd"><b class="t">Onde o console não basta</b>
+O console atual não cria <b>pool de destino</b> (tarefa 2) nem permite escolher o nome do <b>proxy HTTP</b> (tarefa 3). Como o roteiro exige os nomes
+<code>www-pool</code> e <code>http-lb-proxy</code>, essas partes são feitas com poucos comandos no Cloud Shell. Todo o resto é pelo console.</div>
+<h2>Tarefa 1: criar três servidores web<span class="pts">20 pontos</span></h2>
+
+<p><b>O que o roteiro pede:</b> três VMs (<code>web1</code>, <code>web2</code>, <code>web3</code>) com Apache e a regra de firewall <code>www-firewall-network-lb</code> liberando HTTP.</p>
+<h3>Criar cada VM (repita 3 vezes)</h3>
+<ol>
+<li><span class="caminho">Menu de navegação (☰) › Compute Engine › Instâncias de VM › Criar instância</span>.</li>
+<li><b>Nome:</b> <code>web1</code> (depois <code>web2</code> e <code>web3</code>). <b>Região/Zona:</b> <span class="v">REGIÃO</span> / <span class="v">ZONA</span>.</li>
+<li><b>Configuração da máquina:</b> série <b>E2</b>, tipo <b>e2-small</b>.</li>
+<li><b>SO e armazenamento › Alterar:</b> sistema operacional <b>Debian</b>, versão <b>Debian GNU/Linux 12 (bookworm)</b> (é a <code>debian-12</code> do roteiro).</li>
+<li><b>Rede › Tags de rede:</b> <code>network-lb-tag</code>.</li>
+<li><b>Avançado › Automação › Script de inicialização:</b> cole o script do roteiro, trocando <code>web-number</code> pelo nome da VM:
+<pre>#!/bin/bash
+apt-get update
+apt-get install apache2 -y
+service apache2 restart
+echo "Servidor da web: web1" | tee /var/www/html/index.html</pre></li>
+<li>Mantenha o resto padrão e clique em <b>Criar</b>.</li>
+</ol>
+<h3>Criar a regra de firewall</h3>
+<ol>
+<li><span class="caminho">Menu › Rede VPC › Firewall › Criar regra de firewall</span>.</li>
+<li><b>Nome:</b> <code>www-firewall-network-lb</code> · <b>Rede:</b> default · <b>Direção:</b> Entrada · <b>Ação:</b> Permitir.</li>
+<li><b>Destinos:</b> Tags de destino especificadas › <code>network-lb-tag</code>.</li>
+<li><b>Intervalos IPv4 de origem:</b> <code>0.0.0.0/0</code> · <b>Protocolos e portas:</b> TCP <code>80</code>.</li>
+</ol>
+<p><b>Conferir:</b> em Instâncias de VM, clique no IP externo de cada VM. A página deve mostrar "Servidor da web: web1" (ou web2, web3).</p>
+<h2>Tarefa 2: configurar o balanceador de rede<span class="pts">35 pontos</span></h2>
+
+<p><b>O que o roteiro pede:</b> IP externo estático <code>network-lb-ip-1</code>, pool de destino <code>www-pool</code> e encaminhamento na porta <code>80</code>.</p>
+<h3>Pelo console: reservar o IP estático</h3>
+<ol>
+<li><span class="caminho">Menu › Rede VPC › Endereços IP › Reservar endereço IP externo estático</span>.</li>
+<li><b>Nome:</b> <code>network-lb-ip-1</code> · <b>Versão:</b> IPv4 · <b>Tipo:</b> Regional · <b>Região:</b> <span class="v">REGIÃO</span>. Clique em <b>Reservar</b>.</li>
+</ol>
+<div class="box cmd"><b class="t">Por comando (o console não cria pool de destino)</b>
+Abra o Cloud Shell (ícone <b>&gt;_</b> no topo) e rode, trocando <span class="v">REGIÃO</span> e <span class="v">ZONA</span>:
+<pre>gcloud compute http-health-checks create basic-check
+
+gcloud compute target-pools create www-pool \
+  --region=REGIÃO --http-health-check basic-check
+
+gcloud compute target-pools add-instances www-pool \
+  --instances web1,web2,web3 --instances-zone=ZONA
+
+gcloud compute forwarding-rules create www-rule \
+  --region=REGIÃO --ports 80 \
+  --address network-lb-ip-1 --target-pool www-pool</pre></div>
+<p><b>Conferir:</b> em <span class="caminho">Serviços de rede › Balanceamento de carga</span> aparece o balanceador com o pool <code>www-pool</code>. Abra o IP <code>network-lb-ip-1</code> no navegador e atualize algumas vezes: a resposta alterna entre web1, web2 e web3.</p>
+<h2>Tarefa 3: criar o balanceador HTTP<span class="pts">45 pontos</span></h2>
+
+<p><b>O que o roteiro pede:</b> modelo <code>lb-backend-template</code>, grupo gerenciado <code>lb-backend-group</code>, firewall <code>fw-allow-health-check</code>, IP <code>lb-ipv4-1</code>, verificação <code>http-basic-check</code>, mapa de URL <code>web-map-http</code> e proxy <code>http-lb-proxy</code>.</p>
+<h3>1. Modelo de instância (console)</h3>
+<ol>
+<li><span class="caminho">Menu › Compute Engine › Modelos de instância › Criar modelo de instância</span>.</li>
+<li><b>Nome:</b> <code>lb-backend-template</code> · <b>Local:</b> Regional, <span class="v">REGIÃO</span>.</li>
+<li><b>Tipo de máquina:</b> <b>e2-medium</b> · <b>Disco de inicialização:</b> Debian 12 (igual às VMs da tarefa 1).</li>
+<li><b>Rede › Tags de rede:</b> <code>allow-health-check</code>.</li>
+<li><b>Automação › Script de inicialização</b> (recomendado, para o teste final mostrar a página):
+<pre>#!/bin/bash
+apt-get update
+apt-get install apache2 -y
+a2ensite default-ssl
+a2enmod ssl
+vm_hostname="$(curl -H "Metadata-Flavor:Google" \
+http://169.254.169.254/computeMetadata/v1/instance/name)"
+echo "Page served from: $vm_hostname" | tee /var/www/html/index.html
+systemctl restart apache2</pre></li>
+</ol>
+<h3>2. Grupo gerenciado de instâncias (console)</h3>
+<ol>
+<li><span class="caminho">Compute Engine › Grupos de instâncias › Criar grupo de instâncias</span> › <b>Novo grupo gerenciado de instâncias (sem estado)</b>.</li>
+<li><b>Nome:</b> <code>lb-backend-group</code> · <b>Modelo:</b> <code>lb-backend-template</code> · <b>Local:</b> Zona única, <span class="v">ZONA</span>.</li>
+<li><b>Escalonamento automático:</b> mínimo 2 instâncias.</li>
+<li><b>Mapeamento de portas:</b> adicione a porta nomeada <code>http</code> › <code>80</code>.</li>
+</ol>
+<h3>3. Firewall para as verificações de integridade (console)</h3>
+<ol>
+<li><span class="caminho">Rede VPC › Firewall › Criar regra de firewall</span>.</li>
+<li><b>Nome:</b> <code>fw-allow-health-check</code> · <b>Rede:</b> default · <b>Entrada</b> · <b>Permitir</b>.</li>
+<li><b>Tags de destino:</b> <code>allow-health-check</code>.</li>
+<li><b>Intervalos de origem:</b> <code>130.211.0.0/22</code> e <code>35.191.0.0/16</code> · <b>TCP</b> <code>80</code>.</li>
+</ol>
+<h3>4. IP externo global (console)</h3>
+<ol>
+<li><span class="caminho">Rede VPC › Endereços IP › Reservar endereço IP externo estático</span>.</li>
+<li><b>Nome:</b> <code>lb-ipv4-1</code> · <b>IPv4</b> · <b>Tipo: Global</b>.</li>
+</ol>
+<div class="box cmd"><b class="t">5. Balanceador por comando (os nomes exigidos não são configuráveis no console)</b>
+<pre>gcloud compute health-checks create http http-basic-check --port 80
+
+gcloud compute backend-services create web-backend-service \
+  --protocol=HTTP --port-name=http \
+  --health-checks=http-basic-check --global
+
+gcloud compute backend-services add-backend web-backend-service \
+  --instance-group=lb-backend-group \
+  --instance-group-zone=ZONA --global
+
+gcloud compute url-maps create web-map-http \
+  --default-service web-backend-service
+
+gcloud compute target-http-proxies create http-lb-proxy \
+  --url-map web-map-http
+
+gcloud compute forwarding-rules create http-content-rule \
+  --address=lb-ipv4-1 --global \
+  --target-http-proxy=http-lb-proxy --ports=80</pre></div>
+<p><b>Conferir (pelo console):</b> <span class="caminho">Serviços de rede › Balanceamento de carga</span> › clique em <code>web-map-http</code>. Abra <code>http://IP-do-balanceador/</code>. Pode levar de 3 a 5 minutos; aparece "Page served from: lb-backend-group-xxxx".</p>
+<div class="box alerta"><b class="t">Erros comuns</b><ul>
+<li>VM em zona errada ou sem a tag de rede: o firewall não se aplica.</li>
+<li>Esquecer a porta nomeada <code>http:80</code> no grupo: o serviço de back-end não encontra a porta.</li>
+<li>Testar o HTTP antes de 5 minutos e achar que falhou. Aguarde e atualize.</li></ul></div>
+<footer>Estratégia de resolução preparada para a turma. Siga sempre o roteiro do laboratório: os nomes, a região e a zona mostrados no painel do lab têm prioridade sobre qualquer exemplo desta página.</footer>
+</div></body></html>
