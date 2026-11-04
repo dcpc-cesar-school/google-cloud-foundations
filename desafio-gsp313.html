@@ -69,6 +69,8 @@ O console do lab abre em <b>inglês</b>, e esta página usa os nomes dos botões
 <li><b>Edge:</b> clique no ícone de tradução na barra de endereço e escolha <b>Nunca traduzir</b> (inglês).</li>
 </ul>
 Faça isso na janela anônima que você usa no lab.</div>
+<div class="box regra"><b class="t">🧭 Produto que não aparece no menu</b>
+O <b>Menu de navegação (☰)</b> mostra só os produtos fixados. Se algum item do caminho não aparecer, clique em <span class="ui">View all products</span> e procure na categoria (por exemplo, <b>Networking › Network services</b>). Outra opção é digitar o nome (ex.: <code>Load balancing</code>) na barra de busca no topo do console.</div>
 <p>No painel do lab, anote a <span class="v">REGIÃO</span> e a <span class="v">ZONA</span>. Todos os recursos ficam nelas, salvo indicação diferente.</p>
 <div class="box cmd"><b class="t">Onde o console não basta</b>
 O console atual não cria <b>pool de destino</b> (tarefa 2) nem permite escolher o nome do <b>proxy HTTP</b> (tarefa 3). Como o roteiro exige os nomes
@@ -221,20 +223,22 @@ echo "&lt;h3&gt;Servidor da web: web3&lt;/h3&gt;" | tee /var/www/html/index.html
 <div class="box cmd"><b class="t">Por comando (o console não cria pool de destino)</b>
 <ol>
 <li>No topo do console, clique em <span class="ui">Activate Cloud Shell</span> (ícone <b>&gt;_</b>) e depois em <span class="ui">Continue</span>. Se pedir, clique em <span class="ui">Authorize</span>.</li>
-<li>Rode os comandos abaixo, trocando <span class="v">REGIÃO</span> e <span class="v">ZONA</span>:</li>
+<li>Rode os 4 comandos abaixo <b>um de cada vez</b>, trocando <span class="v">REGIÃO</span> e <span class="v">ZONA</span>. Cole um bloco, tecle Enter e espere o comando terminar (o cursor do Cloud Shell volta a aparecer) antes de colar o próximo. Se aparecer uma pergunta <code>(Y/n)</code>, digite <code>Y</code> e tecle Enter.</li>
 </ol>
-<pre>gcloud compute http-health-checks create basic-check
-
-gcloud compute target-pools create www-pool \
-  --region=REGIÃO --http-health-check basic-check
-
-gcloud compute target-pools add-instances www-pool \
-  --instances web1,web2,web3 --instances-zone=ZONA
-
-gcloud compute forwarding-rules create www-rule \
+<p><b>1. Criar a verificação de integridade</b> <code>basic-check</code>:</p>
+<pre>gcloud compute http-health-checks create basic-check</pre>
+<p><b>2. Criar o pool de destino</b> <code>www-pool</code>:</p>
+<pre>gcloud compute target-pools create www-pool \
+  --region=REGIÃO --http-health-check basic-check</pre>
+<p><b>3. Adicionar as três VMs ao pool:</b></p>
+<pre>gcloud compute target-pools add-instances www-pool \
+  --instances web1,web2,web3 --instances-zone=ZONA \
+  --region=REGIÃO</pre>
+<p><b>4. Criar a regra de encaminhamento</b> <code>www-rule</code> na porta 80, usando o IP <code>network-lb-ip-1</code>:</p>
+<pre>gcloud compute forwarding-rules create www-rule \
   --region=REGIÃO --ports 80 \
   --address network-lb-ip-1 --target-pool www-pool</pre></div>
-<p><b>Conferir:</b> em <span class="caminho">Network services › Load balancing</span> aparece o balanceador com o pool <code>www-pool</code>. Abra o IP <code>network-lb-ip-1</code> no navegador e atualize algumas vezes: a resposta alterna entre web1, web2 e web3.</p>
+<p><b>Conferir:</b> em <span class="caminho">Menu de navegação (☰) › View all products › Networking › Network services › Load balancing</span> aparece o balanceador com o pool <code>www-pool</code>. Abra o IP <code>network-lb-ip-1</code> no navegador e atualize algumas vezes: a resposta alterna entre web1, web2 e web3.</p>
 <p>Volte ao roteiro e clique em <b>Verificar meu progresso</b> da tarefa 2.</p>
 
 <h2>Tarefa 3: criar o balanceador HTTP<span class="pts">45 pontos</span></h2>
@@ -307,7 +311,7 @@ gcloud compute target-http-proxies create http-lb-proxy \
 gcloud compute forwarding-rules create http-content-rule \
   --address=lb-ipv4-1 --global \
   --target-http-proxy=http-lb-proxy --ports=80</pre></div>
-<p><b>Conferir (pelo console):</b> <span class="caminho">Network services › Load balancing</span> › clique em <code>web-map-http</code>. Copie o IP em <span class="ui">Frontend</span> e abra <code>http://IP-do-balanceador/</code>. Pode levar de 3 a 5 minutos; aparece "Page served from: lb-backend-group-xxxx".</p>
+<p><b>Conferir (pelo console):</b> <span class="caminho">Menu de navegação (☰) › View all products › Networking › Network services › Load balancing</span> › clique em <code>web-map-http</code>. Copie o IP em <span class="ui">Frontend</span> e abra <code>http://IP-do-balanceador/</code>. Pode levar de 3 a 5 minutos; aparece "Page served from: lb-backend-group-xxxx".</p>
 <p>Volte ao roteiro e clique em <b>Verificar meu progresso</b> da tarefa 3.</p>
 <div class="box alerta"><b class="t">Erros comuns</b><ul>
 <li>VM em zona errada ou sem a tag de rede: o firewall não se aplica.</li>
