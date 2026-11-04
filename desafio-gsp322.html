@@ -22,15 +22,27 @@ li{margin:5px 0}
 code,.v{font-family:Consolas,'Courier New',monospace;font-size:.92em}
 code{background:#f1f3f4;padding:1px 6px;border-radius:4px}
 .v{background:#fff3cd;padding:1px 6px;border-radius:4px;border:1px dashed #f9ab00}
+.ui{font-weight:600;background:#e8f0fe;color:#174ea6;padding:0 5px;border-radius:4px;white-space:nowrap}
+.fim{font-weight:600}
+.btn{display:inline-block;font-family:"Google Sans",Roboto,Arial,sans-serif;font-weight:500;font-size:.9em;background:#1a73e8;color:#fff;padding:1px 12px;border-radius:4px;white-space:nowrap;line-height:1.6}
 pre{background:#202124;color:#e8eaed;padding:14px 16px;border-radius:10px;overflow-x:auto;margin:10px 0;font-size:.88em;line-height:1.45}
-table{border-collapse:collapse;width:100%;margin:10px 0;font-size:.95em}
-th,td{border:1px solid #dadce0;padding:7px 10px;text-align:left;vertical-align:top}
-th{background:#f1f3f4}
 .caminho{color:#188038;font-weight:600}
+details.antes{margin:34px 0 12px;border:1px solid #dadce0;border-radius:10px;background:#fff}
+details.antes>summary{cursor:pointer;list-style:none;padding:14px 18px;font-size:1.3em;font-weight:700;color:#202124;display:flex;align-items:center;gap:10px;border-left:6px solid var(--cor);border-radius:10px}
+details.antes>summary::-webkit-details-marker{display:none}
+details.antes>summary::before{content:"▸";color:var(--cor);transition:transform .15s}
+details.antes[open]>summary::before{transform:rotate(90deg)}
+details.antes>summary .dica{font-size:.62em;font-weight:400;color:#5f6368;margin-left:auto}
+details.antes[open]>summary .dica{display:none}
+details.antes>summary:focus-visible{outline:2px solid var(--cor);outline-offset:2px}
+details.antes .corpo{padding:0 18px 6px}
+details.erros{background:#fce8e6;border-color:#f6aea9}
+details.erros>summary{border-left-color:#d93025}
+details.erros>summary::before{color:#d93025}
 .alt{margin-top:36px;text-align:center;font-size:.8em;color:#9aa0a6}
 .alt a{color:#9aa0a6}
 footer{margin-top:10px;color:#80868b;font-size:.85em;text-align:center}
-@media(max-width:600px){.container{padding:22px 16px}h1{font-size:1.45em}}
+@media(max-width:600px){.container{padding:22px 16px}h1{font-size:1.45em}.ui{white-space:normal}details.antes>summary .dica{display:none}}
 </style></head><body style="--cor:#e69138;--claro:#fef3e6"><div class="container">
 <a class="voltar" href="index.html">← Voltar às fases</a>
 <div class="fase">Fase 3 · Selo 6 · 📅 Encontro 3: 04/11</div>
@@ -41,71 +53,160 @@ footer{margin-top:10px;color:#80868b;font-size:.85em;text-align:center}
 <li><b>Link direto:</b> <a href="https://www.skills.google/paths/36/course_templates/654/labs/592556" target="_blank" rel="noopener">abrir o laboratório com desafio no Google Skills</a>.</li>
 <li><b>Pela busca:</b> entre em <a href="https://www.skills.google" target="_blank" rel="noopener">skills.google</a> e pesquise por <code>GSP322</code> ou pelo nome do selo, <i>Como criar uma rede segura do Google Cloud</i>.</li>
 </ul>Entre com a mesma conta que você usa no curso.</div>
-<h2>Antes de começar</h2>
+
+<details class="antes">
+<summary>Antes de começar <span class="dica">clique para abrir</span></summary>
+<div class="corpo">
 <div class="box regra"><b class="t">Regras de ouro</b>
 <ul>
 <li>Abra o lab em janela anônima e use só o usuário e a senha do laboratório.</li>
-<li>Os valores em <span class="v">amarelo</span> (nomes, região e zona) mudam a cada execução: copie do <b>painel do lab</b>, à esquerda do roteiro.</li>
-<li>Faça pelo <b>console</b>. Use comandos apenas onde esta página indicar, e sempre no Cloud Shell do projeto do lab.</li>
+<li>Os valores em <span class="v">amarelo</span> (tags de rede, zona) mudam a cada execução: copie do <b>roteiro do lab</b> depois de clicar em <b>Iniciar laboratório</b>.</li>
+<li>Faça pelo <b>console</b>. Use comandos apenas onde esta página indicar.</li>
 <li>Ao final de cada tarefa, clique em <b>Verificar meu progresso</b>. Se não passar, leia a mensagem, corrija e verifique de novo.</li>
 <li>Não clique em <b>Terminar o laboratório</b> antes de todas as tarefas estarem verificadas.</li>
 </ul></div>
-<p>Cenário: site <b>juice-shop</b> do Jeferson. No painel do lab, anote as três <span class="v">TAGS DE REDE</span>: a do SSH pelo IAP, a do HTTP e a do SSH interno.</p>
-<div class="box regra"><b class="t">Objetivo final da segurança</b><ul>
-<li>O bastion host não tem IP público e só recebe SSH vindo do IAP.</li>
-<li>O juice-shop só recebe SSH vindo do bastion (sub-rede <code>acme-mgmt-subnet</code>).</li>
-<li>Só o HTTP (porta 80) do juice-shop fica aberto ao público.</li></ul></div>
-<h2>1. Remover as regras abertas demais<span class="pts">10 pontos</span></h2>
+<div class="box alerta"><b class="t">🌐 Desative a tradução automática do navegador</b>
+O console do lab abre em <b>inglês</b>, e esta página usa os nomes dos botões e campos em inglês, <span class="ui">assim</span>. Se o navegador traduzir a página, os nomes deixam de bater com o tutorial e a tradução pode alterar nomes de recursos e comandos que você copia.
+<ul>
+<li><b>Chrome:</b> clique no ícone de tradução na barra de endereço e escolha <b>Mostrar original</b> e depois <b>Nunca traduzir este site</b>. Ou desligue em <span class="caminho">Configurações › Idiomas › Google Tradutor</span>.</li>
+<li><b>Edge:</b> clique no ícone de tradução na barra de endereço e escolha <b>Nunca traduzir</b> (inglês).</li>
+</ul>
+Faça isso na janela anônima que você usa no lab.</div>
+<div class="box regra"><b class="t">🧭 Produto que não aparece no menu</b>
+O <b>Menu de navegação (☰)</b> mostra só os produtos fixados. Se algum item do caminho não aparecer, clique em <span class="ui">View all products</span> e procure na categoria (por exemplo, <b>Networking › VPC network</b>). Outra opção é digitar o nome (ex.: <code>Firewall</code>) na barra de busca no topo do console.</div>
+<div class="box regra"><b class="t">📝 Anote as 3 tags de rede do seu lab</b>
+Depois de clicar em <b>Iniciar laboratório</b>, o roteiro mostra as tags nos passos 3, 4 e 5 (no trecho "tag de rede de ..."). Elas mudam a cada execução. Anote:
+<ul>
+<li><span class="v">TAG SSH IAP</span>: a do passo 3 (SSH pelo IAP para o bastion);</li>
+<li><span class="v">TAG HTTP</span>: a do passo 4 (HTTP público para o juice-shop);</li>
+<li><span class="v">TAG SSH INTERNO</span>: a do passo 5 (SSH do bastion para o juice-shop).</li>
+</ul></div>
+</div>
+</details>
 
+<div class="box regra"><b class="t">Cenário e objetivo</b>
+O site <b>juice-shop</b> do Jeferson está na VPC <code>acme-vpc</code>, com uma configuração de firewall aberta demais. Ao final:
+<ul>
+<li>o bastion host <b>não tem IP público</b> e só recebe SSH vindo do <b>IAP</b>;</li>
+<li>o juice-shop só recebe SSH vindo do bastion (sub-rede <code>acme-mgmt-subnet</code>);</li>
+<li>só o HTTP (porta 80) do juice-shop fica aberto ao público.</li>
+</ul>
+O roteiro avisa: <b>permissões muito flexíveis são marcadas como incorretas</b>. Nunca use <code>0.0.0.0/0</code> nas regras de SSH.</div>
+
+<h2>1. Remover as regras excessivamente flexíveis<span class="pts">10 pontos</span></h2>
 <ol>
-<li><span class="caminho">Menu › Rede VPC › Firewall</span>.</li>
-<li>Procure regras com origem <code>0.0.0.0/0</code> liberando tudo (por exemplo, "open-access" ou todas as portas).</li>
-<li>Marque a regra e clique em <b>Excluir</b>. Deixe as regras que não são excessivamente abertas.</li>
+<li><span class="caminho">Menu de navegação (☰) › VPC network › Firewall</span>.</li>
+<li>Na lista, olhe as regras da rede <code>acme-vpc</code>. Procure a que libera tudo para qualquer origem: <span class="ui">Source IPv4 ranges</span> <code>0.0.0.0/0</code> com <span class="ui">Protocols and ports</span> <b>Allow all</b> (normalmente chamada <code>open-access</code>).</li>
+<li>Marque a caixa da regra e clique em <span class="ui">Delete</span>.</li>
+<li class="fim">Na janela de confirmação, clique em <span class="btn">Delete</span>.</li>
 </ol>
+<p>Deixe as demais regras como estão.</p>
+<p>Volte ao roteiro e clique em <b>Verificar meu progresso</b> de "Remova regras excessivamente flexíveis".</p>
+
 <h2>2. Iniciar o bastion host<span class="pts">10 pontos</span></h2>
-
 <ol>
-<li><span class="caminho">Menu › Compute Engine › Instâncias de VM</span>.</li>
-<li>Marque a VM do bastion (está parada) e clique em <b>Iniciar/Retomar</b>.</li>
+<li><span class="caminho">Menu de navegação (☰) › Compute Engine › VM instances</span>.</li>
+<li>Na linha da VM <code>bastion</code> (está parada), clique em <span class="ui">⋮</span> (<span class="ui">More actions</span>) › <span class="ui">Start / Resume</span>.</li>
+<li class="fim">Na janela de confirmação, clique em <span class="btn">Start</span>. Espere o ícone verde aparecer.</li>
+<li><b>Confira o IP público:</b> na coluna <span class="ui">External IP</span>, o <code>bastion</code> deve aparecer <b>sem endereço</b>. Se tiver um IP, clique no nome <code>bastion</code> › <span class="ui">Edit</span> › <span class="ui">Network interfaces</span> › abra a interface › em <span class="ui">External IPv4 address</span>, selecione a opção <b>None</b> › <span class="btn">Done</span> › <span class="btn">Save</span>.</li>
 </ol>
+<p>Anote também a <span class="v">ZONA</span> das VMs (coluna <span class="ui">Zone</span>). Ela é usada no passo 6.</p>
+<p>Volte ao roteiro e clique em <b>Verificar meu progresso</b> de "Inicie a instância do Bastion Host".</p>
+
 <h2>3. SSH pelo IAP para o bastion<span class="pts">20 pontos</span></h2>
-
+<h3>Criar a regra de firewall</h3>
 <ol>
-<li><span class="caminho">Rede VPC › Firewall › Criar regra de firewall</span>.</li>
-<li><b>Rede:</b> a VPC do lab (a mesma das VMs) · <b>Entrada</b> · <b>Permitir</b>.</li>
-<li><b>Tags de destino:</b> <span class="v">TAG SSH IAP</span>.</li>
-<li><b>Intervalo IPv4 de origem:</b> <code>35.235.240.0/20</code> (faixa do IAP) · <b>TCP</b> <code>22</code>.</li>
-<li>Adicione a tag na VM: <span class="caminho">Compute Engine › Instâncias de VM › bastion › Editar › Tags de rede</span> › <span class="v">TAG SSH IAP</span> › <b>Salvar</b>.</li>
+<li><span class="caminho">Menu de navegação (☰) › VPC network › Firewall</span> e clique em <span class="ui">Create firewall rule</span>.</li>
+<li><span class="ui">Name</span>: um nome à sua escolha, por exemplo <code>allow-ssh-iap</code>.</li>
+<li><span class="ui">Network</span>: selecione a opção <code>acme-vpc</code> (não use <b>default</b>).</li>
+<li><span class="ui">Direction of traffic</span>: <b>Ingress</b> · <span class="ui">Action on match</span>: <b>Allow</b>.</li>
+<li><span class="ui">Targets</span>: selecione a opção <b>Specified target tags</b> · <span class="ui">Target tags</span>: <span class="v">TAG SSH IAP</span> (tecle Enter).</li>
+<li><span class="ui">Source filter</span>: <b>IPv4 ranges</b> · <span class="ui">Source IPv4 ranges</span>: <code>35.235.240.0/20</code> (é a faixa fixa do serviço IAP).</li>
+<li><span class="ui">Protocols and ports</span>: <b>Specified protocols and ports</b> › marque <b>TCP</b> › <span class="ui">Ports</span>: <code>22</code>.</li>
+<li class="fim">Clique em <span class="btn">Create</span>.</li>
 </ol>
+<h3>Colocar a tag no bastion</h3>
+<ol>
+<li><span class="caminho">Menu de navegação (☰) › Compute Engine › VM instances</span> e clique no nome <code>bastion</code>.</li>
+<li>No topo da página da VM, clique em <span class="ui">Edit</span>.</li>
+<li>Em <span class="ui">Network tags</span>, digite <span class="v">TAG SSH IAP</span> e tecle Enter. Não apague as tags que já existirem.</li>
+<li class="fim">Role até o fim da página e clique em <span class="btn">Save</span>.</li>
+</ol>
+<p>Volte ao roteiro e clique em <b>Verificar meu progresso</b> do passo 3.</p>
+
 <h2>4. HTTP público para o juice-shop<span class="pts">20 pontos</span></h2>
-
+<h3>Criar a regra de firewall</h3>
 <ol>
-<li>Nova regra de firewall: <b>Entrada</b> · <b>Permitir</b> · <b>Tags de destino:</b> <span class="v">TAG HTTP</span>.</li>
-<li><b>Origem:</b> <code>0.0.0.0/0</code> · <b>TCP</b> <code>80</code>.</li>
-<li>Adicione a tag <span class="v">TAG HTTP</span> na VM <b>juice-shop</b> (Editar › Tags de rede).</li>
+<li><span class="caminho">Menu de navegação (☰) › VPC network › Firewall</span> e clique em <span class="ui">Create firewall rule</span>.</li>
+<li><span class="ui">Name</span>: por exemplo <code>allow-http</code>.</li>
+<li><span class="ui">Network</span>: selecione a opção <code>acme-vpc</code>.</li>
+<li><span class="ui">Direction of traffic</span>: <b>Ingress</b> · <span class="ui">Action on match</span>: <b>Allow</b>.</li>
+<li><span class="ui">Targets</span>: selecione a opção <b>Specified target tags</b> · <span class="ui">Target tags</span>: <span class="v">TAG HTTP</span>.</li>
+<li><span class="ui">Source filter</span>: <b>IPv4 ranges</b> · <span class="ui">Source IPv4 ranges</span>: <code>0.0.0.0/0</code> (aqui é público, como o roteiro pede).</li>
+<li><span class="ui">Protocols and ports</span>: <b>Specified protocols and ports</b> › marque <b>TCP</b> › <span class="ui">Ports</span>: <code>80</code>.</li>
+<li class="fim">Clique em <span class="btn">Create</span>.</li>
 </ol>
-<h2>5. SSH interno: do bastion para o juice-shop<span class="pts">20 pontos</span></h2>
-
+<h3>Colocar a tag no juice-shop</h3>
 <ol>
-<li>Descubra o intervalo da sub-rede: <span class="caminho">Rede VPC › Redes VPC › acme-vpc › Sub-redes</span> › anote o intervalo de <code>acme-mgmt-subnet</code>.</li>
-<li>Nova regra: <b>Entrada</b> · <b>Permitir</b> · <b>Tags de destino:</b> <span class="v">TAG SSH INTERNO</span>.</li>
-<li><b>Origem:</b> o intervalo da <code>acme-mgmt-subnet</code> · <b>TCP</b> <code>22</code>.</li>
-<li>Adicione a tag <span class="v">TAG SSH INTERNO</span> na VM <b>juice-shop</b>.</li>
+<li><span class="caminho">Menu de navegação (☰) › Compute Engine › VM instances</span> e clique no nome <code>juice-shop</code>.</li>
+<li>Clique em <span class="ui">Edit</span>.</li>
+<li>Em <span class="ui">Network tags</span>, digite <span class="v">TAG HTTP</span> e tecle Enter.</li>
+<li class="fim">Clique em <span class="btn">Save</span>.</li>
 </ol>
-<h2>6. Conectar ao juice-shop pelo bastion<span class="pts">20 pontos</span></h2>
+<p>Volte ao roteiro e clique em <b>Verificar meu progresso</b> do passo 4.</p>
 
+<h2>5. SSH do bastion para o juice-shop<span class="pts">20 pontos</span></h2>
+<h3>Descobrir o intervalo da sub-rede de gerenciamento</h3>
 <ol>
-<li>Em <b>Instâncias de VM</b>, clique em <b>SSH</b> na linha do bastion (a conexão passa pelo IAP).</li>
-<li>Anote o <b>IP interno</b> do juice-shop na lista de VMs.</li>
+<li><span class="caminho">Menu de navegação (☰) › VPC network › VPC networks</span> e clique em <code>acme-vpc</code>.</li>
+<li>Abra a aba <span class="ui">Subnets</span> e anote o <span class="ui">Internal IP ranges</span> da <code>acme-mgmt-subnet</code> (algo como <code>192.168.10.0/24</code>). Esse é o <span class="v">INTERVALO MGMT</span>.</li>
+</ol>
+<h3>Criar a regra de firewall</h3>
+<ol>
+<li><span class="caminho">Menu de navegação (☰) › VPC network › Firewall</span> e clique em <span class="ui">Create firewall rule</span>.</li>
+<li><span class="ui">Name</span>: por exemplo <code>allow-ssh-mgmt</code>.</li>
+<li><span class="ui">Network</span>: selecione a opção <code>acme-vpc</code>.</li>
+<li><span class="ui">Direction of traffic</span>: <b>Ingress</b> · <span class="ui">Action on match</span>: <b>Allow</b>.</li>
+<li><span class="ui">Targets</span>: selecione a opção <b>Specified target tags</b> · <span class="ui">Target tags</span>: <span class="v">TAG SSH INTERNO</span>.</li>
+<li><span class="ui">Source filter</span>: <b>IPv4 ranges</b> · <span class="ui">Source IPv4 ranges</span>: o <span class="v">INTERVALO MGMT</span> anotado acima.</li>
+<li><span class="ui">Protocols and ports</span>: <b>Specified protocols and ports</b> › marque <b>TCP</b> › <span class="ui">Ports</span>: <code>22</code>.</li>
+<li class="fim">Clique em <span class="btn">Create</span>.</li>
+</ol>
+<h3>Colocar a tag no juice-shop</h3>
+<ol>
+<li><span class="caminho">Menu de navegação (☰) › Compute Engine › VM instances</span> e clique no nome <code>juice-shop</code>.</li>
+<li>Clique em <span class="ui">Edit</span>.</li>
+<li>Em <span class="ui">Network tags</span>, digite <span class="v">TAG SSH INTERNO</span> e tecle Enter. A <span class="v">TAG HTTP</span> do passo 4 deve continuar lá.</li>
+<li class="fim">Clique em <span class="btn">Save</span>.</li>
+</ol>
+<p>Volte ao roteiro e clique em <b>Verificar meu progresso</b> do passo 5.</p>
+
+<h2>6. Conectar ao bastion pelo IAP e ao juice-shop pelo bastion<span class="pts">20 pontos</span></h2>
+<ol>
+<li><span class="caminho">Menu de navegação (☰) › Compute Engine › VM instances</span>.</li>
+<li>Na linha do <code>bastion</code>, clique em <span class="ui">SSH</span>. Uma janela abre e se conecta pelo IAP (o bastion não tem IP público). Se pedir, clique em <span class="btn">Authorize</span>.</li>
 </ol>
 <div class="box cmd"><b class="t">Por comando (dentro da janela SSH do bastion)</b>
-Esta é a única parte que exige comando, porque a conexão sai de dentro do bastion:
-<pre>ssh IP-INTERNO-DO-JUICE-SHOP</pre>
-Se pedir confirmação, digite <code>yes</code>. Ao conectar, volte ao lab e verifique o progresso.</div>
-<div class="box alerta"><b class="t">Erros comuns</b><ul>
-<li>Criar a regra na rede errada (default em vez da VPC do lab).</li>
-<li>Criar a regra mas esquecer de colocar a tag na VM.</li>
-<li>Usar <code>0.0.0.0/0</code> nas regras de SSH: é marcado como permissão excessiva.</li></ul></div>
+Esta é a única parte que exige comando, porque a conexão sai de dentro do bastion. Rode os blocos <b>um de cada vez</b>, trocando <span class="v">ZONA</span>.
+<p><b>1. Conectar ao juice-shop pelo IP interno:</b></p>
+<pre>gcloud compute ssh juice-shop --internal-ip --zone=ZONA</pre>
+<p>Se perguntar <code>Do you want to continue (Y/n)?</code>, digite <code>Y</code> e tecle Enter. Se pedir uma <i>passphrase</i>, só tecle Enter duas vezes (deixe em branco).</p>
+<p><b>2. Conferir que está no juice-shop:</b> o prompt muda para algo como <code>usuario@juice-shop:~$</code>. Se quiser confirmar:</p>
+<pre>hostname</pre>
+</div>
+<p>Com a conexão aberta, volte ao roteiro e clique em <b>Verificar meu progresso</b> do passo 6.</p>
+
+<details class="antes erros">
+<summary>⚠️ Erros comuns <span class="dica">clique para abrir</span></summary>
+<div class="corpo"><ul>
+<li>Criar a regra na rede <b>default</b> em vez da <code>acme-vpc</code>: a regra não vale para as VMs do lab.</li>
+<li>Criar a regra mas esquecer de colocar a tag na VM (ou clicar em <b>Save</b>).</li>
+<li>Usar <code>0.0.0.0/0</code> nas regras de SSH: é marcado como permissão excessiva.</li>
+<li>Digitar a tag errada: copie do roteiro, letra por letra. A tag da regra e a da VM precisam ser idênticas.</li>
+<li>Botão <b>SSH</b> do bastion não conecta: confira a regra do IAP (<code>35.235.240.0/20</code>, TCP 22) e a <span class="v">TAG SSH IAP</span> no bastion. O roteiro sugere rodar o comando com <code>--troubleshoot</code> para ver o motivo.</li>
+<li>Nomes de botões diferentes dos desta página: a tradução automática do navegador está ligada. Veja "Antes de começar".</li>
+</ul></div>
+</details>
 <p class="alt">Prefere fazer pelo terminal? <a href="cli-gsp322.html" target="_blank" rel="noopener">Versão por linha de comando</a></p>
-<footer>Estratégia de resolução preparada para a turma. Siga sempre o roteiro do laboratório: os nomes, a região e a zona mostrados no painel do lab têm prioridade sobre qualquer exemplo desta página.</footer>
+<footer>Estratégia de resolução preparada para a turma. Siga sempre o roteiro do laboratório: as tags de rede e a zona mostradas no lab têm prioridade sobre qualquer exemplo desta página.</footer>
 </div></body></html>
