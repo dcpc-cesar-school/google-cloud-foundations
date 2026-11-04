@@ -78,20 +78,11 @@ O console atual não cria <b>pool de destino</b> (tarefa 2) nem permite escolher
 
 <h2>Tarefa 1: criar três servidores web<span class="pts">20 pontos</span></h2>
 <p><b>O que o roteiro pede:</b> três VMs (<code>web1</code>, <code>web2</code>, <code>web3</code>) com Apache e a regra de firewall <code>www-firewall-network-lb</code> liberando HTTP.</p>
-<h3>Primeiro: criar a regra de firewall</h3>
-<p>O roteiro pede a regra depois das VMs, mas a ordem não muda a correção. Criando a regra antes, você já consegue testar cada servidor web logo depois de criá-lo.</p>
-<ol>
-<li><span class="caminho">Navigation menu › VPC network › Firewall</span> e clique em <span class="ui">Create firewall rule</span>.</li>
-<li><span class="ui">Name</span>: <code>www-firewall-network-lb</code>.</li>
-<li><span class="ui">Network</span>: <b>default</b> · <span class="ui">Direction of traffic</span>: <b>Ingress</b> · <span class="ui">Action on match</span>: <b>Allow</b>.</li>
-<li><span class="ui">Targets</span>: <b>Specified target tags</b> · <span class="ui">Target tags</span>: <code>network-lb-tag</code>.</li>
-<li><span class="ui">Source filter</span>: <b>IPv4 ranges</b> · <span class="ui">Source IPv4 ranges</span>: <code>0.0.0.0/0</code>.</li>
-<li><span class="ui">Protocols and ports</span>: <b>Specified protocols and ports</b> › marque <b>TCP</b> › <span class="ui">Ports</span>: <code>80</code>.</li>
-<li class="fim">Clique em <span class="btn">Create</span>.</li>
-</ol>
 <div class="box regra"><b class="t">O que muda em cada VM</b>
 Você vai criar 3 VMs com o mesmo roteiro. Em cada uma, altere só estes campos e deixe o resto como está: <b>nome</b>, <b>região</b>, <b>zona</b>, <b>tipo de máquina</b>, <b>versão do Debian</b>, <b>tag de rede</b> e <b>script de inicialização</b>.
 <br><br><b>Precisa de <code>sudo</code> no script?</b> Não. O script de inicialização (<i>startup script</i>) já roda como <b>root</b> quando a VM liga, então os comandos funcionam sem <code>sudo</code>. Use o script exatamente como está abaixo.</div>
+<div class="box alerta"><b class="t">Por que conferir o log</b>
+Às vezes, logo após ligar a VM, o próprio Debian já está usando o instalador de pacotes. O script encontra o instalador ocupado (<code>Could not get lock</code>), não instala o Apache e termina com erro. Não é erro seu: um <b>Reset</b> resolve.</div>
 <h3>Criar a VM <code>web1</code></h3>
 <ol>
 <li><span class="caminho">Navigation menu (☰) › Compute Engine › VM instances</span> e clique em <span class="ui">Create instance</span>.</li>
@@ -116,12 +107,15 @@ apt-get install apache2 -y
 service apache2 restart
 echo "&lt;h3&gt;Servidor da web: web1&lt;/h3&gt;" | tee /var/www/html/index.html</pre></li>
 <li class="fim">Clique em <span class="btn">Create</span> e espere a <code>web1</code> aparecer com o ícone verde na lista.</li>
-<li><b>Teste o servidor web:</b> na lista de <span class="caminho">VM instances</span>, na linha da <code>web1</code>, clique no endereço da coluna <span class="ui">External IP</span>. Uma nova aba abre e deve mostrar <b>Servidor da web: web1</b>.
-<ul>
-<li>Se der erro, aguarde 1 a 2 minutos (o script ainda está instalando o Apache) e atualize a aba.</li>
-<li>Confira se o endereço começa com <b>http://</b>. Se o navegador trocar para https://, apague o "s" e tecle Enter.</li>
-<li>Se continuar sem abrir, confira a tag <code>network-lb-tag</code> na VM e a regra <code>www-firewall-network-lb</code>.</li>
-</ul></li>
+<li><b>Confira no log se o Apache foi instalado:</b>
+<ol type="a">
+<li>Na lista de <span class="caminho">VM instances</span>, clique no nome <code>web1</code>.</li>
+<li>Na aba <span class="ui">Details</span>, em <span class="ui">Logs</span>, clique em <span class="ui">Serial port 1 (console)</span>.</li>
+<li>Aguarde 1 a 2 minutos e clique em <span class="ui">Refresh</span>. Use Ctrl+F e procure por <code>startup-script</code>.</li>
+<li><b>Deu certo</b> se aparecer <code>Setting up apache2</code> e <b>não</b> aparecer <code>failed with error</code>. Siga para a próxima VM.</li>
+<li><b>Falhou</b> se aparecer <code>Could not get lock</code>, <code>apache2.service not found</code> ou <code>Script "startup-script" failed with error</code>. Faça o reset abaixo.</li>
+</ol></li>
+<li><b>Se falhou, clique em Reset:</b> volte a <span class="caminho">VM instances</span>, na linha da <code>web1</code> clique em <span class="ui">⋮</span> (<span class="ui">More actions</span>) › <span class="ui">Reset</span> e confirme em <span class="btn">Reset</span>. O script roda de novo quando a VM reinicia. Espere 2 minutos e confira o log outra vez, olhando as <b>últimas linhas</b>: a falha anterior continua aparecendo mais acima.</li>
 </ol>
 <h3>Criar a VM <code>web2</code></h3>
 <ol>
@@ -147,12 +141,15 @@ apt-get install apache2 -y
 service apache2 restart
 echo "&lt;h3&gt;Servidor da web: web2&lt;/h3&gt;" | tee /var/www/html/index.html</pre></li>
 <li class="fim">Clique em <span class="btn">Create</span> e espere a <code>web2</code> aparecer com o ícone verde na lista.</li>
-<li><b>Teste o servidor web:</b> na lista de <span class="caminho">VM instances</span>, na linha da <code>web2</code>, clique no endereço da coluna <span class="ui">External IP</span>. Uma nova aba abre e deve mostrar <b>Servidor da web: web2</b>.
-<ul>
-<li>Se der erro, aguarde 1 a 2 minutos (o script ainda está instalando o Apache) e atualize a aba.</li>
-<li>Confira se o endereço começa com <b>http://</b>. Se o navegador trocar para https://, apague o "s" e tecle Enter.</li>
-<li>Se continuar sem abrir, confira a tag <code>network-lb-tag</code> na VM e a regra <code>www-firewall-network-lb</code>.</li>
-</ul></li>
+<li><b>Confira no log se o Apache foi instalado:</b>
+<ol type="a">
+<li>Na lista de <span class="caminho">VM instances</span>, clique no nome <code>web2</code>.</li>
+<li>Na aba <span class="ui">Details</span>, em <span class="ui">Logs</span>, clique em <span class="ui">Serial port 1 (console)</span>.</li>
+<li>Aguarde 1 a 2 minutos e clique em <span class="ui">Refresh</span>. Use Ctrl+F e procure por <code>startup-script</code>.</li>
+<li><b>Deu certo</b> se aparecer <code>Setting up apache2</code> e <b>não</b> aparecer <code>failed with error</code>. Siga para a próxima VM.</li>
+<li><b>Falhou</b> se aparecer <code>Could not get lock</code>, <code>apache2.service not found</code> ou <code>Script "startup-script" failed with error</code>. Faça o reset abaixo.</li>
+</ol></li>
+<li><b>Se falhou, clique em Reset:</b> volte a <span class="caminho">VM instances</span>, na linha da <code>web2</code> clique em <span class="ui">⋮</span> (<span class="ui">More actions</span>) › <span class="ui">Reset</span> e confirme em <span class="btn">Reset</span>. O script roda de novo quando a VM reinicia. Espere 2 minutos e confira o log outra vez, olhando as <b>últimas linhas</b>: a falha anterior continua aparecendo mais acima.</li>
 </ol>
 <h3>Criar a VM <code>web3</code></h3>
 <ol>
@@ -178,14 +175,38 @@ apt-get install apache2 -y
 service apache2 restart
 echo "&lt;h3&gt;Servidor da web: web3&lt;/h3&gt;" | tee /var/www/html/index.html</pre></li>
 <li class="fim">Clique em <span class="btn">Create</span> e espere a <code>web3</code> aparecer com o ícone verde na lista.</li>
-<li><b>Teste o servidor web:</b> na lista de <span class="caminho">VM instances</span>, na linha da <code>web3</code>, clique no endereço da coluna <span class="ui">External IP</span>. Uma nova aba abre e deve mostrar <b>Servidor da web: web3</b>.
-<ul>
-<li>Se der erro, aguarde 1 a 2 minutos (o script ainda está instalando o Apache) e atualize a aba.</li>
-<li>Confira se o endereço começa com <b>http://</b>. Se o navegador trocar para https://, apague o "s" e tecle Enter.</li>
-<li>Se continuar sem abrir, confira a tag <code>network-lb-tag</code> na VM e a regra <code>www-firewall-network-lb</code>.</li>
-</ul></li>
+<li><b>Confira no log se o Apache foi instalado:</b>
+<ol type="a">
+<li>Na lista de <span class="caminho">VM instances</span>, clique no nome <code>web3</code>.</li>
+<li>Na aba <span class="ui">Details</span>, em <span class="ui">Logs</span>, clique em <span class="ui">Serial port 1 (console)</span>.</li>
+<li>Aguarde 1 a 2 minutos e clique em <span class="ui">Refresh</span>. Use Ctrl+F e procure por <code>startup-script</code>.</li>
+<li><b>Deu certo</b> se aparecer <code>Setting up apache2</code> e <b>não</b> aparecer <code>failed with error</code>. Siga para a próxima VM.</li>
+<li><b>Falhou</b> se aparecer <code>Could not get lock</code>, <code>apache2.service not found</code> ou <code>Script "startup-script" failed with error</code>. Faça o reset abaixo.</li>
+</ol></li>
+<li><b>Se falhou, clique em Reset:</b> volte a <span class="caminho">VM instances</span>, na linha da <code>web3</code> clique em <span class="ui">⋮</span> (<span class="ui">More actions</span>) › <span class="ui">Reset</span> e confirme em <span class="btn">Reset</span>. O script roda de novo quando a VM reinicia. Espere 2 minutos e confira o log outra vez, olhando as <b>últimas linhas</b>: a falha anterior continua aparecendo mais acima.</li>
 </ol>
 
+<h3>Criar a regra de firewall</h3>
+<ol>
+<li><span class="caminho">Navigation menu › VPC network › Firewall</span> e clique em <span class="ui">Create firewall rule</span>.</li>
+<li><span class="ui">Name</span>: <code>www-firewall-network-lb</code>.</li>
+<li><span class="ui">Network</span>: <b>default</b> · <span class="ui">Direction of traffic</span>: <b>Ingress</b> · <span class="ui">Action on match</span>: <b>Allow</b>.</li>
+<li><span class="ui">Targets</span>: <b>Specified target tags</b> · <span class="ui">Target tags</span>: <code>network-lb-tag</code>.</li>
+<li><span class="ui">Source filter</span>: <b>IPv4 ranges</b> · <span class="ui">Source IPv4 ranges</span>: <code>0.0.0.0/0</code>.</li>
+<li><span class="ui">Protocols and ports</span>: <b>Specified protocols and ports</b> › marque <b>TCP</b> › <span class="ui">Ports</span>: <code>80</code>.</li>
+<li class="fim">Clique em <span class="btn">Create</span>.</li>
+</ol>
+<h3>Testar os três servidores web</h3>
+<ol>
+<li>Volte a <span class="caminho">Navigation menu › Compute Engine › VM instances</span>.</li>
+<li>Na linha de cada VM, clique no endereço da coluna <span class="ui">External IP</span>. Uma nova aba abre e deve mostrar <b>Servidor da web: web1</b> (ou web2, web3).</li>
+<li>Se não abrir:
+<ul>
+<li>confira se o endereço começa com <b>http://</b>. Se o navegador trocar para https://, apague o "s" e tecle Enter;</li>
+<li>confira o log da VM (passo "Confira no log" acima) e, se falhou, faça o <b>Reset</b>;</li>
+<li>confira a tag <code>network-lb-tag</code> na VM e a regra <code>www-firewall-network-lb</code>.</li>
+</ul></li>
+</ol>
 <p>Volte ao roteiro e clique em <b>Verificar meu progresso</b> da tarefa 1.</p>
 
 <h2>Tarefa 2: configurar o balanceador de rede<span class="pts">35 pontos</span></h2>
@@ -292,6 +313,7 @@ gcloud compute forwarding-rules create http-content-rule \
 <li>VM em zona errada ou sem a tag de rede: o firewall não se aplica.</li>
 <li>Esquecer a porta nomeada <code>http:80</code> no grupo: o serviço de back-end não encontra a porta.</li>
 <li>Testar o HTTP antes de 5 minutos e achar que falhou. Aguarde e atualize.</li>
+<li>Apache não instalado (<code>Could not get lock</code> no <span class="ui">Serial port 1 (console)</span>): clique em <span class="ui">Reset</span> na VM. No balanceador HTTP, isso vale para as VMs <code>lb-backend-group-xxxx</code>.</li>
 <li>Nomes de botões diferentes dos desta página: a tradução automática do navegador está ligada. Veja "Antes de começar".</li></ul></div>
 <p class="alt">Prefere fazer pelo terminal? <a href="lab-gsp313-manual.html" target="_blank" rel="noopener">Versão por linha de comando</a></p>
 <footer>Estratégia de resolução preparada para a turma. Siga sempre o roteiro do laboratório: os nomes, a região e a zona mostrados no painel do lab têm prioridade sobre qualquer exemplo desta página.</footer>
