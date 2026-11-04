@@ -24,6 +24,7 @@ code{background:#f1f3f4;padding:1px 6px;border-radius:4px}
 .v{background:#fff3cd;padding:1px 6px;border-radius:4px;border:1px dashed #f9ab00}
 .ui{font-weight:600;background:#e8f0fe;color:#174ea6;padding:0 5px;border-radius:4px;white-space:nowrap}
 .fim{font-weight:600}
+.btn{display:inline-block;font-family:"Google Sans",Roboto,Arial,sans-serif;font-weight:500;font-size:.9em;background:#1a73e8;color:#fff;padding:1px 12px;border-radius:4px;white-space:nowrap;line-height:1.6}
 pre{background:#202124;color:#e8eaed;padding:14px 16px;border-radius:10px;overflow-x:auto;margin:10px 0;font-size:.88em;line-height:1.45}
 .caminho{color:#188038;font-weight:600}
 details.antes{margin:34px 0 12px;border:1px solid #dadce0;border-radius:10px;background:#fff}
@@ -77,6 +78,17 @@ O console atual não cria <b>pool de destino</b> (tarefa 2) nem permite escolher
 
 <h2>Tarefa 1: criar três servidores web<span class="pts">20 pontos</span></h2>
 <p><b>O que o roteiro pede:</b> três VMs (<code>web1</code>, <code>web2</code>, <code>web3</code>) com Apache e a regra de firewall <code>www-firewall-network-lb</code> liberando HTTP.</p>
+<h3>Primeiro: criar a regra de firewall</h3>
+<p>O roteiro pede a regra depois das VMs, mas a ordem não muda a correção. Criando a regra antes, você já consegue testar cada servidor web logo depois de criá-lo.</p>
+<ol>
+<li><span class="caminho">Navigation menu › VPC network › Firewall</span> e clique em <span class="ui">Create firewall rule</span>.</li>
+<li><span class="ui">Name</span>: <code>www-firewall-network-lb</code>.</li>
+<li><span class="ui">Network</span>: <b>default</b> · <span class="ui">Direction of traffic</span>: <b>Ingress</b> · <span class="ui">Action on match</span>: <b>Allow</b>.</li>
+<li><span class="ui">Targets</span>: <b>Specified target tags</b> · <span class="ui">Target tags</span>: <code>network-lb-tag</code>.</li>
+<li><span class="ui">Source filter</span>: <b>IPv4 ranges</b> · <span class="ui">Source IPv4 ranges</span>: <code>0.0.0.0/0</code>.</li>
+<li><span class="ui">Protocols and ports</span>: <b>Specified protocols and ports</b> › marque <b>TCP</b> › <span class="ui">Ports</span>: <code>80</code>.</li>
+<li class="fim">Clique em <span class="btn">Create</span>.</li>
+</ol>
 <div class="box regra"><b class="t">O que muda em cada VM</b>
 Você vai criar 3 VMs com o mesmo roteiro. Em cada uma, altere só estes campos e deixe o resto como está: <b>nome</b>, <b>região</b>, <b>zona</b>, <b>tipo de máquina</b>, <b>versão do Debian</b>, <b>tag de rede</b> e <b>script de inicialização</b>.
 <br><br><b>Precisa de <code>sudo</code> no script?</b> Não. O script de inicialização (<i>startup script</i>) já roda como <b>root</b> quando a VM liga, então os comandos funcionam sem <code>sudo</code>. Use o script exatamente como está abaixo.</div>
@@ -86,15 +98,15 @@ Você vai criar 3 VMs com o mesmo roteiro. Em cada uma, altere só estes campos 
 <li>Em <span class="ui">Machine configuration</span>:
 <ul>
 <li><span class="ui">Name</span>: <code>web1</code></li>
-<li><span class="ui">Region</span>: <span class="v">REGIÃO</span></li>
-<li><span class="ui">Zone</span>: <span class="v">ZONA</span></li>
-<li><span class="ui">Series</span>: <b>E2</b> · <span class="ui">Machine type</span>: <b>e2-small</b></li>
+<li><span class="ui">Region</span>: <span class="v">REGIÃO</span> &nbsp;·&nbsp; <span class="ui">Zone</span>: <span class="v">ZONA</span></li>
+<li><span class="ui">Series</span>: selecione a opção <b>E2</b></li>
+<li><span class="ui">Machine type</span>: selecione a opção <b>e2-small</b></li>
 </ul></li>
 <li>No menu à esquerda, clique em <span class="ui">OS and storage</span> e depois em <span class="ui">Change</span>:
 <ul>
 <li><span class="ui">Operating system</span>: <b>Debian</b></li>
 <li><span class="ui">Version</span>: <b>Debian GNU/Linux 12 (bookworm)</b> com <b>x86/64</b> (não escolha a opção <b>Arm64</b>)</li>
-<li>clique em <span class="ui">Select</span>.</li>
+<li>clique em <span class="btn">Select</span>.</li>
 </ul></li>
 <li>No menu à esquerda, clique em <span class="ui">Networking</span>. Em <span class="ui">Network tags</span>, digite <code>network-lb-tag</code> e tecle Enter.</li>
 <li>No menu à esquerda, clique em <span class="ui">Advanced</span>. Em <span class="ui">Automation › Startup script</span>, cole:
@@ -103,7 +115,13 @@ apt-get update
 apt-get install apache2 -y
 service apache2 restart
 echo "&lt;h3&gt;Servidor da web: web1&lt;/h3&gt;" | tee /var/www/html/index.html</pre></li>
-<li class="fim">Clique em <span class="ui">Create</span> e espere a <code>web1</code> aparecer com o ícone verde na lista.</li>
+<li class="fim">Clique em <span class="btn">Create</span> e espere a <code>web1</code> aparecer com o ícone verde na lista.</li>
+<li><b>Teste o servidor web:</b> na lista de <span class="caminho">VM instances</span>, na linha da <code>web1</code>, clique no endereço da coluna <span class="ui">External IP</span>. Uma nova aba abre e deve mostrar <b>Servidor da web: web1</b>.
+<ul>
+<li>Se der erro, aguarde 1 a 2 minutos (o script ainda está instalando o Apache) e atualize a aba.</li>
+<li>Confira se o endereço começa com <b>http://</b>. Se o navegador trocar para https://, apague o "s" e tecle Enter.</li>
+<li>Se continuar sem abrir, confira a tag <code>network-lb-tag</code> na VM e a regra <code>www-firewall-network-lb</code>.</li>
+</ul></li>
 </ol>
 <h3>Criar a VM <code>web2</code></h3>
 <ol>
@@ -111,15 +129,15 @@ echo "&lt;h3&gt;Servidor da web: web1&lt;/h3&gt;" | tee /var/www/html/index.html
 <li>Em <span class="ui">Machine configuration</span>:
 <ul>
 <li><span class="ui">Name</span>: <code>web2</code></li>
-<li><span class="ui">Region</span>: <span class="v">REGIÃO</span></li>
-<li><span class="ui">Zone</span>: <span class="v">ZONA</span></li>
-<li><span class="ui">Series</span>: <b>E2</b> · <span class="ui">Machine type</span>: <b>e2-small</b></li>
+<li><span class="ui">Region</span>: <span class="v">REGIÃO</span> &nbsp;·&nbsp; <span class="ui">Zone</span>: <span class="v">ZONA</span></li>
+<li><span class="ui">Series</span>: selecione a opção <b>E2</b></li>
+<li><span class="ui">Machine type</span>: selecione a opção <b>e2-small</b></li>
 </ul></li>
 <li>No menu à esquerda, clique em <span class="ui">OS and storage</span> e depois em <span class="ui">Change</span>:
 <ul>
 <li><span class="ui">Operating system</span>: <b>Debian</b></li>
 <li><span class="ui">Version</span>: <b>Debian GNU/Linux 12 (bookworm)</b> com <b>x86/64</b> (não escolha a opção <b>Arm64</b>)</li>
-<li>clique em <span class="ui">Select</span>.</li>
+<li>clique em <span class="btn">Select</span>.</li>
 </ul></li>
 <li>No menu à esquerda, clique em <span class="ui">Networking</span>. Em <span class="ui">Network tags</span>, digite <code>network-lb-tag</code> e tecle Enter.</li>
 <li>No menu à esquerda, clique em <span class="ui">Advanced</span>. Em <span class="ui">Automation › Startup script</span>, cole:
@@ -128,7 +146,13 @@ apt-get update
 apt-get install apache2 -y
 service apache2 restart
 echo "&lt;h3&gt;Servidor da web: web2&lt;/h3&gt;" | tee /var/www/html/index.html</pre></li>
-<li class="fim">Clique em <span class="ui">Create</span> e espere a <code>web2</code> aparecer com o ícone verde na lista.</li>
+<li class="fim">Clique em <span class="btn">Create</span> e espere a <code>web2</code> aparecer com o ícone verde na lista.</li>
+<li><b>Teste o servidor web:</b> na lista de <span class="caminho">VM instances</span>, na linha da <code>web2</code>, clique no endereço da coluna <span class="ui">External IP</span>. Uma nova aba abre e deve mostrar <b>Servidor da web: web2</b>.
+<ul>
+<li>Se der erro, aguarde 1 a 2 minutos (o script ainda está instalando o Apache) e atualize a aba.</li>
+<li>Confira se o endereço começa com <b>http://</b>. Se o navegador trocar para https://, apague o "s" e tecle Enter.</li>
+<li>Se continuar sem abrir, confira a tag <code>network-lb-tag</code> na VM e a regra <code>www-firewall-network-lb</code>.</li>
+</ul></li>
 </ol>
 <h3>Criar a VM <code>web3</code></h3>
 <ol>
@@ -136,15 +160,15 @@ echo "&lt;h3&gt;Servidor da web: web2&lt;/h3&gt;" | tee /var/www/html/index.html
 <li>Em <span class="ui">Machine configuration</span>:
 <ul>
 <li><span class="ui">Name</span>: <code>web3</code></li>
-<li><span class="ui">Region</span>: <span class="v">REGIÃO</span></li>
-<li><span class="ui">Zone</span>: <span class="v">ZONA</span></li>
-<li><span class="ui">Series</span>: <b>E2</b> · <span class="ui">Machine type</span>: <b>e2-small</b></li>
+<li><span class="ui">Region</span>: <span class="v">REGIÃO</span> &nbsp;·&nbsp; <span class="ui">Zone</span>: <span class="v">ZONA</span></li>
+<li><span class="ui">Series</span>: selecione a opção <b>E2</b></li>
+<li><span class="ui">Machine type</span>: selecione a opção <b>e2-small</b></li>
 </ul></li>
 <li>No menu à esquerda, clique em <span class="ui">OS and storage</span> e depois em <span class="ui">Change</span>:
 <ul>
 <li><span class="ui">Operating system</span>: <b>Debian</b></li>
 <li><span class="ui">Version</span>: <b>Debian GNU/Linux 12 (bookworm)</b> com <b>x86/64</b> (não escolha a opção <b>Arm64</b>)</li>
-<li>clique em <span class="ui">Select</span>.</li>
+<li>clique em <span class="btn">Select</span>.</li>
 </ul></li>
 <li>No menu à esquerda, clique em <span class="ui">Networking</span>. Em <span class="ui">Network tags</span>, digite <code>network-lb-tag</code> e tecle Enter.</li>
 <li>No menu à esquerda, clique em <span class="ui">Advanced</span>. Em <span class="ui">Automation › Startup script</span>, cole:
@@ -153,19 +177,15 @@ apt-get update
 apt-get install apache2 -y
 service apache2 restart
 echo "&lt;h3&gt;Servidor da web: web3&lt;/h3&gt;" | tee /var/www/html/index.html</pre></li>
-<li class="fim">Clique em <span class="ui">Create</span> e espere a <code>web3</code> aparecer com o ícone verde na lista.</li>
+<li class="fim">Clique em <span class="btn">Create</span> e espere a <code>web3</code> aparecer com o ícone verde na lista.</li>
+<li><b>Teste o servidor web:</b> na lista de <span class="caminho">VM instances</span>, na linha da <code>web3</code>, clique no endereço da coluna <span class="ui">External IP</span>. Uma nova aba abre e deve mostrar <b>Servidor da web: web3</b>.
+<ul>
+<li>Se der erro, aguarde 1 a 2 minutos (o script ainda está instalando o Apache) e atualize a aba.</li>
+<li>Confira se o endereço começa com <b>http://</b>. Se o navegador trocar para https://, apague o "s" e tecle Enter.</li>
+<li>Se continuar sem abrir, confira a tag <code>network-lb-tag</code> na VM e a regra <code>www-firewall-network-lb</code>.</li>
+</ul></li>
 </ol>
-<h3>Criar a regra de firewall</h3>
-<ol>
-<li><span class="caminho">Navigation menu › VPC network › Firewall</span> e clique em <span class="ui">Create firewall rule</span>.</li>
-<li><span class="ui">Name</span>: <code>www-firewall-network-lb</code>.</li>
-<li><span class="ui">Network</span>: <b>default</b> · <span class="ui">Direction of traffic</span>: <b>Ingress</b> · <span class="ui">Action on match</span>: <b>Allow</b>.</li>
-<li><span class="ui">Targets</span>: <b>Specified target tags</b> · <span class="ui">Target tags</span>: <code>network-lb-tag</code>.</li>
-<li><span class="ui">Source filter</span>: <b>IPv4 ranges</b> · <span class="ui">Source IPv4 ranges</span>: <code>0.0.0.0/0</code>.</li>
-<li><span class="ui">Protocols and ports</span>: <b>Specified protocols and ports</b> › marque <b>TCP</b> › <span class="ui">Ports</span>: <code>80</code>.</li>
-<li class="fim">Clique em <span class="ui">Create</span>.</li>
-</ol>
-<p><b>Conferir:</b> em <span class="caminho">VM instances</span>, clique no <span class="ui">External IP</span> de cada VM. A página deve mostrar "Servidor da web: web1" (ou web2, web3). Se der erro, confira se o endereço começa com <b>http://</b> e não https://.</p>
+
 <p>Volte ao roteiro e clique em <b>Verificar meu progresso</b> da tarefa 1.</p>
 
 <h2>Tarefa 2: configurar o balanceador de rede<span class="pts">35 pontos</span></h2>
@@ -175,7 +195,7 @@ echo "&lt;h3&gt;Servidor da web: web3&lt;/h3&gt;" | tee /var/www/html/index.html
 <li><span class="caminho">Navigation menu › VPC network › IP addresses</span> e clique em <span class="ui">Reserve external static IP address</span>.</li>
 <li><span class="ui">Name</span>: <code>network-lb-ip-1</code>.</li>
 <li><span class="ui">IP version</span>: <b>IPv4</b> · <span class="ui">Type</span>: <b>Regional</b> · <span class="ui">Region</span>: <span class="v">REGIÃO</span>.</li>
-<li class="fim">Clique em <span class="ui">Reserve</span>.</li>
+<li class="fim">Clique em <span class="btn">Reserve</span>.</li>
 </ol>
 <div class="box cmd"><b class="t">Por comando (o console não cria pool de destino)</b>
 <ol>
@@ -204,7 +224,7 @@ gcloud compute forwarding-rules create www-rule \
 <li><span class="ui">Name</span>: <code>lb-backend-template</code>.</li>
 <li><span class="ui">Location</span>: <b>Regional</b> · <span class="ui">Region</span>: <span class="v">REGIÃO</span>.</li>
 <li><span class="ui">Machine configuration</span>: <span class="ui">Series</span> <b>E2</b> · <span class="ui">Machine type</span> <b>e2-medium</b>.</li>
-<li><span class="ui">Boot disk</span> › <span class="ui">Change</span>: <b>Debian GNU/Linux 12 (bookworm)</b> (igual às VMs da tarefa 1) › <span class="ui">Select</span>.</li>
+<li><span class="ui">Boot disk</span> › <span class="ui">Change</span>: <b>Debian GNU/Linux 12 (bookworm)</b> (igual às VMs da tarefa 1) › <span class="btn">Select</span>.</li>
 <li>Abra <span class="ui">Advanced options › Networking</span> e, em <span class="ui">Network tags</span>, digite <code>allow-health-check</code> e tecle Enter.</li>
 <li>Em <span class="ui">Advanced options › Management › Automation › Startup script</span>, cole (recomendado, para o teste final mostrar a página):
 <pre>#!/bin/bash
@@ -216,7 +236,7 @@ vm_hostname="$(curl -H "Metadata-Flavor:Google" \
 http://169.254.169.254/computeMetadata/v1/instance/name)"
 echo "Page served from: $vm_hostname" | tee /var/www/html/index.html
 systemctl restart apache2</pre></li>
-<li class="fim">Clique em <span class="ui">Create</span>.</li>
+<li class="fim">Clique em <span class="btn">Create</span>.</li>
 </ol>
 <h3>2. Grupo gerenciado de instâncias (console)</h3>
 <ol>
@@ -226,7 +246,7 @@ systemctl restart apache2</pre></li>
 <li><span class="ui">Location</span>: <b>Single zone</b> · <span class="ui">Region</span>: <span class="v">REGIÃO</span> · <span class="ui">Zone</span>: <span class="v">ZONA</span>.</li>
 <li><span class="ui">Autoscaling</span>: <span class="ui">Minimum number of instances</span> <code>2</code>.</li>
 <li>Em <span class="ui">Port mapping</span>, clique em <span class="ui">Add port</span>: <span class="ui">Port name</span> <code>http</code> · <span class="ui">Port number</span> <code>80</code>.</li>
-<li class="fim">Clique em <span class="ui">Create</span>. O grupo leva 1 ou 2 minutos para subir as VMs.</li>
+<li class="fim">Clique em <span class="btn">Create</span>. O grupo leva 1 ou 2 minutos para subir as VMs.</li>
 </ol>
 <h3>3. Firewall para as verificações de integridade (console)</h3>
 <ol>
@@ -236,14 +256,14 @@ systemctl restart apache2</pre></li>
 <li><span class="ui">Targets</span>: <b>Specified target tags</b> · <span class="ui">Target tags</span>: <code>allow-health-check</code>.</li>
 <li><span class="ui">Source filter</span>: <b>IPv4 ranges</b> · <span class="ui">Source IPv4 ranges</span>: <code>130.211.0.0/22</code> e <code>35.191.0.0/16</code> (tecle Enter depois de cada um).</li>
 <li><span class="ui">Protocols and ports</span>: <b>Specified protocols and ports</b> › marque <b>TCP</b> › <span class="ui">Ports</span>: <code>80</code>.</li>
-<li class="fim">Clique em <span class="ui">Create</span>.</li>
+<li class="fim">Clique em <span class="btn">Create</span>.</li>
 </ol>
 <h3>4. IP externo global (console)</h3>
 <ol>
 <li><span class="caminho">Navigation menu › VPC network › IP addresses</span> e clique em <span class="ui">Reserve external static IP address</span>.</li>
 <li><span class="ui">Name</span>: <code>lb-ipv4-1</code>.</li>
 <li><span class="ui">IP version</span>: <b>IPv4</b> · <span class="ui">Type</span>: <b>Global</b>.</li>
-<li class="fim">Clique em <span class="ui">Reserve</span>.</li>
+<li class="fim">Clique em <span class="btn">Reserve</span>.</li>
 </ol>
 <div class="box cmd"><b class="t">5. Balanceador por comando (os nomes exigidos não são configuráveis no console)</b>
 No Cloud Shell, rode os comandos abaixo, trocando <span class="v">ZONA</span>:
