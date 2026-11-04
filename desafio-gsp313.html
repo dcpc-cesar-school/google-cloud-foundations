@@ -85,7 +85,7 @@ Você vai criar 3 VMs com o mesmo roteiro. Em cada uma, altere só estes campos 
 Às vezes, logo após ligar a VM, o próprio Debian já está usando o instalador de pacotes. O script encontra o instalador ocupado (<code>Could not get lock</code>), não instala o Apache e termina com erro. Não é erro seu: um <b>Reset</b> resolve.</div>
 <h3>Criar a VM <code>web1</code></h3>
 <ol>
-<li><span class="caminho">Navigation menu (☰) › Compute Engine › VM instances</span> e clique em <span class="ui">Create instance</span>.</li>
+<li><span class="caminho">Menu de navegação (☰) › Compute Engine › VM instances</span> e clique em <span class="ui">Create instance</span>.</li>
 <li>Em <span class="ui">Machine configuration</span>:
 <ul>
 <li><span class="ui">Name</span>: <code>web1</code></li>
@@ -119,7 +119,7 @@ echo "&lt;h3&gt;Servidor da web: web1&lt;/h3&gt;" | tee /var/www/html/index.html
 </ol>
 <h3>Criar a VM <code>web2</code></h3>
 <ol>
-<li><span class="caminho">Navigation menu (☰) › Compute Engine › VM instances</span> e clique em <span class="ui">Create instance</span>.</li>
+<li><span class="caminho">Menu de navegação (☰) › Compute Engine › VM instances</span> e clique em <span class="ui">Create instance</span>.</li>
 <li>Em <span class="ui">Machine configuration</span>:
 <ul>
 <li><span class="ui">Name</span>: <code>web2</code></li>
@@ -153,7 +153,7 @@ echo "&lt;h3&gt;Servidor da web: web2&lt;/h3&gt;" | tee /var/www/html/index.html
 </ol>
 <h3>Criar a VM <code>web3</code></h3>
 <ol>
-<li><span class="caminho">Navigation menu (☰) › Compute Engine › VM instances</span> e clique em <span class="ui">Create instance</span>.</li>
+<li><span class="caminho">Menu de navegação (☰) › Compute Engine › VM instances</span> e clique em <span class="ui">Create instance</span>.</li>
 <li>Em <span class="ui">Machine configuration</span>:
 <ul>
 <li><span class="ui">Name</span>: <code>web3</code></li>
@@ -188,7 +188,7 @@ echo "&lt;h3&gt;Servidor da web: web3&lt;/h3&gt;" | tee /var/www/html/index.html
 
 <h3>Criar a regra de firewall</h3>
 <ol>
-<li><span class="caminho">Navigation menu › VPC network › Firewall</span> e clique em <span class="ui">Create firewall rule</span>.</li>
+<li><span class="caminho">Menu de navegação › VPC network › Firewall</span> e clique em <span class="ui">Create firewall rule</span>.</li>
 <li><span class="ui">Name</span>: <code>www-firewall-network-lb</code>.</li>
 <li><span class="ui">Network</span>: <b>default</b> · <span class="ui">Direction of traffic</span>: <b>Ingress</b> · <span class="ui">Action on match</span>: <b>Allow</b>.</li>
 <li><span class="ui">Targets</span>: <b>Specified target tags</b> · <span class="ui">Target tags</span>: <code>network-lb-tag</code>.</li>
@@ -198,7 +198,7 @@ echo "&lt;h3&gt;Servidor da web: web3&lt;/h3&gt;" | tee /var/www/html/index.html
 </ol>
 <h3>Testar os três servidores web</h3>
 <ol>
-<li>Volte a <span class="caminho">Navigation menu › Compute Engine › VM instances</span>.</li>
+<li>Volte a <span class="caminho">Menu de navegação › Compute Engine › VM instances</span>.</li>
 <li>Na linha de cada VM, clique no endereço da coluna <span class="ui">External IP</span>. Uma nova aba abre e deve mostrar <b>Servidor da web: web1</b> (ou web2, web3).</li>
 <li>Se não abrir:
 <ul>
@@ -213,7 +213,7 @@ echo "&lt;h3&gt;Servidor da web: web3&lt;/h3&gt;" | tee /var/www/html/index.html
 <p><b>O que o roteiro pede:</b> IP externo estático <code>network-lb-ip-1</code>, pool de destino <code>www-pool</code> e encaminhamento na porta <code>80</code>.</p>
 <h3>Pelo console: reservar o IP estático</h3>
 <ol>
-<li><span class="caminho">Navigation menu › VPC network › IP addresses</span> e clique em <span class="ui">Reserve external static IP address</span>.</li>
+<li><span class="caminho">Menu de navegação › VPC network › IP addresses</span> e clique em <span class="ui">Reserve external static IP address</span>.</li>
 <li><span class="ui">Name</span>: <code>network-lb-ip-1</code>.</li>
 <li><span class="ui">IP version</span>: <b>IPv4</b> · <span class="ui">Type</span>: <b>Regional</b> · <span class="ui">Region</span>: <span class="v">REGIÃO</span>.</li>
 <li class="fim">Clique em <span class="btn">Reserve</span>.</li>
@@ -241,7 +241,7 @@ gcloud compute forwarding-rules create www-rule \
 <p><b>O que o roteiro pede:</b> modelo <code>lb-backend-template</code>, grupo gerenciado <code>lb-backend-group</code>, firewall <code>fw-allow-health-check</code>, IP <code>lb-ipv4-1</code>, verificação <code>http-basic-check</code>, mapa de URL <code>web-map-http</code> e proxy <code>http-lb-proxy</code>.</p>
 <h3>1. Modelo de instância (console)</h3>
 <ol>
-<li><span class="caminho">Navigation menu › Compute Engine › Instance templates</span> e clique em <span class="ui">Create instance template</span>.</li>
+<li><span class="caminho">Menu de navegação › Compute Engine › Instance templates</span> e clique em <span class="ui">Create instance template</span>.</li>
 <li><span class="ui">Name</span>: <code>lb-backend-template</code>.</li>
 <li><span class="ui">Location</span>: <b>Regional</b> · <span class="ui">Region</span>: <span class="v">REGIÃO</span>.</li>
 <li><span class="ui">Machine configuration</span>: <span class="ui">Series</span> <b>E2</b> · <span class="ui">Machine type</span> <b>e2-medium</b>.</li>
@@ -261,7 +261,7 @@ systemctl restart apache2</pre></li>
 </ol>
 <h3>2. Grupo gerenciado de instâncias (console)</h3>
 <ol>
-<li><span class="caminho">Navigation menu › Compute Engine › Instance groups</span> e clique em <span class="ui">Create instance group</span>.</li>
+<li><span class="caminho">Menu de navegação › Compute Engine › Instance groups</span> e clique em <span class="ui">Create instance group</span>.</li>
 <li>No menu à esquerda, escolha <span class="ui">New managed instance group (stateless)</span>.</li>
 <li><span class="ui">Name</span>: <code>lb-backend-group</code> · <span class="ui">Instance template</span>: <code>lb-backend-template</code>.</li>
 <li><span class="ui">Location</span>: <b>Single zone</b> · <span class="ui">Region</span>: <span class="v">REGIÃO</span> · <span class="ui">Zone</span>: <span class="v">ZONA</span>.</li>
@@ -271,7 +271,7 @@ systemctl restart apache2</pre></li>
 </ol>
 <h3>3. Firewall para as verificações de integridade (console)</h3>
 <ol>
-<li><span class="caminho">Navigation menu › VPC network › Firewall</span> e clique em <span class="ui">Create firewall rule</span>.</li>
+<li><span class="caminho">Menu de navegação › VPC network › Firewall</span> e clique em <span class="ui">Create firewall rule</span>.</li>
 <li><span class="ui">Name</span>: <code>fw-allow-health-check</code>.</li>
 <li><span class="ui">Network</span>: <b>default</b> · <span class="ui">Direction of traffic</span>: <b>Ingress</b> · <span class="ui">Action on match</span>: <b>Allow</b>.</li>
 <li><span class="ui">Targets</span>: <b>Specified target tags</b> · <span class="ui">Target tags</span>: <code>allow-health-check</code>.</li>
@@ -281,7 +281,7 @@ systemctl restart apache2</pre></li>
 </ol>
 <h3>4. IP externo global (console)</h3>
 <ol>
-<li><span class="caminho">Navigation menu › VPC network › IP addresses</span> e clique em <span class="ui">Reserve external static IP address</span>.</li>
+<li><span class="caminho">Menu de navegação › VPC network › IP addresses</span> e clique em <span class="ui">Reserve external static IP address</span>.</li>
 <li><span class="ui">Name</span>: <code>lb-ipv4-1</code>.</li>
 <li><span class="ui">IP version</span>: <b>IPv4</b> · <span class="ui">Type</span>: <b>Global</b>.</li>
 <li class="fim">Clique em <span class="btn">Reserve</span>.</li>
