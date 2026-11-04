@@ -22,6 +22,284 @@ li{margin:5px 0}
 code,.v{font-family:Consolas,'Courier New',monospace;font-size:.92em}
 code{background:#f1f3f4;padding:1px 6px;border-radius:4px}
 .v{background:#fff3cd;padding:1px 6px;border-radius:4px;border:1px dashed #f9ab00}
+.ui{font-weight:600;background:#e8f0fe;color:#174ea6;padding:0 5px;border-radius:4px;white-space:nowrap}
+.fim{font-weight:600}
+pre{background:#202124;color:#e8eaed;padding:14px 16px;border-radius:10px;overflow-x:auto;margin:10px 0;font-size:.88em;line-height:1.45}
+.caminho{color:#188038;font-weight:600}
+details.antes{margin:34px 0 12px;border:1px solid #dadce0;border-radius:10px;background:#fff}
+details.antes>summary{cursor:pointer;list-style:none;padding:14px 18px;font-size:1.3em;font-weight:700;color:#202124;display:flex;align-items:center;gap:10px;border-left:6px solid var(--cor);border-radius:10px}
+details.antes>summary::-webkit-details-marker{display:none}
+details.antes>summary::before{content:"▸";color:var(--cor);transition:transform .15s}
+details.antes[open]>summary::before{transform:rotate(90deg)}
+details.antes>summary .dica{font-size:.62em;font-weight:400;color:#5f6368;margin-left:auto}
+details.antes[open]>summary .dica{display:none}
+details.antes>summary:focus-visible{outline:2px solid var(--cor);outline-offset:2px}
+details.antes .corpo{padding:0 18px 6px}
+.alt{margin-top:36px;text-align:center;font-size:.8em;color:#9aa0a6}
+.alt a{color:#9aa0a6}
+footer{margin-top:10px;color:#80868b;font-size:.85em;text-align:center}
+@media(max-width:600px){.container{padding:22px 16px}h1{font-size:1.45em}.ui{white-space:normal}details.antes>summary .dica{display:none}}
+</style></head><body style="--cor:#6aa84f;--claro:#e6f4ea"><div class="container">
+<a class="voltar" href="index.html">← Voltar às fases</a>
+<div class="fase">Fase 1 · Selo 2 · 📅 Encontro 1: 21/10</div>
+<h1>🔀 GSP313 · Implementar o balanceamento de carga no Compute Engine</h1>
+<p class="sub">Selo de habilidade: Implementação do Cloud Load Balancing no Compute Engine</p>
+<div class="chips"><span>3 tarefas</span><span>100 pontos</span><span>Compute Engine</span><span>Firewall</span><span>Balanceador de rede</span><span>Balanceador HTTP</span></div>
+<div class="box regra"><b class="t">🔎 Onde encontrar o lab</b><ul>
+<li><b>Link direto:</b> <a href="https://www.skills.google/paths/36/course_templates/648/labs/613025" target="_blank" rel="noopener">abrir o laboratório com desafio no Google Skills</a>.</li>
+<li><b>Pela busca:</b> entre em <a href="https://www.skills.google" target="_blank" rel="noopener">skills.google</a> e pesquise por <code>GSP313</code> ou pelo nome do selo, <i>Implementar o balanceamento de carga no Compute Engine</i>.</li>
+</ul>Entre com a mesma conta que você usa no curso.</div>
+
+<details class="antes">
+<summary>Antes de começar <span class="dica">clique para abrir</span></summary>
+<div class="corpo">
+<div class="box regra"><b class="t">Regras de ouro</b>
+<ul>
+<li>Abra o lab em janela anônima e use só o usuário e a senha do laboratório.</li>
+<li>Os valores em <span class="v">amarelo</span> (nomes, região e zona) mudam a cada execução: copie do <b>painel do lab</b>, à esquerda do roteiro.</li>
+<li>Faça pelo <b>console</b>. Use comandos apenas onde esta página indicar, e sempre no Cloud Shell do projeto do lab.</li>
+<li>Ao final de cada tarefa, clique em <b>Verificar meu progresso</b>. Se não passar, leia a mensagem, corrija e verifique de novo.</li>
+<li>Não clique em <b>Terminar o laboratório</b> antes de todas as tarefas estarem verificadas.</li>
+</ul></div>
+<div class="box alerta"><b class="t">🌐 Desative a tradução automática do navegador</b>
+O console do lab abre em <b>inglês</b>, e esta página usa os nomes dos botões e campos em inglês, <span class="ui">assim</span>. Se o navegador traduzir a página, os nomes deixam de bater com o tutorial e a tradução pode alterar nomes de recursos e comandos que você copia.
+<ul>
+<li><b>Chrome:</b> clique no ícone de tradução na barra de endereço e escolha <b>Mostrar original</b> e depois <b>Nunca traduzir este site</b>. Ou desligue em <span class="caminho">Configurações › Idiomas › Google Tradutor</span>.</li>
+<li><b>Edge:</b> clique no ícone de tradução na barra de endereço e escolha <b>Nunca traduzir</b> (inglês).</li>
+</ul>
+Faça isso na janela anônima que você usa no lab.</div>
+<p>No painel do lab, anote a <span class="v">REGIÃO</span> e a <span class="v">ZONA</span>. Todos os recursos ficam nelas, salvo indicação diferente.</p>
+<div class="box cmd"><b class="t">Onde o console não basta</b>
+O console atual não cria <b>pool de destino</b> (tarefa 2) nem permite escolher o nome do <b>proxy HTTP</b> (tarefa 3). Como o roteiro exige os nomes
+<code>www-pool</code> e <code>http-lb-proxy</code>, essas partes são feitas com poucos comandos no Cloud Shell. Todo o resto é pelo console.</div>
+</div>
+</details>
+
+<h2>Tarefa 1: criar três servidores web<span class="pts">20 pontos</span></h2>
+<p><b>O que o roteiro pede:</b> três VMs (<code>web1</code>, <code>web2</code>, <code>web3</code>) com Apache e a regra de firewall <code>www-firewall-network-lb</code> liberando HTTP.</p>
+<div class="box regra"><b class="t">O que muda em cada VM</b>
+Você vai criar 3 VMs com o mesmo roteiro. Em cada uma, altere só estes campos e deixe o resto como está: <b>nome</b>, <b>região</b>, <b>zona</b>, <b>tipo de máquina</b>, <b>versão do Debian</b>, <b>tag de rede</b> e <b>script de inicialização</b>.
+<br><br><b>Precisa de <code>sudo</code> no script?</b> Não. O script de inicialização (<i>startup script</i>) já roda como <b>root</b> quando a VM liga, então os comandos funcionam sem <code>sudo</code>. Use o script exatamente como está abaixo.</div>
+<h3>Criar a VM <code>web1</code></h3>
+<ol>
+<li><span class="caminho">Navigation menu (☰) › Compute Engine › VM instances</span> e clique em <span class="ui">Create instance</span>.</li>
+<li>Em <span class="ui">Machine configuration</span>:
+<ul>
+<li><span class="ui">Name</span>: <code>web1</code></li>
+<li><span class="ui">Region</span>: <span class="v">REGIÃO</span></li>
+<li><span class="ui">Zone</span>: <span class="v">ZONA</span></li>
+<li><span class="ui">Series</span>: <b>E2</b> · <span class="ui">Machine type</span>: <b>e2-small</b></li>
+</ul></li>
+<li>No menu à esquerda, clique em <span class="ui">OS and storage</span> e depois em <span class="ui">Change</span>:
+<ul>
+<li><span class="ui">Operating system</span>: <b>Debian</b></li>
+<li><span class="ui">Version</span>: <b>Debian GNU/Linux 12 (bookworm)</b> com <b>x86/64</b> (não escolha a opção <b>Arm64</b>)</li>
+<li>clique em <span class="ui">Select</span>.</li>
+</ul></li>
+<li>No menu à esquerda, clique em <span class="ui">Networking</span>. Em <span class="ui">Network tags</span>, digite <code>network-lb-tag</code> e tecle Enter.</li>
+<li>No menu à esquerda, clique em <span class="ui">Advanced</span>. Em <span class="ui">Automation › Startup script</span>, cole:
+<pre>#!/bin/bash
+apt-get update
+apt-get install apache2 -y
+service apache2 restart
+echo "&lt;h3&gt;Servidor da web: web1&lt;/h3&gt;" | tee /var/www/html/index.html</pre></li>
+<li class="fim">Clique em <span class="ui">Create</span> e espere a <code>web1</code> aparecer com o ícone verde na lista.</li>
+</ol>
+<h3>Criar a VM <code>web2</code></h3>
+<ol>
+<li><span class="caminho">Navigation menu (☰) › Compute Engine › VM instances</span> e clique em <span class="ui">Create instance</span>.</li>
+<li>Em <span class="ui">Machine configuration</span>:
+<ul>
+<li><span class="ui">Name</span>: <code>web2</code></li>
+<li><span class="ui">Region</span>: <span class="v">REGIÃO</span></li>
+<li><span class="ui">Zone</span>: <span class="v">ZONA</span></li>
+<li><span class="ui">Series</span>: <b>E2</b> · <span class="ui">Machine type</span>: <b>e2-small</b></li>
+</ul></li>
+<li>No menu à esquerda, clique em <span class="ui">OS and storage</span> e depois em <span class="ui">Change</span>:
+<ul>
+<li><span class="ui">Operating system</span>: <b>Debian</b></li>
+<li><span class="ui">Version</span>: <b>Debian GNU/Linux 12 (bookworm)</b> com <b>x86/64</b> (não escolha a opção <b>Arm64</b>)</li>
+<li>clique em <span class="ui">Select</span>.</li>
+</ul></li>
+<li>No menu à esquerda, clique em <span class="ui">Networking</span>. Em <span class="ui">Network tags</span>, digite <code>network-lb-tag</code> e tecle Enter.</li>
+<li>No menu à esquerda, clique em <span class="ui">Advanced</span>. Em <span class="ui">Automation › Startup script</span>, cole:
+<pre>#!/bin/bash
+apt-get update
+apt-get install apache2 -y
+service apache2 restart
+echo "&lt;h3&gt;Servidor da web: web2&lt;/h3&gt;" | tee /var/www/html/index.html</pre></li>
+<li class="fim">Clique em <span class="ui">Create</span> e espere a <code>web2</code> aparecer com o ícone verde na lista.</li>
+</ol>
+<h3>Criar a VM <code>web3</code></h3>
+<ol>
+<li><span class="caminho">Navigation menu (☰) › Compute Engine › VM instances</span> e clique em <span class="ui">Create instance</span>.</li>
+<li>Em <span class="ui">Machine configuration</span>:
+<ul>
+<li><span class="ui">Name</span>: <code>web3</code></li>
+<li><span class="ui">Region</span>: <span class="v">REGIÃO</span></li>
+<li><span class="ui">Zone</span>: <span class="v">ZONA</span></li>
+<li><span class="ui">Series</span>: <b>E2</b> · <span class="ui">Machine type</span>: <b>e2-small</b></li>
+</ul></li>
+<li>No menu à esquerda, clique em <span class="ui">OS and storage</span> e depois em <span class="ui">Change</span>:
+<ul>
+<li><span class="ui">Operating system</span>: <b>Debian</b></li>
+<li><span class="ui">Version</span>: <b>Debian GNU/Linux 12 (bookworm)</b> com <b>x86/64</b> (não escolha a opção <b>Arm64</b>)</li>
+<li>clique em <span class="ui">Select</span>.</li>
+</ul></li>
+<li>No menu à esquerda, clique em <span class="ui">Networking</span>. Em <span class="ui">Network tags</span>, digite <code>network-lb-tag</code> e tecle Enter.</li>
+<li>No menu à esquerda, clique em <span class="ui">Advanced</span>. Em <span class="ui">Automation › Startup script</span>, cole:
+<pre>#!/bin/bash
+apt-get update
+apt-get install apache2 -y
+service apache2 restart
+echo "&lt;h3&gt;Servidor da web: web3&lt;/h3&gt;" | tee /var/www/html/index.html</pre></li>
+<li class="fim">Clique em <span class="ui">Create</span> e espere a <code>web3</code> aparecer com o ícone verde na lista.</li>
+</ol>
+<h3>Criar a regra de firewall</h3>
+<ol>
+<li><span class="caminho">Navigation menu › VPC network › Firewall</span> e clique em <span class="ui">Create firewall rule</span>.</li>
+<li><span class="ui">Name</span>: <code>www-firewall-network-lb</code>.</li>
+<li><span class="ui">Network</span>: <b>default</b> · <span class="ui">Direction of traffic</span>: <b>Ingress</b> · <span class="ui">Action on match</span>: <b>Allow</b>.</li>
+<li><span class="ui">Targets</span>: <b>Specified target tags</b> · <span class="ui">Target tags</span>: <code>network-lb-tag</code>.</li>
+<li><span class="ui">Source filter</span>: <b>IPv4 ranges</b> · <span class="ui">Source IPv4 ranges</span>: <code>0.0.0.0/0</code>.</li>
+<li><span class="ui">Protocols and ports</span>: <b>Specified protocols and ports</b> › marque <b>TCP</b> › <span class="ui">Ports</span>: <code>80</code>.</li>
+<li class="fim">Clique em <span class="ui">Create</span>.</li>
+</ol>
+<p><b>Conferir:</b> em <span class="caminho">VM instances</span>, clique no <span class="ui">External IP</span> de cada VM. A página deve mostrar "Servidor da web: web1" (ou web2, web3). Se der erro, confira se o endereço começa com <b>http://</b> e não https://.</p>
+<p>Volte ao roteiro e clique em <b>Verificar meu progresso</b> da tarefa 1.</p>
+
+<h2>Tarefa 2: configurar o balanceador de rede<span class="pts">35 pontos</span></h2>
+<p><b>O que o roteiro pede:</b> IP externo estático <code>network-lb-ip-1</code>, pool de destino <code>www-pool</code> e encaminhamento na porta <code>80</code>.</p>
+<h3>Pelo console: reservar o IP estático</h3>
+<ol>
+<li><span class="caminho">Navigation menu › VPC network › IP addresses</span> e clique em <span class="ui">Reserve external static IP address</span>.</li>
+<li><span class="ui">Name</span>: <code>network-lb-ip-1</code>.</li>
+<li><span class="ui">IP version</span>: <b>IPv4</b> · <span class="ui">Type</span>: <b>Regional</b> · <span class="ui">Region</span>: <span class="v">REGIÃO</span>.</li>
+<li class="fim">Clique em <span class="ui">Reserve</span>.</li>
+</ol>
+<div class="box cmd"><b class="t">Por comando (o console não cria pool de destino)</b>
+<ol>
+<li>No topo do console, clique em <span class="ui">Activate Cloud Shell</span> (ícone <b>&gt;_</b>) e depois em <span class="ui">Continue</span>. Se pedir, clique em <span class="ui">Authorize</span>.</li>
+<li>Rode os comandos abaixo, trocando <span class="v">REGIÃO</span> e <span class="v">ZONA</span>:</li>
+</ol>
+<pre>gcloud compute http-health-checks create basic-check
+
+gcloud compute target-pools create www-pool \
+  --region=REGIÃO --http-health-check basic-check
+
+gcloud compute target-pools add-instances www-pool \
+  --instances web1,web2,web3 --instances-zone=ZONA
+
+gcloud compute forwarding-rules create www-rule \
+  --region=REGIÃO --ports 80 \
+  --address network-lb-ip-1 --target-pool www-pool</pre></div>
+<p><b>Conferir:</b> em <span class="caminho">Network services › Load balancing</span> aparece o balanceador com o pool <code>www-pool</code>. Abra o IP <code>network-lb-ip-1</code> no navegador e atualize algumas vezes: a resposta alterna entre web1, web2 e web3.</p>
+<p>Volte ao roteiro e clique em <b>Verificar meu progresso</b> da tarefa 2.</p>
+
+<h2>Tarefa 3: criar o balanceador HTTP<span class="pts">45 pontos</span></h2>
+<p><b>O que o roteiro pede:</b> modelo <code>lb-backend-template</code>, grupo gerenciado <code>lb-backend-group</code>, firewall <code>fw-allow-health-check</code>, IP <code>lb-ipv4-1</code>, verificação <code>http-basic-check</code>, mapa de URL <code>web-map-http</code> e proxy <code>http-lb-proxy</code>.</p>
+<h3>1. Modelo de instância (console)</h3>
+<ol>
+<li><span class="caminho">Navigation menu › Compute Engine › Instance templates</span> e clique em <span class="ui">Create instance template</span>.</li>
+<li><span class="ui">Name</span>: <code>lb-backend-template</code>.</li>
+<li><span class="ui">Location</span>: <b>Regional</b> · <span class="ui">Region</span>: <span class="v">REGIÃO</span>.</li>
+<li><span class="ui">Machine configuration</span>: <span class="ui">Series</span> <b>E2</b> · <span class="ui">Machine type</span> <b>e2-medium</b>.</li>
+<li><span class="ui">Boot disk</span> › <span class="ui">Change</span>: <b>Debian GNU/Linux 12 (bookworm)</b> (igual às VMs da tarefa 1) › <span class="ui">Select</span>.</li>
+<li>Abra <span class="ui">Advanced options › Networking</span> e, em <span class="ui">Network tags</span>, digite <code>allow-health-check</code> e tecle Enter.</li>
+<li>Em <span class="ui">Advanced options › Management › Automation › Startup script</span>, cole (recomendado, para o teste final mostrar a página):
+<pre>#!/bin/bash
+apt-get update
+apt-get install apache2 -y
+a2ensite default-ssl
+a2enmod ssl
+vm_hostname="$(curl -H "Metadata-Flavor:Google" \
+http://169.254.169.254/computeMetadata/v1/instance/name)"
+echo "Page served from: $vm_hostname" | tee /var/www/html/index.html
+systemctl restart apache2</pre></li>
+<li class="fim">Clique em <span class="ui">Create</span>.</li>
+</ol>
+<h3>2. Grupo gerenciado de instâncias (console)</h3>
+<ol>
+<li><span class="caminho">Navigation menu › Compute Engine › Instance groups</span> e clique em <span class="ui">Create instance group</span>.</li>
+<li>No menu à esquerda, escolha <span class="ui">New managed instance group (stateless)</span>.</li>
+<li><span class="ui">Name</span>: <code>lb-backend-group</code> · <span class="ui">Instance template</span>: <code>lb-backend-template</code>.</li>
+<li><span class="ui">Location</span>: <b>Single zone</b> · <span class="ui">Region</span>: <span class="v">REGIÃO</span> · <span class="ui">Zone</span>: <span class="v">ZONA</span>.</li>
+<li><span class="ui">Autoscaling</span>: <span class="ui">Minimum number of instances</span> <code>2</code>.</li>
+<li>Em <span class="ui">Port mapping</span>, clique em <span class="ui">Add port</span>: <span class="ui">Port name</span> <code>http</code> · <span class="ui">Port number</span> <code>80</code>.</li>
+<li class="fim">Clique em <span class="ui">Create</span>. O grupo leva 1 ou 2 minutos para subir as VMs.</li>
+</ol>
+<h3>3. Firewall para as verificações de integridade (console)</h3>
+<ol>
+<li><span class="caminho">Navigation menu › VPC network › Firewall</span> e clique em <span class="ui">Create firewall rule</span>.</li>
+<li><span class="ui">Name</span>: <code>fw-allow-health-check</code>.</li>
+<li><span class="ui">Network</span>: <b>default</b> · <span class="ui">Direction of traffic</span>: <b>Ingress</b> · <span class="ui">Action on match</span>: <b>Allow</b>.</li>
+<li><span class="ui">Targets</span>: <b>Specified target tags</b> · <span class="ui">Target tags</span>: <code>allow-health-check</code>.</li>
+<li><span class="ui">Source filter</span>: <b>IPv4 ranges</b> · <span class="ui">Source IPv4 ranges</span>: <code>130.211.0.0/22</code> e <code>35.191.0.0/16</code> (tecle Enter depois de cada um).</li>
+<li><span class="ui">Protocols and ports</span>: <b>Specified protocols and ports</b> › marque <b>TCP</b> › <span class="ui">Ports</span>: <code>80</code>.</li>
+<li class="fim">Clique em <span class="ui">Create</span>.</li>
+</ol>
+<h3>4. IP externo global (console)</h3>
+<ol>
+<li><span class="caminho">Navigation menu › VPC network › IP addresses</span> e clique em <span class="ui">Reserve external static IP address</span>.</li>
+<li><span class="ui">Name</span>: <code>lb-ipv4-1</code>.</li>
+<li><span class="ui">IP version</span>: <b>IPv4</b> · <span class="ui">Type</span>: <b>Global</b>.</li>
+<li class="fim">Clique em <span class="ui">Reserve</span>.</li>
+</ol>
+<div class="box cmd"><b class="t">5. Balanceador por comando (os nomes exigidos não são configuráveis no console)</b>
+No Cloud Shell, rode os comandos abaixo, trocando <span class="v">ZONA</span>:
+<pre>gcloud compute health-checks create http http-basic-check --port 80
+
+gcloud compute backend-services create web-backend-service \
+  --protocol=HTTP --port-name=http \
+  --health-checks=http-basic-check --global
+
+gcloud compute backend-services add-backend web-backend-service \
+  --instance-group=lb-backend-group \
+  --instance-group-zone=ZONA --global
+
+gcloud compute url-maps create web-map-http \
+  --default-service web-backend-service
+
+gcloud compute target-http-proxies create http-lb-proxy \
+  --url-map web-map-http
+
+gcloud compute forwarding-rules create http-content-rule \
+  --address=lb-ipv4-1 --global \
+  --target-http-proxy=http-lb-proxy --ports=80</pre></div>
+<p><b>Conferir (pelo console):</b> <span class="caminho">Network services › Load balancing</span> › clique em <code>web-map-http</code>. Copie o IP em <span class="ui">Frontend</span> e abra <code>http://IP-do-balanceador/</code>. Pode levar de 3 a 5 minutos; aparece "Page served from: lb-backend-group-xxxx".</p>
+<p>Volte ao roteiro e clique em <b>Verificar meu progresso</b> da tarefa 3.</p>
+<div class="box alerta"><b class="t">Erros comuns</b><ul>
+<li>VM em zona errada ou sem a tag de rede: o firewall não se aplica.</li>
+<li>Esquecer a porta nomeada <code>http:80</code> no grupo: o serviço de back-end não encontra a porta.</li>
+<li>Testar o HTTP antes de 5 minutos e achar que falhou. Aguarde e atualize.</li>
+<li>Nomes de botões diferentes dos desta página: a tradução automática do navegador está ligada. Veja "Antes de começar".</li></ul></div>
+<p class="alt">Prefere fazer pelo terminal? <a href="lab-gsp313-manual.html" target="_blank" rel="noopener">Versão por linha de comando</a></p>
+<footer>Estratégia de resolução preparada para a turma. Siga sempre o roteiro do laboratório: os nomes, a região e a zona mostrados no painel do lab têm prioridade sobre qualquer exemplo desta página.</footer>
+</div></body></html>
+<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>GSP313 – Estratégia de resolução</title><style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',Roboto,Helvetica,Arial,sans-serif;background:#f1f3f4;min-height:100vh;padding:32px 16px;color:#202124;line-height:1.55}
+.container{background:#fff;border:1px solid #dadce0;border-top:6px solid var(--cor);border-radius:12px;padding:32px 36px;max-width:900px;margin:0 auto}
+a.voltar{display:block;width:fit-content;margin-bottom:18px;color:var(--cor);text-decoration:none;font-weight:600}
+a.voltar:hover{text-decoration:underline}
+.fase{display:inline-block;font-size:.85em;font-weight:600;color:var(--cor);background:var(--claro);border-radius:999px;padding:3px 12px;margin-bottom:10px}
+h1{color:#202124;font-size:1.8em;line-height:1.25;margin-bottom:6px}
+.sub{color:#5f6368;margin-bottom:20px}
+.chips span{display:inline-block;background:#f1f3f4;color:#3c4043;border-radius:16px;padding:4px 12px;margin:0 6px 6px 0;font-size:.88em}
+h2{color:#202124;font-size:1.3em;margin:34px 0 12px;padding-bottom:8px;border-bottom:3px solid var(--cor)}
+h2 .pts{float:right;background:var(--cor);color:#fff;border-radius:14px;padding:2px 12px;font-size:.68em;margin-top:6px}
+h3{color:#202124;font-size:1.05em;margin:18px 0 8px}
+p{margin:8px 0}
+ol,ul{margin:8px 0 8px 24px}
+li{margin:5px 0}
+.box{border-radius:10px;padding:14px 18px;margin:14px 0;border:1px solid transparent}
+.regra{background:#f8f9fa;border-color:#e8eaed}
+.cmd{background:#fef7e0;border-color:#fde293}
+.alerta{background:#fce8e6;border-color:#f6aea9}
+.box b.t{display:block;margin-bottom:4px}
+code,.v{font-family:Consolas,'Courier New',monospace;font-size:.92em}
+code{background:#f1f3f4;padding:1px 6px;border-radius:4px}
+.v{background:#fff3cd;padding:1px 6px;border-radius:4px;border:1px dashed #f9ab00}
 pre{background:#202124;color:#e8eaed;padding:14px 16px;border-radius:10px;overflow-x:auto;margin:10px 0;font-size:.88em;line-height:1.45}
 table{border-collapse:collapse;width:100%;margin:10px 0;font-size:.95em}
 th,td{border:1px solid #dadce0;padding:7px 10px;text-align:left;vertical-align:top}
