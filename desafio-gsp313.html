@@ -269,7 +269,7 @@ systemctl restart apache2</pre></li>
 <li>No menu à esquerda, escolha <span class="ui">New managed instance group (stateless)</span>.</li>
 <li><span class="ui">Name</span>: <code>lb-backend-group</code> · <span class="ui">Instance template</span>: <code>lb-backend-template</code>.</li>
 <li><span class="ui">Location</span>: <b>Single zone</b> · <span class="ui">Region</span>: <span class="v">REGIÃO</span> · <span class="ui">Zone</span>: <span class="v">ZONA</span>.</li>
-<li><span class="ui">Autoscaling</span>: <span class="ui">Minimum number of instances</span> <code>2</code>.</li>
+<li>Em <span class="ui">Autoscaling</span>, clique em <span class="ui">Configure</span> para abrir as opções. Em <span class="ui">Minimum number of instances</span>, digite <code>2</code>.</li>
 <li>Em <span class="ui">Port mapping</span>, clique em <span class="ui">Add port</span>: <span class="ui">Port name</span> <code>http</code> · <span class="ui">Port number</span> <code>80</code>.</li>
 <li class="fim">Clique em <span class="btn">Create</span>. O grupo leva 1 ou 2 minutos para subir as VMs.</li>
 </ol>
