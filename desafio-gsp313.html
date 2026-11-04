@@ -36,6 +36,9 @@ details.antes>summary .dica{font-size:.62em;font-weight:400;color:#5f6368;margin
 details.antes[open]>summary .dica{display:none}
 details.antes>summary:focus-visible{outline:2px solid var(--cor);outline-offset:2px}
 details.antes .corpo{padding:0 18px 6px}
+details.erros{background:#fce8e6;border-color:#f6aea9}
+details.erros>summary{border-left-color:#d93025}
+details.erros>summary::before{color:#d93025}
 .alt{margin-top:36px;text-align:center;font-size:.8em;color:#9aa0a6}
 .alt a{color:#9aa0a6}
 footer{margin-top:10px;color:#80868b;font-size:.85em;text-align:center}
@@ -314,12 +317,15 @@ No Cloud Shell (se ele foi fechado, abra de novo em <span class="ui">Activate Cl
   --target-http-proxy=http-lb-proxy --ports=80</pre></div>
 <p><b>Conferir (pelo console):</b> <span class="caminho">Menu de navegação (☰) › View all products › Networking › Network services › Load balancing</span> › clique em <code>web-map-http</code>. Copie o IP em <span class="ui">Frontend</span> e abra <code>http://IP-do-balanceador/</code>. Pode levar de 3 a 5 minutos; aparece "Page served from: lb-backend-group-xxxx".</p>
 <p>Volte ao roteiro e clique em <b>Verificar meu progresso</b> da tarefa 3.</p>
-<div class="box alerta"><b class="t">Erros comuns</b><ul>
+<details class="antes erros">
+<summary>⚠️ Erros comuns <span class="dica">clique para abrir</span></summary>
+<div class="corpo"><ul>
 <li>VM em zona errada ou sem a tag de rede: o firewall não se aplica.</li>
 <li>Esquecer a porta nomeada <code>http:80</code> no grupo: o serviço de back-end não encontra a porta.</li>
 <li>Testar o HTTP antes de 5 minutos e achar que falhou. Aguarde e atualize.</li>
 <li>Apache não instalado (<code>Could not get lock</code> no <span class="ui">Serial port 1 (console)</span>): clique em <span class="ui">Reset</span> na VM. No balanceador HTTP, isso vale para as VMs <code>lb-backend-group-xxxx</code>.</li>
 <li>Nomes de botões diferentes dos desta página: a tradução automática do navegador está ligada. Veja "Antes de começar".</li></ul></div>
+</details>
 <p class="alt">Prefere fazer pelo terminal? <a href="lab-gsp313-manual.html" target="_blank" rel="noopener">Versão por linha de comando</a></p>
 <footer>Estratégia de resolução preparada para a turma. Siga sempre o roteiro do laboratório: os nomes, a região e a zona mostrados no painel do lab têm prioridade sobre qualquer exemplo desta página.</footer>
 </div></body></html>
