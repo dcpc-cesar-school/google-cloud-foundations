@@ -39,6 +39,18 @@ details.antes .corpo{padding:0 18px 6px}
 details.erros{background:#fce8e6;border-color:#f6aea9}
 details.erros>summary{border-left-color:#d93025}
 details.erros>summary::before{color:#d93025}
+.card{border:1px solid #dadce0;border-radius:12px;background:#fff;margin:14px 0 4px;overflow:hidden}
+.card>input{position:absolute;opacity:0;pointer-events:none}
+.card-tabs{display:flex;border-bottom:1px solid #dadce0;background:#f8f9fa}
+.card-tabs label{flex:1;text-align:center;padding:10px 8px;cursor:pointer;font-weight:600;color:#5f6368;border-bottom:3px solid transparent}
+.card-tabs label:hover{background:#f1f3f4}
+#c-antes:checked~.card-tabs label[for=c-antes],#c-depois:checked~.card-tabs label[for=c-depois]{color:var(--cor);border-bottom-color:var(--cor);background:#fff}
+#c-antes:focus-visible~.card-tabs label[for=c-antes],#c-depois:focus-visible~.card-tabs label[for=c-depois]{outline:2px solid var(--cor);outline-offset:-2px}
+.card figure{display:none;margin:0;padding:12px}
+#c-antes:checked~.f-antes,#c-depois:checked~.f-depois{display:block}
+.card img{display:block;width:100%;max-width:640px;height:auto;margin:0 auto;border-radius:6px}
+.card figcaption{font-size:.88em;color:#5f6368;margin-top:8px;text-align:center}
+.credito{font-size:.78em;color:#80868b;margin:4px 0 14px}
 .alt{margin-top:36px;text-align:center;font-size:.8em;color:#9aa0a6}
 .alt a{color:#9aa0a6}
 footer{margin-top:10px;color:#80868b;font-size:.85em;text-align:center}
@@ -92,6 +104,27 @@ O site <b>juice-shop</b> do Jeferson está na VPC <code>acme-vpc</code>, com uma
 <li>só o HTTP (porta 80) do juice-shop fica aberto ao público.</li>
 </ul>
 O roteiro avisa: <b>permissões muito flexíveis são marcadas como incorretas</b>. Nunca use <code>0.0.0.0/0</code> nas regras de SSH.</div>
+<div class="card">
+<input type="radio" name="card322" id="c-antes" checked><input type="radio" name="card322" id="c-depois">
+<div class="card-tabs"><label for="c-antes">Antes: configuração atual</label><label for="c-depois">Depois: o que você vai configurar</label></div>
+<figure class="f-antes"><a href="https://cdn.qwiklabs.com/qEwFTP7%2FkyF3cRwfT3FGObt7L7VLB60%2Bvp92hZVnogw%3D" target="_blank" rel="noopener"><img src="https://cdn.qwiklabs.com/qEwFTP7%2FkyF3cRwfT3FGObt7L7VLB60%2Bvp92hZVnogw%3D" alt="Ambiente atual do Google Cloud no lab GSP322"></a>
+<figcaption>Como o ambiente está quando o lab começa. Clique em <b>Depois</b> para ver o objetivo.</figcaption></figure>
+<figure class="f-depois"><a href="https://cdn.qwiklabs.com/BgxgsuLyqMkhxmO3jDlkHE7yGLIR%2B3rrUabKimlgrbo%3D" target="_blank" rel="noopener"><img src="https://cdn.qwiklabs.com/BgxgsuLyqMkhxmO3jDlkHE7yGLIR%2B3rrUabKimlgrbo%3D" alt="Ambiente do Google Cloud a ser configurado no lab GSP322"></a>
+<figcaption>Objetivo: Admin › IAP › bastion › juice-shop por SSH; clientes só por HTTP.</figcaption></figure>
+</div>
+<p class="credito">Imagens do roteiro do lab GSP322 (Google Skills). Clique na imagem para ampliar.</p>
+<div class="box regra"><b class="t">🗺️ Quem é quem na rede</b>
+<ul>
+<li><b><code>acme-vpc</code></b>: a rede privada (VPC) do Jeferson no Google Cloud. Todas as VMs do lab ficam nela, e as regras de firewall que você criar devem ser dela.</li>
+<li><b><code>acme-mgmt-subnet</code></b>: sub-rede de <b>gerenciamento</b>. Fica nela só o que a equipe usa para administrar o ambiente, no caso o bastion.</li>
+<li><b><code>acme-app-subnet</code></b>: sub-rede da <b>aplicação</b>. Fica nela o servidor que atende os clientes, o juice-shop.</li>
+<li><b><code>bastion</code></b> (bastion host): a "portaria" da rede. É a única VM em que o administrador entra por SSH; dali ele salta para os outros servidores. Por isso não tem IP público e só aceita SSH vindo do IAP.</li>
+<li><b><code>juice-shop</code></b>: o servidor web da loja. Os clientes acessam o site por HTTP (porta 80). O SSH nele só é aceito quando vem do bastion.</li>
+<li><b>IAP</b> (Identity-Aware Proxy): serviço do Google que confere a identidade do administrador (login e permissões) e só então abre o túnel SSH até o bastion. As conexões chegam sempre da faixa <code>35.235.240.0/20</code>.</li>
+<li><b>Admin</b>: quem administra o ambiente. Entra pelo IAP › bastion › juice-shop.</li>
+<li><b>Customers</b>: os clientes da loja. Só chegam ao juice-shop, e só por HTTP.</li>
+<li><b>Regras de firewall + tags de rede</b>: a regra diz <i>o que</i> está liberado (porta e origem) e a tag diz <i>em qual VM</i> a regra vale. Uma regra só tem efeito na VM que tem a mesma tag.</li>
+</ul></div>
 
 <h2>1. Remover as regras excessivamente flexíveis<span class="pts">10 pontos</span></h2>
 <ol>
