@@ -291,24 +291,25 @@ systemctl restart apache2</pre></li>
 <li class="fim">Clique em <span class="btn">Reserve</span>.</li>
 </ol>
 <div class="box cmd"><b class="t">5. Balanceador por comando (os nomes exigidos não são configuráveis no console)</b>
-No Cloud Shell, rode os comandos abaixo, trocando <span class="v">ZONA</span>:
-<pre>gcloud compute health-checks create http http-basic-check --port 80
-
-gcloud compute backend-services create web-backend-service \
+No Cloud Shell (se ele foi fechado, abra de novo em <span class="ui">Activate Cloud Shell</span>), rode os 6 comandos abaixo <b>um de cada vez</b>, trocando <span class="v">ZONA</span>. Cole um bloco, tecle Enter e espere o comando terminar (o cursor do Cloud Shell volta a aparecer) antes de colar o próximo.
+<p><b>1. Criar a verificação de integridade</b> <code>http-basic-check</code>:</p>
+<pre>gcloud compute health-checks create http http-basic-check --port 80</pre>
+<p><b>2. Criar o serviço de back-end</b> <code>web-backend-service</code>:</p>
+<pre>gcloud compute backend-services create web-backend-service \
   --protocol=HTTP --port-name=http \
-  --health-checks=http-basic-check --global
-
-gcloud compute backend-services add-backend web-backend-service \
+  --health-checks=http-basic-check --global</pre>
+<p><b>3. Adicionar o grupo de instâncias ao serviço de back-end:</b></p>
+<pre>gcloud compute backend-services add-backend web-backend-service \
   --instance-group=lb-backend-group \
-  --instance-group-zone=ZONA --global
-
-gcloud compute url-maps create web-map-http \
-  --default-service web-backend-service
-
-gcloud compute target-http-proxies create http-lb-proxy \
-  --url-map web-map-http
-
-gcloud compute forwarding-rules create http-content-rule \
+  --instance-group-zone=ZONA --global</pre>
+<p><b>4. Criar o mapa de URL</b> <code>web-map-http</code>:</p>
+<pre>gcloud compute url-maps create web-map-http \
+  --default-service web-backend-service</pre>
+<p><b>5. Criar o proxy HTTP</b> <code>http-lb-proxy</code>:</p>
+<pre>gcloud compute target-http-proxies create http-lb-proxy \
+  --url-map web-map-http</pre>
+<p><b>6. Criar a regra de encaminhamento</b> <code>http-content-rule</code> na porta 80, usando o IP <code>lb-ipv4-1</code>:</p>
+<pre>gcloud compute forwarding-rules create http-content-rule \
   --address=lb-ipv4-1 --global \
   --target-http-proxy=http-lb-proxy --ports=80</pre></div>
 <p><b>Conferir (pelo console):</b> <span class="caminho">Menu de navegação (☰) › View all products › Networking › Network services › Load balancing</span> › clique em <code>web-map-http</code>. Copie o IP em <span class="ui">Frontend</span> e abra <code>http://IP-do-balanceador/</code>. Pode levar de 3 a 5 minutos; aparece "Page served from: lb-backend-group-xxxx".</p>
