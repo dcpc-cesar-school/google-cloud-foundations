@@ -76,7 +76,7 @@ footer{margin-top:10px;color:#80868b;font-size:.85em;text-align:center}
 <li>Abra o lab em janela anônima e use só o usuário e a senha do laboratório.</li>
 <li>Os valores em <span class="v">amarelo</span> (tags de rede, zona) mudam a cada execução: copie do <b>painel do lab</b>, à esquerda do roteiro, depois de clicar em <b>Iniciar laboratório</b>.</li>
 <li>Faça pelo <b>console</b>. Use comandos apenas onde esta página indicar.</li>
-<li>Ao final de cada tarefa, clique em <b>Verificar meu progresso</b>. Se não passar, leia a mensagem, corrija e verifique de novo.</li>
+<li>Ao final de cada tarefa, clique em <span class="btn">Verificar meu progresso</span>. Se não passar, leia a mensagem, corrija e verifique de novo.</li>
 <li>Não clique em <b>Terminar o laboratório</b> antes de todas as tarefas estarem verificadas.</li>
 </ul></div>
 <div class="box alerta"><b class="t">🌐 Desative a tradução automática do navegador</b>
@@ -144,7 +144,7 @@ O roteiro avisa: <b>permissões muito flexíveis são marcadas como incorretas</
 <li class="fim">Na janela de confirmação, clique em <span class="btn">Delete</span>.</li>
 </ol>
 <p>Deixe as demais regras como estão.</p>
-<p>Volte ao roteiro e clique em <b>Verificar meu progresso</b> de "Remova regras excessivamente flexíveis".</p>
+<p>Volte às instruções do lab no Google Skills e clique em <span class="btn">Verificar meu progresso</span> de "Remova regras excessivamente flexíveis".</p>
 
 <h2>2. Iniciar o bastion host<span class="pts">10 pontos</span></h2>
 <ol>
@@ -153,7 +153,7 @@ O roteiro avisa: <b>permissões muito flexíveis são marcadas como incorretas</
 <li class="fim">Na janela de confirmação, clique em <span class="btn">Start</span>. Espere o ícone verde aparecer.</li>
 <li><b>Confira o IP público:</b> na coluna <span class="ui">External IP</span>, o <code>bastion</code> deve aparecer <b>sem endereço</b>. Se tiver um IP, clique no nome <code>bastion</code> › <span class="ui">Edit</span> › <span class="ui">Network interfaces</span> › abra a interface › em <span class="ui">External IPv4 address</span>, selecione a opção <b>None</b> › <span class="btn">Done</span> › <span class="btn">Save</span>.</li>
 </ol>
-<p>Volte ao roteiro e clique em <b>Verificar meu progresso</b> de "Inicie a instância do Bastion Host".</p>
+<p>Volte às instruções do lab no Google Skills e clique em <span class="btn">Verificar meu progresso</span> de "Inicie a instância do Bastion Host".</p>
 
 <h2>3. SSH pelo IAP para o bastion<span class="pts">20 pontos</span></h2>
 <h3>Criar a regra de firewall</h3>
@@ -174,7 +174,7 @@ O roteiro avisa: <b>permissões muito flexíveis são marcadas como incorretas</
 <li>Role até a seção <span class="ui">Networking</span> e, no campo <span class="ui">Network tags</span>, digite <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: Painel do lab (à esquerda do roteiro), campo &quot;SSH IAP network tag&quot;">SSH IAP network tag</span> e tecle Enter. Não apague as tags que já existirem.</li>
 <li class="fim">Role até o fim da página e clique em <span class="btn">Save</span>.</li>
 </ol>
-<p>Volte ao roteiro e clique em <b>Verificar meu progresso</b> do passo 3.</p>
+<p>Volte às instruções do lab no Google Skills e clique em <span class="btn">Verificar meu progresso</span> do passo 3.</p>
 
 <h2>4. HTTP público para o juice-shop<span class="pts">20 pontos</span></h2>
 <h3>Criar a regra de firewall</h3>
@@ -195,7 +195,7 @@ O roteiro avisa: <b>permissões muito flexíveis são marcadas como incorretas</
 <li>Role até a seção <span class="ui">Networking</span> e, no campo <span class="ui">Network tags</span>, digite <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: Painel do lab (à esquerda do roteiro), campo &quot;HTTP network tag&quot;">HTTP network tag</span> e tecle Enter.</li>
 <li class="fim">Clique em <span class="btn">Save</span>.</li>
 </ol>
-<p>Volte ao roteiro e clique em <b>Verificar meu progresso</b> do passo 4.</p>
+<p>Volte às instruções do lab no Google Skills e clique em <span class="btn">Verificar meu progresso</span> do passo 4.</p>
 
 <h2>5. SSH do bastion para o juice-shop<span class="pts">20 pontos</span></h2>
 <h3>Descobrir o intervalo da sub-rede de gerenciamento</h3>
@@ -221,7 +221,7 @@ O roteiro avisa: <b>permissões muito flexíveis são marcadas como incorretas</
 <li>Role até a seção <span class="ui">Networking</span> e, no campo <span class="ui">Network tags</span>, digite <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: Painel do lab (à esquerda do roteiro), campo &quot;SSH internal network tag&quot;">SSH internal network tag</span> e tecle Enter. A <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: Painel do lab (à esquerda do roteiro), campo &quot;HTTP network tag&quot;">HTTP network tag</span> do passo 4 deve continuar lá.</li>
 <li class="fim">Clique em <span class="btn">Save</span>.</li>
 </ol>
-<p>Volte ao roteiro e clique em <b>Verificar meu progresso</b> do passo 5.</p>
+<p>Volte às instruções do lab no Google Skills e clique em <span class="btn">Verificar meu progresso</span> do passo 5.</p>
 
 <h2>6. Conectar ao bastion pelo IAP e ao juice-shop pelo bastion<span class="pts">20 pontos</span></h2>
 <ol>
@@ -236,7 +236,7 @@ Esta é a única parte que exige comando, porque a conexão sai de dentro do bas
 <p><b>2. Conferir que está no juice-shop:</b> o prompt muda para algo como <code>usuario@juice-shop:~$</code>. Se quiser confirmar:</p>
 <pre>hostname</pre>
 </div>
-<p>Com a conexão aberta, volte ao roteiro e clique em <b>Verificar meu progresso</b> do passo 6.</p>
+<p>Com a conexão aberta, volte às instruções do lab no Google Skills e clique em <span class="btn">Verificar meu progresso</span> do passo 6.</p>
 
 <details class="antes erros">
 <summary>⚠️ Erros comuns <span class="dica">clique para abrir</span></summary>
@@ -244,7 +244,7 @@ Esta é a única parte que exige comando, porque a conexão sai de dentro do bas
 <li>Criar a regra na rede <b>default</b> em vez da <code>acme-vpc</code>: a regra não vale para as VMs do lab.</li>
 <li>Criar a regra mas esquecer de colocar a tag na VM (ou clicar em <b>Save</b>).</li>
 <li>Usar <code>0.0.0.0/0</code> nas regras de SSH: é marcado como permissão excessiva.</li>
-<li>Digitar a tag errada: copie do roteiro, letra por letra. A tag da regra e a da VM precisam ser idênticas.</li>
+<li>Digitar a tag errada: copie do painel do lab, letra por letra. A tag da regra e a da VM precisam ser idênticas.</li>
 <li>Botão <b>SSH</b> do bastion não conecta: confira a regra do IAP (<code>35.235.240.0/20</code>, TCP 22) e a <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: Painel do lab (à esquerda do roteiro), campo &quot;SSH IAP network tag&quot;">SSH IAP network tag</span> no bastion. O roteiro sugere rodar o comando com <code>--troubleshoot</code> para ver o motivo.</li>
 <li>Nomes de botões diferentes dos desta página: a tradução automática do navegador está ligada. Veja "Antes de começar".</li>
 </ul></div>
