@@ -111,14 +111,33 @@ Nesta página, todo valor em <span class="v">amarelo</span> é um <b>placeholder
 <details class="antes">
 <summary>🎯 Cenário e objetivo <span class="dica">clique para abrir</span></summary>
 <div class="corpo">
-Você é da equipe de nuvem da Jooli Inc. e vai preparar o ambiente do projeto de fotos <b>Recordações</b>. Ao final:
+<p>Você está na equipe de nuvem da Jooli Inc. e vai preparar o ambiente do projeto de fotos <b>Recordações</b>: um lugar para guardar as fotos, um processamento automático que gera uma miniatura a cada foto enviada e a remoção do acesso de quem saiu do projeto. Crie tudo na <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: instruções do lab no Google Skills, no texto da tarefa (aparece depois de clicar em Iniciar laboratório), valor &quot;Region&quot;">Region</span> e na <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: instruções do lab no Google Skills, no texto da tarefa (aparece depois de clicar em Iniciar laboratório), valor &quot;Zone&quot;">Zone</span> indicadas nas instruções do lab, com os nomes exatamente como aparecem lá.</p>
+
+<h3>🧰 Os serviços usados no lab</h3>
 <ul>
-<li>existe um <b>bucket</b> para guardar as fotos;</li>
-<li>existe um <b>tópico do Pub/Sub</b> que recebe mensagens da função;</li>
-<li>uma <b>função do Cloud Run</b> cria uma miniatura (64x64) toda vez que uma imagem chega ao bucket;</li>
-<li>o <b>engenheiro anterior</b> não tem mais acesso ao projeto.</li>
+<li><b>Cloud Storage</b>: o "HD" da nuvem. Guarda arquivos em <b>buckets</b>. Além de armazenar, avisa (gera um <b>evento</b>) sempre que um arquivo novo chega.</li>
+<li><b>Pub/Sub</b>: serviço de <b>mensagens</b>. Um sistema publica uma mensagem num <b>tópico</b>, e quem assina o tópico recebe. Assim, as partes de uma aplicação conversam sem depender diretamente umas das outras.</li>
+<li><b>Cloud Run functions</b>: roda um trecho de código (uma <b>função</b>) automaticamente quando algo acontece, sem servidor para você gerenciar. Só consome recursos enquanto está executando.</li>
+<li><b>Gatilho (Eventarc)</b>: a "ponte" que liga um evento, como "arquivo criado no bucket", à função que deve rodar. No console, é o que você configura em <b>Add trigger</b>.</li>
+<li><b>IAM</b>: controla <b>quem pode fazer o quê</b> no projeto, por meio de papéis como Owner (proprietário) e Viewer (leitor).</li>
 </ul>
-Crie tudo na <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: instruções do lab no Google Skills, no texto da tarefa (aparece depois de clicar em Iniciar laboratório), valor &quot;Region&quot;">Region</span> e na <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: instruções do lab no Google Skills, no texto da tarefa (aparece depois de clicar em Iniciar laboratório), valor &quot;Zone&quot;">Zone</span> indicadas nas instruções do lab. Use os nomes exatamente como aparecem lá.
+
+<h3>🔗 O que cada tarefa faz</h3>
+<ul>
+<li><b>Tarefa 1</b> · Cloud Storage<br><b>O que faz:</b> cria o bucket <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: instruções do lab no Google Skills, no texto da tarefa (aparece depois de clicar em Iniciar laboratório), valor &quot;Bucket&quot;">Bucket</span>.<br><b>Para que serve:</b> ser o repositório das fotos e o ponto de partida do processamento automático.</li>
+<li><b>Tarefa 2</b> · Pub/Sub<br><b>O que faz:</b> cria o tópico <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: instruções do lab no Google Skills, no texto da tarefa (aparece depois de clicar em Iniciar laboratório), valor &quot;Topic&quot;">Topic</span>.<br><b>Para que serve:</b> ser o canal em que a função avisa que uma miniatura foi gerada, para que outros sistemas possam reagir sem depender dela.</li>
+<li><b>Tarefa 3</b> · Cloud Storage › Cloud Run functions › Cloud Storage e Pub/Sub<br><b>O que faz:</b> cria a função <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: instruções do lab no Google Skills, no texto da tarefa (aparece depois de clicar em Iniciar laboratório), valor &quot;Function&quot;">Function</span>, que roda a cada imagem enviada ao bucket, gera uma miniatura 64x64, salva a miniatura no bucket e publica uma mensagem no tópico.<br><b>Para que serve:</b> automatizar uma tarefa repetitiva (redimensionar imagens), que passa a acontecer sozinha a cada envio.</li>
+<li><b>Tarefa 4</b> · IAM<br><b>O que faz:</b> remove o papel Viewer do <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: instruções do lab no Google Skills, no texto da tarefa (aparece depois de clicar em Iniciar laboratório), valor &quot;Username 2&quot;">Username 2</span>, o engenheiro anterior.<br><b>Para que serve:</b> aplicar o <b>menor privilégio</b>: quem saiu do projeto não deve continuar com acesso.</li>
+</ul>
+
+<div class="box regra"><b class="t">💡 Na prática, o que o conjunto faz</b>
+As tarefas montam uma pequena aplicação <b>serverless orientada a eventos</b>:
+<ul>
+<li>alguém <b>envia uma foto</b> para o bucket;</li>
+<li>o bucket gera um <b>evento</b>, e o gatilho chama a <b>função</b>;</li>
+<li>a função cria a <b>miniatura</b> e publica uma <b>mensagem</b> no tópico, para quem precisar saber.</li>
+</ul>
+Ninguém precisa ligar servidor nem rodar nada à mão. É assim que galerias de fotos e redes sociais geram miniaturas automaticamente. A tarefa 4 completa o cenário com a <b>governança de acesso</b>, que todo projeto real precisa ter.</div>
 </div>
 </details>
 
