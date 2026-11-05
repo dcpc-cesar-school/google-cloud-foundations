@@ -112,6 +112,8 @@ Nesta página, todo valor em <span class="v">amarelo</span> é um <b>placeholder
 <li>Confira se a conta <code>NÚMERO-DO-PROJETO-compute@developer.gserviceaccount.com</code> aparece com os papéis <b>Editor</b> e <b>Storage Admin</b>. Se aparecer, siga em frente.</li>
 <li>Se faltar o <b>Storage Admin</b>: clique em <span class="ui">Grant access</span>, em <span class="ui">New principals</span> cole a conta acima (o número do projeto está em <span class="caminho">Menu de navegação (☰) › Cloud overview › Dashboard</span>), em <span class="ui">Role</span> selecione a opção <b>Storage Admin</b> e clique em <span class="btn">Save</span>.</li>
 </ol></div>
+<div class="box cmd"><b class="t">Onde o console não basta</b>
+Tarefa 2: as instruções do lab exigem um comando <code>hdfs</code> dentro do cluster. Tarefas 3 e 4: as APIs não têm tela de uso no console; são chamadas por comando no Cloud Shell, e o resultado é enviado ao bucket.</div>
 </div>
 </details>
 
@@ -135,8 +137,6 @@ As quatro tarefas montam um pequeno fluxo de <b>preparação de dados para machi
 No fim, tudo está em formatos que podem ser consultados, cruzados e usados para treinar ou alimentar modelos. E sem você escrever nenhum modelo de ML: o trabalho é feito com serviços gerenciados e APIs prontas do Google.</div>
 </div>
 </details>
-<div class="box cmd"><b class="t">Onde o console não basta</b>
-Tarefa 2: as instruções do lab exigem um comando <code>hdfs</code> dentro do cluster. Tarefas 3 e 4: as APIs não têm tela de uso no console; são chamadas por comando no Cloud Shell, e o resultado é enviado ao bucket.</div>
 
 <h2>Tarefa 1: job simples no Dataflow<span class="pts">25 pontos</span></h2>
 <h3>Criar o dataset e a tabela do BigQuery</h3>
