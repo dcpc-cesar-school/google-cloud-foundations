@@ -149,8 +149,10 @@ O roteiro avisa: <b>permissões muito flexíveis são marcadas como incorretas</
 <h2>2. Iniciar o bastion host<span class="pts">10 pontos</span></h2>
 <ol>
 <li><span class="caminho">Menu de navegação (☰) › Compute Engine › VM instances</span>.</li>
-<li>Na linha da VM <code>bastion</code> (está parada), clique em <span class="ui">⋮</span> (<span class="ui">More actions</span>) › <span class="ui">Start / Resume</span>.</li>
-<li class="fim">Na janela de confirmação, clique em <span class="btn">Start</span>. Espere o ícone verde aparecer.</li>
+<li>Localize a VM <code>bastion</code>. Ela está parada: na coluna <span class="ui">Status</span> aparece o ícone de parada (■), <b>Stopped</b>.</li>
+<li>Marque a caixa de seleção à esquerda do nome <code>bastion</code>.</li>
+<li class="fim">Na barra logo acima da lista, clique em <span class="btn">Start / Resume</span>. Se aparecer uma confirmação, clique em <span class="btn">Start</span>.</li>
+<li>Espere o <span class="ui">Status</span> mudar para o ícone verde (<b>Running</b>).</li>
 <li><b>Confira o IP público:</b> na coluna <span class="ui">External IP</span>, o <code>bastion</code> deve aparecer <b>sem endereço</b>. Se tiver um IP, clique no nome <code>bastion</code> › <span class="ui">Edit</span> › <span class="ui">Network interfaces</span> › abra a interface › em <span class="ui">External IPv4 address</span>, selecione a opção <b>None</b> › <span class="btn">Done</span> › <span class="btn">Save</span>.</li>
 </ol>
 <p>Volte às instruções do lab no Google Skills e clique em <span class="btn">Verificar meu progresso</span> de "Inicie a instância do Bastion Host".</p>
