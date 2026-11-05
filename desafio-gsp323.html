@@ -120,13 +120,26 @@ Tarefa 2: as instruções do lab exigem um comando <code>hdfs</code> dentro do c
 <details class="antes">
 <summary>🎯 Cenário e objetivo <span class="dica">clique para abrir</span></summary>
 <div class="corpo">
-Você é engenheiro de dados júnior da Jooli Inc. e vai mostrar, na prática, as etapas mais comuns de um projeto de dados no Google Cloud: levar dados brutos para um lugar onde possam ser consultados, processar dados em escala e extrair informação de áudio e de texto com modelos de IA prontos do Google.
+<p>Você é engenheiro de dados júnior da Jooli Inc. e vai mostrar, na prática, as etapas mais comuns de um projeto de dados no Google Cloud: guardar dados brutos, carregá-los num lugar onde possam ser consultados, processá-los em escala e extrair informação de áudio e de texto com modelos de IA prontos do Google.</p>
+
+<h3>🧰 Os serviços usados no lab</h3>
 <ul>
-<li><b>Tarefa 1 · Dataflow</b><br><b>O que faz:</b> lê um arquivo CSV no Cloud Storage, aplica uma transformação (a função JavaScript <code>transform</code>) e grava o resultado numa tabela do BigQuery.<br><b>Para que serve:</b> é um pipeline de <b>ETL</b> (extrair, transformar e carregar). Pega dados brutos de arquivos e os deixa prontos para análise com SQL, sem você precisar gerenciar servidores.</li>
-<li><b>Tarefa 2 · Spark (Dataproc)</b><br><b>O que faz:</b> cria um cluster de máquinas e roda o PageRank sobre o arquivo <code>data.txt</code>.<br><b>Para que serve:</b> processar grandes volumes de dados <b>em paralelo</b>, dividindo o trabalho entre várias máquinas. O PageRank, algoritmo que ranqueia páginas pela quantidade e qualidade dos links que recebem, é o exemplo clássico desse tipo de processamento.</li>
-<li><b>Tarefa 3 · Speech-to-Text</b><br><b>O que faz:</b> transcreve um arquivo de áudio (<code>.flac</code>) para texto e salva o resultado em JSON no bucket.<br><b>Para que serve:</b> transformar áudio (atendimentos, reuniões, vídeos) em texto que pode ser pesquisado, analisado e usado por outros sistemas.</li>
-<li><b>Tarefa 4 · Natural Language</b><br><b>O que faz:</b> analisa um trecho de texto sobre Odin e identifica as <b>entidades</b> citadas (pessoas, objetos, lugares), salvando o resultado em JSON no bucket.<br><b>Para que serve:</b> descobrir automaticamente "do que o texto fala", para classificar, indexar ou alimentar outras análises.</li>
+<li><b>Cloud Storage</b>: o "HD" da nuvem. Guarda arquivos de qualquer tipo (CSV, áudio, JSON) em <b>buckets</b>. No lab, é de onde vêm os dados de entrada e para onde vão os resultados.</li>
+<li><b>BigQuery</b>: o banco de dados para análise. Guarda tabelas enormes e responde a consultas em SQL em segundos. Os dados ficam organizados em <b>datasets</b> (conjuntos de dados) e <b>tabelas</b>.</li>
+<li><b>Dataflow</b>: o "encanamento" de dados. Roda pipelines que leem dados de um lugar, transformam e gravam em outro, criando e desligando as máquinas sozinho. Tem <b>modelos prontos</b> para os casos mais comuns.</li>
+<li><b>Managed Service for Spark (Dataproc)</b>: clusters de <b>Apache Spark</b> prontos em poucos minutos. O Spark divide um processamento grande entre várias máquinas, que trabalham em paralelo.</li>
+<li><b>Speech-to-Text</b>: API de IA que <b>transcreve áudio em texto</b>. Você envia o áudio e recebe a transcrição em JSON.</li>
+<li><b>Natural Language</b>: API de IA que <b>entende texto</b>. Identifica entidades (pessoas, lugares, objetos), sentimento e assunto, e devolve o resultado em JSON.</li>
 </ul>
+
+<h3>🔗 O que cada tarefa faz</h3>
+<ul>
+<li><b>Tarefa 1</b> · Cloud Storage › Dataflow › BigQuery<br><b>O que faz:</b> lê o CSV <code>lab.csv</code> no Cloud Storage, aplica a função <code>transform</code> e grava o resultado numa tabela do BigQuery.<br><b>Para que serve:</b> é um pipeline de <b>ETL</b> (extrair, transformar e carregar): deixa dados brutos prontos para análise com SQL, sem gerenciar servidores.</li>
+<li><b>Tarefa 2</b> · Managed Service for Spark (Dataproc)<br><b>O que faz:</b> cria um cluster e roda o <b>PageRank</b> sobre o arquivo <code>data.txt</code>.<br><b>Para que serve:</b> processar grandes volumes de dados <b>em paralelo</b>. O PageRank, que ranqueia páginas pelos links que recebem, é o exemplo clássico.</li>
+<li><b>Tarefa 3</b> · Cloud Storage › Speech-to-Text › Cloud Storage<br><b>O que faz:</b> transcreve o áudio <code>task3.flac</code> e salva a transcrição em JSON no bucket.<br><b>Para que serve:</b> transformar áudio (atendimentos, reuniões, vídeos) em texto que pode ser pesquisado e analisado.</li>
+<li><b>Tarefa 4</b> · Natural Language › Cloud Storage<br><b>O que faz:</b> identifica as entidades do texto sobre Odin e salva o resultado em JSON no bucket.<br><b>Para que serve:</b> descobrir automaticamente "do que o texto fala", para classificar, indexar ou alimentar outras análises.</li>
+</ul>
+
 <div class="box regra"><b class="t">💡 Na prática, o que o conjunto faz</b>
 As quatro tarefas montam um pequeno fluxo de <b>preparação de dados para machine learning</b>:
 <ul>
