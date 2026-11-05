@@ -82,7 +82,7 @@ footer{margin-top:10px;color:#80868b;font-size:.85em;text-align:center}
 <li>Abra o lab em janela anônima e use só o usuário e a senha do laboratório.</li>
 <li>Os valores em <span class="v">amarelo</span> (nomes, região e zona) mudam a cada execução: copie do <b>painel do lab</b>, à esquerda do roteiro.</li>
 <li>Faça pelo <b>console</b>. Use comandos apenas onde esta página indicar, e sempre no Cloud Shell do projeto do lab.</li>
-<li>Ao final de cada tarefa, clique em <b>Verificar meu progresso</b>. Se não passar, leia a mensagem, corrija e verifique de novo.</li>
+<li>Ao final de cada tarefa, clique em <span class="btn">Verificar meu progresso</span>. Se não passar, leia a mensagem, corrija e verifique de novo.</li>
 <li>Não clique em <b>Terminar o laboratório</b> antes de todas as tarefas estarem verificadas.</li>
 </ul></div>
 <div class="box alerta"><b class="t">🌐 Desative a tradução automática do navegador</b>
@@ -232,7 +232,7 @@ echo "&lt;h3&gt;Servidor da web: web3&lt;/h3&gt;" | tee /var/www/html/index.html
 <li>confira a tag <code>network-lb-tag</code> na VM e a regra <code>www-firewall-network-lb</code>.</li>
 </ul></li>
 </ol>
-<p>Volte ao roteiro e clique em <b>Verificar meu progresso</b> da tarefa 1.</p>
+<p>Volte às instruções do lab no Google Skills e clique em <span class="btn">Verificar meu progresso</span> da tarefa 1.</p>
 
 <h2>Tarefa 2: configurar o balanceador de rede<span class="pts">35 pontos</span></h2>
 <p><b>O que o roteiro pede:</b> IP externo estático <code>network-lb-ip-1</code>, pool de destino <code>www-pool</code> e encaminhamento na porta <code>80</code>.</p>
@@ -262,7 +262,7 @@ echo "&lt;h3&gt;Servidor da web: web3&lt;/h3&gt;" | tee /var/www/html/index.html
   --region=REGIÃO --ports 80 \
   --address network-lb-ip-1 --target-pool www-pool</pre></div>
 <p><b>Conferir:</b> em <span class="caminho">Menu de navegação (☰) › View all products › Networking › Network services › Load balancing</span> aparece o balanceador com o pool <code>www-pool</code>. Abra o IP <code>network-lb-ip-1</code> no navegador e atualize algumas vezes: a resposta alterna entre web1, web2 e web3.</p>
-<p>Volte ao roteiro e clique em <b>Verificar meu progresso</b> da tarefa 2.</p>
+<p>Volte às instruções do lab no Google Skills e clique em <span class="btn">Verificar meu progresso</span> da tarefa 2.</p>
 
 <h2>Tarefa 3: criar o balanceador HTTP<span class="pts">45 pontos</span></h2>
 <p><b>O que o roteiro pede:</b> modelo <code>lb-backend-template</code>, grupo gerenciado <code>lb-backend-group</code>, firewall <code>fw-allow-health-check</code>, IP <code>lb-ipv4-1</code>, verificação <code>http-basic-check</code>, mapa de URL <code>web-map-http</code> e proxy <code>http-lb-proxy</code>.</p>
@@ -336,7 +336,7 @@ No Cloud Shell (se ele foi fechado, abra de novo em <span class="ui">Activate Cl
   --address=lb-ipv4-1 --global \
   --target-http-proxy=http-lb-proxy --ports=80</pre></div>
 <p><b>Conferir (pelo console):</b> <span class="caminho">Menu de navegação (☰) › View all products › Networking › Network services › Load balancing</span> › clique em <code>web-map-http</code>. Copie o IP em <span class="ui">Frontend</span> e abra <code>http://IP-do-balanceador/</code>. Pode levar de 3 a 5 minutos; aparece "Page served from: lb-backend-group-xxxx".</p>
-<p>Volte ao roteiro e clique em <b>Verificar meu progresso</b> da tarefa 3.</p>
+<p>Volte às instruções do lab no Google Skills e clique em <span class="btn">Verificar meu progresso</span> da tarefa 3.</p>
 <details class="antes erros">
 <summary>⚠️ Erros comuns <span class="dica">clique para abrir</span></summary>
 <div class="corpo"><ul>
