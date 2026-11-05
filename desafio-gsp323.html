@@ -82,7 +82,7 @@ footer{margin-top:10px;color:#80868b;font-size:.85em;text-align:center}
 <div class="box regra"><b class="t">Regras de ouro</b>
 <ul>
 <li>Abra o lab em janela anônima e use só o usuário e a senha do laboratório.</li>
-<li>Os valores em <span class="v">amarelo</span> mudam a cada execução: copie do <b>painel do lab</b>, à esquerda das instruções, depois de clicar em <b>Iniciar laboratório</b>.</li>
+<li>Os valores em <span class="v">amarelo</span> mudam a cada execução: copie do <b>painel do lab</b> ou das <b>instruções do lab no Google Skills</b>, depois de clicar em <b>Iniciar laboratório</b>.</li>
 <li>Faça pelo <b>console</b>. Use comandos apenas onde esta página indicar, e sempre no Cloud Shell do projeto do lab.</li>
 <li>Ao final de cada tarefa, clique em <span class="btn">Verificar meu progresso</span>. Se não passar, leia a mensagem, corrija e verifique de novo.</li>
 <li>Não clique em <b>Terminar o laboratório</b> antes de todas as tarefas estarem verificadas.</li>
@@ -97,14 +97,14 @@ Faça isso na janela anônima que você usa no lab.</div>
 <div class="box regra"><b class="t">🧭 Produto que não aparece no menu</b>
 O <b>Menu de navegação (☰)</b> mostra só os produtos fixados. Se algum item do caminho não aparecer, clique em <span class="ui">View all products</span> e procure na categoria. Outra opção é digitar o nome do produto na barra de busca no topo do console.</div>
 <div class="box regra"><b class="t">📝 Como identificar os valores para substituir</b>
-Nesta página, todo valor em <span class="v">amarelo</span> é um <b>placeholder</b>: troque pelo valor do <b>seu</b> lab. O nome em amarelo é exatamente o nome do campo no <b>painel do lab</b> (à esquerda das instruções, depois de clicar em <b>Iniciar laboratório</b>). Passe o mouse (ou toque) sobre o valor em amarelo para ver onde encontrá-lo.
+Nesta página, todo valor em <span class="v">amarelo</span> é um <b>placeholder</b>: troque pelo valor do <b>seu</b> lab. Depois de clicar em <b>Iniciar laboratório</b>, <b>BigQuery Dataset Name</b>, <b>Cloud Storage Bucket Name</b> e <b>Region</b> aparecem no <b>painel do lab</b> (à esquerda das instruções). Os demais aparecem preenchidos no <b>texto das instruções do lab no Google Skills</b>, na tarefa indicada. Passe o mouse (ou toque) sobre o valor em amarelo para ver onde encontrá-lo.
 <ul>
-<li><span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: Painel do lab (à esquerda das instruções), campo &quot;BigQuery Dataset Name&quot;">BigQuery Dataset Name</span> e <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: Painel do lab (à esquerda das instruções), campo &quot;Output Table Name&quot;">Output Table Name</span>: dataset e tabela do BigQuery (tarefa 1);</li>
+<li><span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: Painel do lab (à esquerda das instruções), campo &quot;BigQuery Dataset Name&quot;">BigQuery Dataset Name</span> e <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: instruções do lab no Google Skills, tarefa 1, no texto &quot;com uma tabela chamada ...&quot;">Output Table Name</span>: dataset e tabela do BigQuery (tarefa 1);</li>
 <li><span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: Painel do lab (à esquerda das instruções), campo &quot;Cloud Storage Bucket Name&quot;">Cloud Storage Bucket Name</span>: bucket do Cloud Storage (tarefa 1);</li>
 <li><span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: Painel do lab (à esquerda das instruções), campo &quot;Region&quot;">Region</span>: região do job do Dataflow e do cluster do Spark;</li>
-<li><span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: Painel do lab (à esquerda das instruções), campo &quot;Temporary BigQuery Directory&quot;">Temporary BigQuery Directory</span> e <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: Painel do lab (à esquerda das instruções), campo &quot;Temporary Location&quot;">Temporary Location</span>: pastas temporárias do job do Dataflow;</li>
-<li><span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: Painel do lab (à esquerda das instruções), campo &quot;Cloud Speech Location&quot;">Cloud Speech Location</span>: caminho <code>gs://</code> do resultado da tarefa 3;</li>
-<li><span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: Painel do lab (à esquerda das instruções), campo &quot;Cloud Natural Language Location&quot;">Cloud Natural Language Location</span>: caminho <code>gs://</code> do resultado da tarefa 4.</li>
+<li><span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: instruções do lab no Google Skills, tabela da tarefa 1, linha &quot;Diretório temporário para o processo de carregamento do BigQuery&quot;">Temporary BigQuery Directory</span> e <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: instruções do lab no Google Skills, tabela da tarefa 1, linha &quot;Local temporário&quot;">Temporary Location</span>: pastas temporárias do job do Dataflow;</li>
+<li><span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: instruções do lab no Google Skills, tarefa 3, no texto &quot;faça upload do arquivo resultante em ...&quot;">Cloud Speech Location</span>: caminho <code>gs://</code> do resultado da tarefa 3;</li>
+<li><span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: instruções do lab no Google Skills, tarefa 4, no texto &quot;faça upload do arquivo resultante em ...&quot;">Cloud Natural Language Location</span>: caminho <code>gs://</code> do resultado da tarefa 4.</li>
 </ul></div>
 <div class="box regra"><b class="t">🔐 Conferir as permissões do projeto (as instruções do lab pedem)</b>
 <ol>
@@ -138,7 +138,7 @@ Tarefa 2: as instruções do lab exigem um comando <code>hdfs</code> dentro do c
 <li><span class="ui">Dataset ID</span>: <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: Painel do lab (à esquerda das instruções), campo &quot;BigQuery Dataset Name&quot;">BigQuery Dataset Name</span>. Deixe o resto como está.</li>
 <li class="fim">Clique em <span class="btn">Create dataset</span>.</li>
 <li>Ao lado do dataset <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: Painel do lab (à esquerda das instruções), campo &quot;BigQuery Dataset Name&quot;">BigQuery Dataset Name</span>, clique em <span class="ui">⋮</span> › <span class="ui">Create table</span>.</li>
-<li><span class="ui">Table</span>: <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: Painel do lab (à esquerda das instruções), campo &quot;Output Table Name&quot;">Output Table Name</span>.</li>
+<li><span class="ui">Table</span>: <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: instruções do lab no Google Skills, tarefa 1, no texto &quot;com uma tabela chamada ...&quot;">Output Table Name</span>.</li>
 <li><span class="ui">Schema</span>: siga a dica das instruções do lab (clique em <b>"Clique aqui para ver uma dica"</b>, logo abaixo de "Criar um bucket").</li>
 <li class="fim">Clique em <span class="btn">Create table</span>.</li>
 </ol>
@@ -159,8 +159,8 @@ Tarefa 2: as instruções do lab exigem um comando <code>hdfs</code> dentro do c
 <li><span class="ui">Cloud Storage Input File(s)</span>: <code>gs://spls/gsp323/lab.csv</code></li>
 <li><span class="ui">Cloud Storage location of your BigQuery schema file</span>: <code>gs://spls/gsp323/lab.schema</code></li>
 <li><span class="ui">BigQuery output table</span>: <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: instruções do lab, tabela da tarefa 1, linha &quot;Tabela de saída do BigQuery&quot; (formato projeto:dataset.tabela)">Output Table Name</span></li>
-<li><span class="ui">Temporary directory for BigQuery loading process</span>: <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: Painel do lab (à esquerda das instruções), campo &quot;Temporary BigQuery Directory&quot;">Temporary BigQuery Directory</span></li>
-<li><span class="ui">Temporary location</span>: <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: Painel do lab (à esquerda das instruções), campo &quot;Temporary Location&quot;">Temporary Location</span></li>
+<li><span class="ui">Temporary directory for BigQuery loading process</span>: <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: instruções do lab no Google Skills, tabela da tarefa 1, linha &quot;Diretório temporário para o processo de carregamento do BigQuery&quot;">Temporary BigQuery Directory</span></li>
+<li><span class="ui">Temporary location</span>: <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: instruções do lab no Google Skills, tabela da tarefa 1, linha &quot;Local temporário&quot;">Temporary Location</span></li>
 </ul></li>
 <li>Abra <span class="ui">Optional parameters</span>:
 <ul>
@@ -225,7 +225,7 @@ EOF</pre>
 <pre>curl -s -X POST -H "Content-Type: application/json" --data-binary @request.json \
  "https://speech.googleapis.com/v1/speech:recognize?key=$API_KEY" &gt; result.json</pre>
 <p><b>4. Enviar o resultado ao bucket:</b></p>
-<pre>gcloud storage cp result.json <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: Painel do lab (à esquerda das instruções), campo &quot;Cloud Speech Location&quot;">Cloud Speech Location</span></pre>
+<pre>gcloud storage cp result.json <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: instruções do lab no Google Skills, tarefa 3, no texto &quot;faça upload do arquivo resultante em ...&quot;">Cloud Speech Location</span></pre>
 O arquivo <code>.json</code> é enviado com Content-Type <code>application/json</code>, como as instruções do lab pedem.</div>
 <p>Volte às instruções do lab no Google Skills e clique em <span class="btn">Verificar meu progresso</span> da tarefa 3.</p>
 
@@ -235,7 +235,7 @@ Rode os blocos <b>um de cada vez</b>. Se o Cloud Shell perguntar se quer ativar 
 <p><b>1. Analisar o texto sobre Odin:</b></p>
 <pre>gcloud ml language analyze-entities --content="Old Norse texts portray Odin as one-eyed and long-bearded, frequently wielding a spear named Gungnir and wearing a cloak and a broad hat." &gt; result.json</pre>
 <p><b>2. Enviar o resultado ao bucket:</b></p>
-<pre>gcloud storage cp result.json <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: Painel do lab (à esquerda das instruções), campo &quot;Cloud Natural Language Location&quot;">Cloud Natural Language Location</span></pre></div>
+<pre>gcloud storage cp result.json <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: instruções do lab no Google Skills, tarefa 4, no texto &quot;faça upload do arquivo resultante em ...&quot;">Cloud Natural Language Location</span></pre></div>
 <p>Volte às instruções do lab no Google Skills e clique em <span class="btn">Verificar meu progresso</span> da tarefa 4.</p>
 
 <details class="antes erros">
@@ -244,7 +244,7 @@ Rode os blocos <b>um de cada vez</b>. Se o Cloud Shell perguntar se quer ativar 
 <li>Verificar o progresso antes de o job terminar: Dataflow e Spark levam alguns minutos. Espere o status <b>Succeeded</b>.</li>
 <li>Esquecer o comando <code>hdfs</code> antes do job do Spark: o job falha por não achar <code>/data.txt</code>.</li>
 <li>Criar o job ou o cluster em outra região: use sempre a <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: Painel do lab (à esquerda das instruções), campo &quot;Region&quot;">Region</span> do painel.</li>
-<li>Enviar o resultado para outro caminho: use exatamente <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: Painel do lab (à esquerda das instruções), campo &quot;Cloud Speech Location&quot;">Cloud Speech Location</span> e <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: Painel do lab (à esquerda das instruções), campo &quot;Cloud Natural Language Location&quot;">Cloud Natural Language Location</span>.</li>
+<li>Enviar o resultado para outro caminho: use exatamente <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: instruções do lab no Google Skills, tarefa 3, no texto &quot;faça upload do arquivo resultante em ...&quot;">Cloud Speech Location</span> e <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: instruções do lab no Google Skills, tarefa 4, no texto &quot;faça upload do arquivo resultante em ...&quot;">Cloud Natural Language Location</span>.</li>
 <li>Mudar o texto sobre Odin: copie o comando inteiro desta página ou das instruções do lab.</li>
 <li>Nomes de botões diferentes dos desta página: a tradução automática do navegador está ligada. Veja "Antes de começar".</li>
 </ul></div>
