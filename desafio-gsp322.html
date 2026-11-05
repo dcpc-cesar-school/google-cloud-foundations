@@ -100,14 +100,18 @@ Exemplo: se o painel mostra <b>HTTP network tag</b> = <code>permit-http-ingress-
 </div>
 </details>
 
-<div class="box regra"><b class="t">Cenário e objetivo</b>
+<details class="antes">
+<summary>🎯 Cenário e objetivo <span class="dica">clique para abrir</span></summary>
+<div class="corpo">
 O site <b>juice-shop</b> do Jeferson está na VPC <code>acme-vpc</code>, com uma configuração de firewall aberta demais. Ao final:
 <ul>
 <li>o bastion host <b>não tem IP público</b> e só recebe SSH vindo do <b>IAP</b>;</li>
 <li>o juice-shop só recebe SSH vindo do bastion (sub-rede <code>acme-mgmt-subnet</code>);</li>
 <li>só o HTTP (porta 80) do juice-shop fica aberto ao público.</li>
 </ul>
-O roteiro avisa: <b>permissões muito flexíveis são marcadas como incorretas</b>. Nunca use <code>0.0.0.0/0</code> nas regras de SSH.</div>
+O roteiro avisa: <b>permissões muito flexíveis são marcadas como incorretas</b>. Nunca use <code>0.0.0.0/0</code> nas regras de SSH.
+</div>
+</details>
 <div class="card">
 <input type="radio" name="card322" id="c-antes" checked><input type="radio" name="card322" id="c-depois">
 <div class="card-tabs"><label for="c-antes">Antes: configuração atual</label><label for="c-depois">Depois: o que você vai configurar</label></div>
@@ -117,8 +121,9 @@ O roteiro avisa: <b>permissões muito flexíveis são marcadas como incorretas</
 <figcaption>Objetivo: Admin › IAP › bastion › juice-shop por SSH; clientes só por HTTP.</figcaption></figure>
 </div>
 <p class="credito">Imagens do roteiro do lab GSP322 (Google Skills). Clique na imagem para ampliar.</p>
-<div class="box regra"><b class="t">🗺️ Quem é quem na rede</b>
-<ul>
+<details class="antes">
+<summary>🗺️ Quem é quem na rede <span class="dica">clique para abrir</span></summary>
+<div class="corpo"><ul>
 <li><b><code>acme-vpc</code></b>: a rede privada (VPC) do Jeferson no Google Cloud. Todas as VMs do lab ficam nela, e as regras de firewall que você criar devem ser dela.</li>
 <li><b><code>acme-mgmt-subnet</code></b>: sub-rede de <b>gerenciamento</b>. Fica nela só o que a equipe usa para administrar o ambiente, no caso o bastion.</li>
 <li><b><code>acme-app-subnet</code></b>: sub-rede da <b>aplicação</b>. Fica nela o servidor que atende os clientes, o juice-shop.</li>
@@ -129,6 +134,7 @@ O roteiro avisa: <b>permissões muito flexíveis são marcadas como incorretas</
 <li><b>Customers</b>: os clientes da loja. Só chegam ao juice-shop, e só por HTTP.</li>
 <li><b>Regras de firewall + tags de rede</b>: a regra diz <i>o que</i> está liberado (porta e origem) e a tag diz <i>em qual VM</i> a regra vale. Uma regra só tem efeito na VM que tem a mesma tag.</li>
 </ul></div>
+</details>
 
 <h2>1. Remover as regras excessivamente flexíveis<span class="pts">10 pontos</span></h2>
 <ol>
