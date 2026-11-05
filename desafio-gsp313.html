@@ -50,6 +50,14 @@ details.erros>summary::before{color:#d93025}
 #lb-reg:checked~.f-reg,#lb-glob:checked~.f-glob{display:block}
 .card svg{display:block;width:100%;min-width:480px;max-width:760px;margin:0 auto;height:auto}
 .card figcaption{font-size:.88em;color:#5f6368;margin-top:8px;text-align:center}
+.codewrap{position:relative}
+.codewrap pre{padding-right:84px}
+.copybtn{position:absolute;top:8px;right:8px;font:600 12px 'Segoe UI',Roboto,Arial,sans-serif;background:#3c4043;color:#fff;border:0;border-radius:4px;padding:4px 10px;cursor:pointer}
+.copybtn:hover{background:#5f6368}
+.copybtn:focus-visible{outline:2px solid #8ab4f8;outline-offset:2px}
+pre .v{background:#fde293;color:#202124;border-color:#f9ab00;padding:0 3px}
+pre .v[data-tip]:hover::after,pre .v[data-tip]:focus::after{content:none;display:none}
+.tipbox{display:none;position:fixed;z-index:1000;max-width:280px;background:#202124;color:#fff;font:12.5px/1.4 'Segoe UI',Roboto,Arial,sans-serif;padding:7px 10px;border-radius:6px;box-shadow:0 2px 8px rgba(0,0,0,.25);pointer-events:none}
 .alt{margin-top:36px;text-align:center;font-size:.8em;color:#9aa0a6}
 .alt a{color:#9aa0a6}
 footer{margin-top:10px;color:#80868b;font-size:.85em;text-align:center}
@@ -94,7 +102,7 @@ O console do lab abre em <b>inglês</b>, e esta página usa os nomes dos botões
 Faça isso na janela anônima que você usa no lab.</div>
 <div class="box regra"><b class="t">🧭 Produto que não aparece no menu</b>
 O <b>Menu de navegação (☰)</b> mostra só os produtos fixados. Se algum item do caminho não aparecer, clique em <span class="ui">View all products</span> e procure na categoria (por exemplo, <b>Networking › Network services</b>). Outra opção é digitar o nome (ex.: <code>Load balancing</code>) na barra de busca no topo do console.</div>
-<p>No painel do lab, anote a <span class="v">REGIÃO</span> e a <span class="v">ZONA</span>. Todos os recursos ficam nelas, salvo indicação diferente.</p>
+<p>No painel do lab, anote a <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: Painel do lab (à esquerda das instruções), campo &quot;Region&quot;">Region</span> e a <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: Painel do lab (à esquerda das instruções), campo &quot;Zone&quot;">Zone</span>. Todos os recursos ficam nelas, salvo indicação diferente.</p>
 <div class="box cmd"><b class="t">Onde o console não basta</b>
 O console atual não cria <b>pool de destino</b> (tarefa 2) nem permite escolher o nome do <b>proxy HTTP</b> (tarefa 3). Como o roteiro exige os nomes
 <code>www-pool</code> e <code>http-lb-proxy</code>, essas partes são feitas com poucos comandos no Cloud Shell. Todo o resto é pelo console.</div>
@@ -114,7 +122,7 @@ Você vai criar 3 VMs com o mesmo roteiro. Em cada uma, altere só estes campos 
 <li>Em <span class="ui">Machine configuration</span>:
 <ul>
 <li><span class="ui">Name</span>: <code>web1</code></li>
-<li><span class="ui">Region</span>: <span class="v">REGIÃO</span> &nbsp;·&nbsp; <span class="ui">Zone</span>: <span class="v">ZONA</span></li>
+<li><span class="ui">Region</span>: <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: Painel do lab (à esquerda das instruções), campo &quot;Region&quot;">Region</span> &nbsp;·&nbsp; <span class="ui">Zone</span>: <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: Painel do lab (à esquerda das instruções), campo &quot;Zone&quot;">Zone</span></li>
 <li><span class="ui">Series</span>: selecione a opção <b>E2</b></li>
 <li><span class="ui">Machine type</span>: selecione a opção <b>e2-small</b></li>
 </ul></li>
@@ -148,7 +156,7 @@ echo "&lt;h3&gt;Servidor da web: web1&lt;/h3&gt;" | tee /var/www/html/index.html
 <li>Em <span class="ui">Machine configuration</span>:
 <ul>
 <li><span class="ui">Name</span>: <code>web2</code></li>
-<li><span class="ui">Region</span>: <span class="v">REGIÃO</span> &nbsp;·&nbsp; <span class="ui">Zone</span>: <span class="v">ZONA</span></li>
+<li><span class="ui">Region</span>: <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: Painel do lab (à esquerda das instruções), campo &quot;Region&quot;">Region</span> &nbsp;·&nbsp; <span class="ui">Zone</span>: <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: Painel do lab (à esquerda das instruções), campo &quot;Zone&quot;">Zone</span></li>
 <li><span class="ui">Series</span>: selecione a opção <b>E2</b></li>
 <li><span class="ui">Machine type</span>: selecione a opção <b>e2-small</b></li>
 </ul></li>
@@ -182,7 +190,7 @@ echo "&lt;h3&gt;Servidor da web: web2&lt;/h3&gt;" | tee /var/www/html/index.html
 <li>Em <span class="ui">Machine configuration</span>:
 <ul>
 <li><span class="ui">Name</span>: <code>web3</code></li>
-<li><span class="ui">Region</span>: <span class="v">REGIÃO</span> &nbsp;·&nbsp; <span class="ui">Zone</span>: <span class="v">ZONA</span></li>
+<li><span class="ui">Region</span>: <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: Painel do lab (à esquerda das instruções), campo &quot;Region&quot;">Region</span> &nbsp;·&nbsp; <span class="ui">Zone</span>: <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: Painel do lab (à esquerda das instruções), campo &quot;Zone&quot;">Zone</span></li>
 <li><span class="ui">Series</span>: selecione a opção <b>E2</b></li>
 <li><span class="ui">Machine type</span>: selecione a opção <b>e2-small</b></li>
 </ul></li>
@@ -240,26 +248,26 @@ echo "&lt;h3&gt;Servidor da web: web3&lt;/h3&gt;" | tee /var/www/html/index.html
 <ol>
 <li><span class="caminho">Menu de navegação › VPC network › IP addresses</span> e clique em <span class="ui">Reserve external static IP address</span>.</li>
 <li><span class="ui">Name</span>: <code>network-lb-ip-1</code>.</li>
-<li><span class="ui">IP version</span>: <b>IPv4</b> · <span class="ui">Type</span>: <b>Regional</b> · <span class="ui">Region</span>: <span class="v">REGIÃO</span>.</li>
+<li><span class="ui">IP version</span>: <b>IPv4</b> · <span class="ui">Type</span>: <b>Regional</b> · <span class="ui">Region</span>: <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: Painel do lab (à esquerda das instruções), campo &quot;Region&quot;">Region</span>.</li>
 <li class="fim">Clique em <span class="btn">Reserve</span>.</li>
 </ol>
 <div class="box cmd"><b class="t">Por comando (o console não cria pool de destino)</b>
 <ol>
 <li>No topo do console, clique em <span class="ui">Activate Cloud Shell</span> (ícone <b>&gt;_</b>) e depois em <span class="ui">Continue</span>. Se pedir, clique em <span class="ui">Authorize</span>.</li>
-<li>Rode os 4 comandos abaixo <b>um de cada vez</b>, trocando <span class="v">REGIÃO</span> e <span class="v">ZONA</span>. Cole um bloco, tecle Enter e espere o comando terminar (o cursor do Cloud Shell volta a aparecer) antes de colar o próximo. Se aparecer uma pergunta <code>(Y/n)</code>, digite <code>Y</code> e tecle Enter.</li>
+<li>Rode os 4 comandos abaixo <b>um de cada vez</b>, trocando <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: Painel do lab (à esquerda das instruções), campo &quot;Region&quot;">Region</span> e <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: Painel do lab (à esquerda das instruções), campo &quot;Zone&quot;">Zone</span>. Cole um bloco, tecle Enter e espere o comando terminar (o cursor do Cloud Shell volta a aparecer) antes de colar o próximo. Se aparecer uma pergunta <code>(Y/n)</code>, digite <code>Y</code> e tecle Enter.</li>
 </ol>
 <p><b>1. Criar a verificação de integridade</b> <code>basic-check</code>:</p>
 <pre>gcloud compute http-health-checks create basic-check</pre>
 <p><b>2. Criar o pool de destino</b> <code>www-pool</code>:</p>
 <pre>gcloud compute target-pools create www-pool \
-  --region=REGIÃO --http-health-check basic-check</pre>
+  --region=<span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: Painel do lab (à esquerda das instruções), campo &quot;Region&quot;">Region</span> --http-health-check basic-check</pre>
 <p><b>3. Adicionar as três VMs ao pool:</b></p>
 <pre>gcloud compute target-pools add-instances www-pool \
-  --instances web1,web2,web3 --instances-zone=ZONA \
-  --region=REGIÃO</pre>
+  --instances web1,web2,web3 --instances-zone=<span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: Painel do lab (à esquerda das instruções), campo &quot;Zone&quot;">Zone</span> \
+  --region=<span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: Painel do lab (à esquerda das instruções), campo &quot;Region&quot;">Region</span></pre>
 <p><b>4. Criar a regra de encaminhamento</b> <code>www-rule</code> na porta 80, usando o IP <code>network-lb-ip-1</code>:</p>
 <pre>gcloud compute forwarding-rules create www-rule \
-  --region=REGIÃO --ports 80 \
+  --region=<span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: Painel do lab (à esquerda das instruções), campo &quot;Region&quot;">Region</span> --ports 80 \
   --address network-lb-ip-1 --target-pool www-pool</pre></div>
 <p><b>Conferir:</b> em <span class="caminho">Menu de navegação (☰) › View all products › Networking › Network services › Load balancing</span> aparece o balanceador com o pool <code>www-pool</code>. Abra o IP <code>network-lb-ip-1</code> no navegador e atualize algumas vezes: a resposta alterna entre web1, web2 e web3.</p>
 <p>Volte às instruções do lab no Google Skills e clique em <span class="btn">Verificar meu progresso</span> da tarefa 2.</p>
@@ -270,7 +278,7 @@ echo "&lt;h3&gt;Servidor da web: web3&lt;/h3&gt;" | tee /var/www/html/index.html
 <ol>
 <li><span class="caminho">Menu de navegação › Compute Engine › Instance templates</span> e clique em <span class="ui">Create instance template</span>.</li>
 <li><span class="ui">Name</span>: <code>lb-backend-template</code>.</li>
-<li><span class="ui">Location</span>: <b>Regional</b> · <span class="ui">Region</span>: <span class="v">REGIÃO</span>.</li>
+<li><span class="ui">Location</span>: <b>Regional</b> · <span class="ui">Region</span>: <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: Painel do lab (à esquerda das instruções), campo &quot;Region&quot;">Region</span>.</li>
 <li><span class="ui">Machine configuration</span>: <span class="ui">Series</span> <b>E2</b> · <span class="ui">Machine type</span> <b>e2-medium</b>.</li>
 <li><span class="ui">Boot disk</span> › <span class="ui">Change</span>: <b>Debian GNU/Linux 12 (bookworm)</b> (igual às VMs da tarefa 1) › <span class="btn">Select</span>.</li>
 <li>Abra <span class="ui">Advanced options › Networking</span> e, em <span class="ui">Network tags</span>, digite <code>allow-health-check</code> e tecle Enter.</li>
@@ -291,7 +299,7 @@ systemctl restart apache2</pre></li>
 <li><span class="caminho">Menu de navegação › Compute Engine › Instance groups</span> e clique em <span class="ui">Create instance group</span>.</li>
 <li>No menu à esquerda, escolha <span class="ui">New managed instance group (stateless)</span>.</li>
 <li><span class="ui">Name</span>: <code>lb-backend-group</code> · <span class="ui">Instance template</span>: <code>lb-backend-template</code>.</li>
-<li><span class="ui">Location</span>: <b>Single zone</b> · <span class="ui">Region</span>: <span class="v">REGIÃO</span> · <span class="ui">Zone</span>: <span class="v">ZONA</span>.</li>
+<li><span class="ui">Location</span>: <b>Single zone</b> · <span class="ui">Region</span>: <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: Painel do lab (à esquerda das instruções), campo &quot;Region&quot;">Region</span> · <span class="ui">Zone</span>: <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: Painel do lab (à esquerda das instruções), campo &quot;Zone&quot;">Zone</span>.</li>
 <li>Em <span class="ui">Autoscaling</span>, clique em <span class="ui">Configure</span> para abrir as opções. Em <span class="ui">Minimum number of instances</span>, digite <code>2</code>.</li>
 <li>Em <span class="ui">Port mapping</span>, clique em <span class="ui">Add port</span>: <span class="ui">Port name</span> <code>http</code> · <span class="ui">Port number</span> <code>80</code>.</li>
 <li class="fim">Clique em <span class="btn">Create</span>. O grupo leva 1 ou 2 minutos para subir as VMs.</li>
@@ -314,7 +322,7 @@ systemctl restart apache2</pre></li>
 <li class="fim">Clique em <span class="btn">Reserve</span>.</li>
 </ol>
 <div class="box cmd"><b class="t">5. Balanceador por comando (os nomes exigidos não são configuráveis no console)</b>
-No Cloud Shell (se ele foi fechado, abra de novo em <span class="ui">Activate Cloud Shell</span>), rode os 6 comandos abaixo <b>um de cada vez</b>, trocando <span class="v">ZONA</span>. Cole um bloco, tecle Enter e espere o comando terminar (o cursor do Cloud Shell volta a aparecer) antes de colar o próximo.
+No Cloud Shell (se ele foi fechado, abra de novo em <span class="ui">Activate Cloud Shell</span>), rode os 6 comandos abaixo <b>um de cada vez</b>, trocando <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: Painel do lab (à esquerda das instruções), campo &quot;Zone&quot;">Zone</span>. Cole um bloco, tecle Enter e espere o comando terminar (o cursor do Cloud Shell volta a aparecer) antes de colar o próximo.
 <p><b>1. Criar a verificação de integridade</b> <code>http-basic-check</code>:</p>
 <pre>gcloud compute health-checks create http http-basic-check --port 80</pre>
 <p><b>2. Criar o serviço de back-end</b> <code>web-backend-service</code>:</p>
@@ -324,7 +332,7 @@ No Cloud Shell (se ele foi fechado, abra de novo em <span class="ui">Activate Cl
 <p><b>3. Adicionar o grupo de instâncias ao serviço de back-end:</b></p>
 <pre>gcloud compute backend-services add-backend web-backend-service \
   --instance-group=lb-backend-group \
-  --instance-group-zone=ZONA --global</pre>
+  --instance-group-zone=<span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: Painel do lab (à esquerda das instruções), campo &quot;Zone&quot;">Zone</span> --global</pre>
 <p><b>4. Criar o mapa de URL</b> <code>web-map-http</code>:</p>
 <pre>gcloud compute url-maps create web-map-http \
   --default-service web-backend-service</pre>
@@ -348,4 +356,24 @@ No Cloud Shell (se ele foi fechado, abra de novo em <span class="ui">Activate Cl
 </details>
 <p class="alt">Prefere fazer pelo terminal? <a href="lab-gsp313-manual.html" target="_blank" rel="noopener">Versão por linha de comando</a></p>
 <footer>Estratégia de resolução preparada para a turma. Siga sempre o roteiro do laboratório: os nomes, a região e a zona mostrados no painel do lab têm prioridade sobre qualquer exemplo desta página.</footer>
-</div></body></html>
+</div>
+<script>
+(function(){
+var tip=document.createElement('div');tip.className='tipbox';tip.setAttribute('role','tooltip');document.body.appendChild(tip);
+function show(e){var t=e.currentTarget,r=t.getBoundingClientRect();tip.textContent=t.getAttribute('data-tip');tip.style.display='block';var x=Math.min(r.left,window.innerWidth-tip.offsetWidth-8);tip.style.left=Math.max(8,x)+'px';tip.style.top=(r.bottom+6)+'px';}
+function hide(){tip.style.display='none';}
+document.querySelectorAll('pre .v[data-tip]').forEach(function(el){el.addEventListener('mouseenter',show);el.addEventListener('focus',show);el.addEventListener('mouseleave',hide);el.addEventListener('blur',hide);});
+window.addEventListener('scroll',hide,true);
+document.querySelectorAll('pre').forEach(function(pre){
+var w=document.createElement('div');w.className='codewrap';pre.parentNode.insertBefore(w,pre);w.appendChild(pre);
+var b=document.createElement('button');b.type='button';b.className='copybtn';b.textContent='Copiar';b.setAttribute('aria-label','Copiar código');w.appendChild(b);
+b.addEventListener('click',function(){
+var t=pre.innerText;
+function ok(){b.textContent='Copiado ✓';setTimeout(function(){b.textContent='Copiar';},1500);}
+function fb(){var s=window.getSelection(),r=document.createRange();r.selectNodeContents(pre);s.removeAllRanges();s.addRange(r);try{document.execCommand('copy');ok();}catch(e){b.textContent='Selecionado: Ctrl+C';}}
+if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(t).then(ok,fb);}else{fb();}
+});
+});
+})();
+</script>
+</body></html>
