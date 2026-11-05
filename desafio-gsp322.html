@@ -22,6 +22,8 @@ li{margin:5px 0}
 code,.v{font-family:Consolas,'Courier New',monospace;font-size:.92em}
 code{background:#f1f3f4;padding:1px 6px;border-radius:4px}
 .v{background:#fff3cd;padding:1px 6px;border-radius:4px;border:1px dashed #f9ab00}
+.v[data-tip]{position:relative;cursor:help}
+.v[data-tip]:hover::after,.v[data-tip]:focus::after{content:attr(data-tip);position:absolute;left:0;top:calc(100% + 6px);z-index:10;width:max-content;max-width:280px;white-space:normal;background:#202124;color:#fff;font-family:'Segoe UI',Roboto,Arial,sans-serif;font-size:12.5px;line-height:1.4;padding:7px 10px;border-radius:6px;box-shadow:0 2px 8px rgba(0,0,0,.25)}
 .ui{font-weight:600;background:#e8f0fe;color:#174ea6;padding:0 5px;border-radius:4px;white-space:nowrap}
 .fim{font-weight:600}
 .btn{display:inline-block;font-family:"Google Sans",Roboto,Arial,sans-serif;font-weight:500;font-size:.9em;background:#1a73e8;color:#fff;padding:1px 12px;border-radius:4px;white-space:nowrap;line-height:1.6}
@@ -72,7 +74,7 @@ footer{margin-top:10px;color:#80868b;font-size:.85em;text-align:center}
 <div class="box regra"><b class="t">Regras de ouro</b>
 <ul>
 <li>Abra o lab em janela anônima e use só o usuário e a senha do laboratório.</li>
-<li>Os valores em <span class="v">amarelo</span> (tags de rede, zona) mudam a cada execução: copie do <b>roteiro do lab</b> depois de clicar em <b>Iniciar laboratório</b>.</li>
+<li>Os valores em <span class="v">amarelo</span> (tags de rede, zona) mudam a cada execução: copie do <b>painel do lab</b>, à esquerda do roteiro, depois de clicar em <b>Iniciar laboratório</b>.</li>
 <li>Faça pelo <b>console</b>. Use comandos apenas onde esta página indicar.</li>
 <li>Ao final de cada tarefa, clique em <b>Verificar meu progresso</b>. Se não passar, leia a mensagem, corrija e verifique de novo.</li>
 <li>Não clique em <b>Terminar o laboratório</b> antes de todas as tarefas estarem verificadas.</li>
@@ -86,13 +88,15 @@ O console do lab abre em <b>inglês</b>, e esta página usa os nomes dos botões
 Faça isso na janela anônima que você usa no lab.</div>
 <div class="box regra"><b class="t">🧭 Produto que não aparece no menu</b>
 O <b>Menu de navegação (☰)</b> mostra só os produtos fixados. Se algum item do caminho não aparecer, clique em <span class="ui">View all products</span> e procure na categoria (por exemplo, <b>Networking › VPC network</b>). Outra opção é digitar o nome (ex.: <code>Firewall</code>) na barra de busca no topo do console.</div>
-<div class="box regra"><b class="t">📝 Anote as 3 tags de rede do seu lab</b>
-Depois de clicar em <b>Iniciar laboratório</b>, o roteiro mostra as tags nos passos 3, 4 e 5 (no trecho "tag de rede de ..."). Elas mudam a cada execução. Anote:
+<div class="box regra"><b class="t">📝 Como identificar os valores para substituir</b>
+Nesta página, todo valor em <span class="v">amarelo</span> é um <b>placeholder</b>: troque pelo valor do <b>seu</b> lab. O nome em amarelo é exatamente o nome do campo no <b>painel do lab</b> (à esquerda do roteiro, depois de clicar em <b>Iniciar laboratório</b>). Passe o mouse (ou toque) sobre o valor em amarelo para ver onde encontrá-lo.
 <ul>
-<li><span class="v">TAG SSH IAP</span>: a do passo 3 (SSH pelo IAP para o bastion);</li>
-<li><span class="v">TAG HTTP</span>: a do passo 4 (HTTP público para o juice-shop);</li>
-<li><span class="v">TAG SSH INTERNO</span>: a do passo 5 (SSH do bastion para o juice-shop).</li>
-</ul></div>
+<li><span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: Painel do lab (à esquerda do roteiro), campo &quot;SSH IAP network tag&quot;">SSH IAP network tag</span>: tag do SSH pelo IAP, usada no bastion (passo 3);</li>
+<li><span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: Painel do lab (à esquerda do roteiro), campo &quot;HTTP network tag&quot;">HTTP network tag</span>: tag do HTTP público, usada no juice-shop (passo 4);</li>
+<li><span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: Painel do lab (à esquerda do roteiro), campo &quot;SSH internal network tag&quot;">SSH internal network tag</span>: tag do SSH vindo do bastion, usada no juice-shop (passo 5);</li>
+<li><span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: Painel do lab (à esquerda do roteiro), campo &quot;Zone&quot;">Zone</span>: zona das VMs (passo 6).</li>
+</ul>
+Exemplo: se o painel mostra <b>HTTP network tag</b> = <code>permit-http-ingress-ql-123</code>, digite <code>permit-http-ingress-ql-123</code> onde a página mostra <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: Painel do lab (à esquerda do roteiro), campo &quot;HTTP network tag&quot;">HTTP network tag</span>.</div>
 </div>
 </details>
 
@@ -129,7 +133,7 @@ O roteiro avisa: <b>permissões muito flexíveis são marcadas como incorretas</
 <h2>1. Remover as regras excessivamente flexíveis<span class="pts">10 pontos</span></h2>
 <ol>
 <li><span class="caminho">Menu de navegação (☰) › VPC network › Firewall</span>.</li>
-<li>Na lista, olhe as regras da rede <code>acme-vpc</code>. Procure a que libera tudo para qualquer origem: <span class="ui">Source IPv4 ranges</span> <code>0.0.0.0/0</code> com <span class="ui">Protocols and ports</span> <b>Allow all</b> (normalmente chamada <code>open-access</code>).</li>
+<li>Na lista, localize a regra <code>open-access</code> da rede <code>acme-vpc</code>. Ela tem <span class="ui">Filters</span> <code>IP ranges: 0.0.0.0/0</code> e <span class="ui">Protocols / ports</span> <code>tcp</code>, ou seja, libera <b>todas as portas TCP</b> (inclusive o SSH, porta 22) para a internet inteira. Por isso é "excessivamente flexível".</li>
 <li>Marque a caixa da regra e clique em <span class="ui">Delete</span>.</li>
 <li class="fim">Na janela de confirmação, clique em <span class="btn">Delete</span>.</li>
 </ol>
@@ -143,7 +147,6 @@ O roteiro avisa: <b>permissões muito flexíveis são marcadas como incorretas</
 <li class="fim">Na janela de confirmação, clique em <span class="btn">Start</span>. Espere o ícone verde aparecer.</li>
 <li><b>Confira o IP público:</b> na coluna <span class="ui">External IP</span>, o <code>bastion</code> deve aparecer <b>sem endereço</b>. Se tiver um IP, clique no nome <code>bastion</code> › <span class="ui">Edit</span> › <span class="ui">Network interfaces</span> › abra a interface › em <span class="ui">External IPv4 address</span>, selecione a opção <b>None</b> › <span class="btn">Done</span> › <span class="btn">Save</span>.</li>
 </ol>
-<p>Anote também a <span class="v">ZONA</span> das VMs (coluna <span class="ui">Zone</span>). Ela é usada no passo 6.</p>
 <p>Volte ao roteiro e clique em <b>Verificar meu progresso</b> de "Inicie a instância do Bastion Host".</p>
 
 <h2>3. SSH pelo IAP para o bastion<span class="pts">20 pontos</span></h2>
@@ -153,7 +156,7 @@ O roteiro avisa: <b>permissões muito flexíveis são marcadas como incorretas</
 <li><span class="ui">Name</span>: um nome à sua escolha, por exemplo <code>allow-ssh-iap</code>.</li>
 <li><span class="ui">Network</span>: selecione a opção <code>acme-vpc</code> (não use <b>default</b>).</li>
 <li><span class="ui">Direction of traffic</span>: <b>Ingress</b> · <span class="ui">Action on match</span>: <b>Allow</b>.</li>
-<li><span class="ui">Targets</span>: selecione a opção <b>Specified target tags</b> · <span class="ui">Target tags</span>: <span class="v">TAG SSH IAP</span> (tecle Enter).</li>
+<li><span class="ui">Targets</span>: selecione a opção <b>Specified target tags</b> · <span class="ui">Target tags</span>: <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: Painel do lab (à esquerda do roteiro), campo &quot;SSH IAP network tag&quot;">SSH IAP network tag</span> (tecle Enter).</li>
 <li><span class="ui">Source filter</span>: <b>IPv4 ranges</b> · <span class="ui">Source IPv4 ranges</span>: <code>35.235.240.0/20</code> (é a faixa fixa do serviço IAP).</li>
 <li><span class="ui">Protocols and ports</span>: <b>Specified protocols and ports</b> › marque <b>TCP</b> › <span class="ui">Ports</span>: <code>22</code>.</li>
 <li class="fim">Clique em <span class="btn">Create</span>.</li>
@@ -162,7 +165,7 @@ O roteiro avisa: <b>permissões muito flexíveis são marcadas como incorretas</
 <ol>
 <li><span class="caminho">Menu de navegação (☰) › Compute Engine › VM instances</span> e clique no nome <code>bastion</code>.</li>
 <li>No topo da página da VM, clique em <span class="ui">Edit</span>.</li>
-<li>Em <span class="ui">Network tags</span>, digite <span class="v">TAG SSH IAP</span> e tecle Enter. Não apague as tags que já existirem.</li>
+<li>Role até a seção <span class="ui">Networking</span> e, no campo <span class="ui">Network tags</span>, digite <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: Painel do lab (à esquerda do roteiro), campo &quot;SSH IAP network tag&quot;">SSH IAP network tag</span> e tecle Enter. Não apague as tags que já existirem.</li>
 <li class="fim">Role até o fim da página e clique em <span class="btn">Save</span>.</li>
 </ol>
 <p>Volte ao roteiro e clique em <b>Verificar meu progresso</b> do passo 3.</p>
@@ -174,7 +177,7 @@ O roteiro avisa: <b>permissões muito flexíveis são marcadas como incorretas</
 <li><span class="ui">Name</span>: por exemplo <code>allow-http</code>.</li>
 <li><span class="ui">Network</span>: selecione a opção <code>acme-vpc</code>.</li>
 <li><span class="ui">Direction of traffic</span>: <b>Ingress</b> · <span class="ui">Action on match</span>: <b>Allow</b>.</li>
-<li><span class="ui">Targets</span>: selecione a opção <b>Specified target tags</b> · <span class="ui">Target tags</span>: <span class="v">TAG HTTP</span>.</li>
+<li><span class="ui">Targets</span>: selecione a opção <b>Specified target tags</b> · <span class="ui">Target tags</span>: <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: Painel do lab (à esquerda do roteiro), campo &quot;HTTP network tag&quot;">HTTP network tag</span>.</li>
 <li><span class="ui">Source filter</span>: <b>IPv4 ranges</b> · <span class="ui">Source IPv4 ranges</span>: <code>0.0.0.0/0</code> (aqui é público, como o roteiro pede).</li>
 <li><span class="ui">Protocols and ports</span>: <b>Specified protocols and ports</b> › marque <b>TCP</b> › <span class="ui">Ports</span>: <code>80</code>.</li>
 <li class="fim">Clique em <span class="btn">Create</span>.</li>
@@ -182,8 +185,8 @@ O roteiro avisa: <b>permissões muito flexíveis são marcadas como incorretas</
 <h3>Colocar a tag no juice-shop</h3>
 <ol>
 <li><span class="caminho">Menu de navegação (☰) › Compute Engine › VM instances</span> e clique no nome <code>juice-shop</code>.</li>
-<li>Clique em <span class="ui">Edit</span>.</li>
-<li>Em <span class="ui">Network tags</span>, digite <span class="v">TAG HTTP</span> e tecle Enter.</li>
+<li>No topo da página da VM, clique em <span class="ui">Edit</span>.</li>
+<li>Role até a seção <span class="ui">Networking</span> e, no campo <span class="ui">Network tags</span>, digite <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: Painel do lab (à esquerda do roteiro), campo &quot;HTTP network tag&quot;">HTTP network tag</span> e tecle Enter.</li>
 <li class="fim">Clique em <span class="btn">Save</span>.</li>
 </ol>
 <p>Volte ao roteiro e clique em <b>Verificar meu progresso</b> do passo 4.</p>
@@ -192,7 +195,7 @@ O roteiro avisa: <b>permissões muito flexíveis são marcadas como incorretas</
 <h3>Descobrir o intervalo da sub-rede de gerenciamento</h3>
 <ol>
 <li><span class="caminho">Menu de navegação (☰) › VPC network › VPC networks</span> e clique em <code>acme-vpc</code>.</li>
-<li>Abra a aba <span class="ui">Subnets</span> e anote o <span class="ui">Internal IP ranges</span> da <code>acme-mgmt-subnet</code> (algo como <code>192.168.10.0/24</code>). Esse é o <span class="v">INTERVALO MGMT</span>.</li>
+<li>Abra a aba <span class="ui">Subnets</span> e confira o <span class="ui">Internal IP ranges</span> da <code>acme-mgmt-subnet</code>. Neste lab ele é fixo: <code>192.168.10.0/24</code>. Se no seu aparecer outro valor, use o que aparecer.</li>
 </ol>
 <h3>Criar a regra de firewall</h3>
 <ol>
@@ -200,16 +203,16 @@ O roteiro avisa: <b>permissões muito flexíveis são marcadas como incorretas</
 <li><span class="ui">Name</span>: por exemplo <code>allow-ssh-mgmt</code>.</li>
 <li><span class="ui">Network</span>: selecione a opção <code>acme-vpc</code>.</li>
 <li><span class="ui">Direction of traffic</span>: <b>Ingress</b> · <span class="ui">Action on match</span>: <b>Allow</b>.</li>
-<li><span class="ui">Targets</span>: selecione a opção <b>Specified target tags</b> · <span class="ui">Target tags</span>: <span class="v">TAG SSH INTERNO</span>.</li>
-<li><span class="ui">Source filter</span>: <b>IPv4 ranges</b> · <span class="ui">Source IPv4 ranges</span>: o <span class="v">INTERVALO MGMT</span> anotado acima.</li>
+<li><span class="ui">Targets</span>: selecione a opção <b>Specified target tags</b> · <span class="ui">Target tags</span>: <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: Painel do lab (à esquerda do roteiro), campo &quot;SSH internal network tag&quot;">SSH internal network tag</span>.</li>
+<li><span class="ui">Source filter</span>: <b>IPv4 ranges</b> · <span class="ui">Source IPv4 ranges</span>: <code>192.168.10.0/24</code> (o intervalo da <code>acme-mgmt-subnet</code>).</li>
 <li><span class="ui">Protocols and ports</span>: <b>Specified protocols and ports</b> › marque <b>TCP</b> › <span class="ui">Ports</span>: <code>22</code>.</li>
 <li class="fim">Clique em <span class="btn">Create</span>.</li>
 </ol>
 <h3>Colocar a tag no juice-shop</h3>
 <ol>
 <li><span class="caminho">Menu de navegação (☰) › Compute Engine › VM instances</span> e clique no nome <code>juice-shop</code>.</li>
-<li>Clique em <span class="ui">Edit</span>.</li>
-<li>Em <span class="ui">Network tags</span>, digite <span class="v">TAG SSH INTERNO</span> e tecle Enter. A <span class="v">TAG HTTP</span> do passo 4 deve continuar lá.</li>
+<li>No topo da página da VM, clique em <span class="ui">Edit</span>.</li>
+<li>Role até a seção <span class="ui">Networking</span> e, no campo <span class="ui">Network tags</span>, digite <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: Painel do lab (à esquerda do roteiro), campo &quot;SSH internal network tag&quot;">SSH internal network tag</span> e tecle Enter. A <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: Painel do lab (à esquerda do roteiro), campo &quot;HTTP network tag&quot;">HTTP network tag</span> do passo 4 deve continuar lá.</li>
 <li class="fim">Clique em <span class="btn">Save</span>.</li>
 </ol>
 <p>Volte ao roteiro e clique em <b>Verificar meu progresso</b> do passo 5.</p>
@@ -220,9 +223,9 @@ O roteiro avisa: <b>permissões muito flexíveis são marcadas como incorretas</
 <li>Na linha do <code>bastion</code>, clique em <span class="ui">SSH</span>. Uma janela abre e se conecta pelo IAP (o bastion não tem IP público). Se pedir, clique em <span class="btn">Authorize</span>.</li>
 </ol>
 <div class="box cmd"><b class="t">Por comando (dentro da janela SSH do bastion)</b>
-Esta é a única parte que exige comando, porque a conexão sai de dentro do bastion. Rode os blocos <b>um de cada vez</b>, trocando <span class="v">ZONA</span>.
+Esta é a única parte que exige comando, porque a conexão sai de dentro do bastion. Rode os blocos <b>um de cada vez</b>, trocando <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: Painel do lab (à esquerda do roteiro), campo &quot;Zone&quot;">Zone</span>.
 <p><b>1. Conectar ao juice-shop pelo IP interno:</b></p>
-<pre>gcloud compute ssh juice-shop --internal-ip --zone=ZONA</pre>
+<pre>gcloud compute ssh juice-shop --internal-ip --zone=Zone</pre>
 <p>Se perguntar <code>Do you want to continue (Y/n)?</code>, digite <code>Y</code> e tecle Enter. Se pedir uma <i>passphrase</i>, só tecle Enter duas vezes (deixe em branco).</p>
 <p><b>2. Conferir que está no juice-shop:</b> o prompt muda para algo como <code>usuario@juice-shop:~$</code>. Se quiser confirmar:</p>
 <pre>hostname</pre>
@@ -236,7 +239,7 @@ Esta é a única parte que exige comando, porque a conexão sai de dentro do bas
 <li>Criar a regra mas esquecer de colocar a tag na VM (ou clicar em <b>Save</b>).</li>
 <li>Usar <code>0.0.0.0/0</code> nas regras de SSH: é marcado como permissão excessiva.</li>
 <li>Digitar a tag errada: copie do roteiro, letra por letra. A tag da regra e a da VM precisam ser idênticas.</li>
-<li>Botão <b>SSH</b> do bastion não conecta: confira a regra do IAP (<code>35.235.240.0/20</code>, TCP 22) e a <span class="v">TAG SSH IAP</span> no bastion. O roteiro sugere rodar o comando com <code>--troubleshoot</code> para ver o motivo.</li>
+<li>Botão <b>SSH</b> do bastion não conecta: confira a regra do IAP (<code>35.235.240.0/20</code>, TCP 22) e a <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: Painel do lab (à esquerda do roteiro), campo &quot;SSH IAP network tag&quot;">SSH IAP network tag</span> no bastion. O roteiro sugere rodar o comando com <code>--troubleshoot</code> para ver o motivo.</li>
 <li>Nomes de botões diferentes dos desta página: a tradução automática do navegador está ligada. Veja "Antes de começar".</li>
 </ul></div>
 </details>
