@@ -111,13 +111,36 @@ Exemplo: se o painel mostra <b>HTTP network tag</b> = <code>permit-http-ingress-
 <details class="antes">
 <summary>🎯 Cenário e objetivo <span class="dica">clique para abrir</span></summary>
 <div class="corpo">
-O site <b>juice-shop</b> do Jeferson está na VPC <code>acme-vpc</code>, com uma configuração de firewall aberta demais. Ao final:
+<p>Você trabalha numa consultoria de segurança contratada pelo Jeferson. O site da loja dele, o <b>juice-shop</b>, está funcionando, mas com a rede aberta demais. Sua missão é deixar aberto só o que precisa ficar aberto: o site para os clientes, e o acesso de administração por um único caminho controlado.</p>
+
+<h3>🧰 Os serviços e elementos da rede</h3>
 <ul>
-<li>o bastion host <b>não tem IP público</b> e só recebe SSH vindo do <b>IAP</b>;</li>
-<li>o juice-shop só recebe SSH vindo do bastion (sub-rede <code>acme-mgmt-subnet</code>);</li>
-<li>só o HTTP (porta 80) do juice-shop fica aberto ao público.</li>
+<li><b>VPC <code>acme-vpc</code></b>: a rede privada do Jeferson no Google Cloud. Todas as VMs do lab ficam nela, e as regras de firewall que você criar devem ser dela.</li>
+<li><b>Sub-redes</b>: divisões da VPC. A <code>acme-mgmt-subnet</code> é a de <b>gerenciamento</b>, onde fica o bastion. A <code>acme-app-subnet</code> é a da <b>aplicação</b>, onde fica o juice-shop.</li>
+<li><b>Compute Engine (VMs)</b>: o <code>bastion</code> é a "portaria" da rede, a única VM em que o administrador entra por SSH, sem IP público. O <code>juice-shop</code> é o servidor web da loja.</li>
+<li><b>Firewall da VPC</b>: regras que dizem <i>o que</i> pode entrar (porta e origem). Por padrão, tudo o que não está liberado é bloqueado.</li>
+<li><b>Tags de rede</b>: etiquetas nas VMs que dizem <i>em qual VM</i> cada regra vale. Uma regra só tem efeito na VM que tem a mesma tag.</li>
+<li><b>IAP (Identity-Aware Proxy)</b>: serviço do Google que confere a identidade do administrador (login e permissões) e só então abre o túnel SSH até o bastion. As conexões chegam sempre da faixa <code>35.235.240.0/20</code>.</li>
 </ul>
-O roteiro avisa: <b>permissões muito flexíveis são marcadas como incorretas</b>. Nunca use <code>0.0.0.0/0</code> nas regras de SSH.
+
+<h3>🔗 O que cada tarefa faz</h3>
+<ul>
+<li><b>Passo 1</b> · Firewall<br><b>O que faz:</b> remove a regra <code>open-access</code>.<br><b>Para que serve:</b> fechar a "porta escancarada" que liberava todas as portas TCP, inclusive o SSH, para a internet inteira.</li>
+<li><b>Passo 2</b> · Compute Engine<br><b>O que faz:</b> liga o <code>bastion</code>, que estava parado.<br><b>Para que serve:</b> colocar no ar a única porta de entrada para a administração.</li>
+<li><b>Passo 3</b> · Firewall · IAP · tag <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: Painel do lab (à esquerda do roteiro), campo &quot;SSH IAP network tag&quot;">SSH IAP network tag</span><br><b>O que faz:</b> libera SSH (porta 22) no bastion, só vindo do IAP.<br><b>Para que serve:</b> o administrador entra no bastion sem que ele precise de IP público, e só depois de o Google confirmar quem ele é.</li>
+<li><b>Passo 4</b> · Firewall · tag <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: Painel do lab (à esquerda do roteiro), campo &quot;HTTP network tag&quot;">HTTP network tag</span><br><b>O que faz:</b> libera HTTP (porta 80) no juice-shop para qualquer origem.<br><b>Para que serve:</b> os clientes acessam a loja. É a única coisa que fica aberta para o público.</li>
+<li><b>Passo 5</b> · Firewall · tag <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: Painel do lab (à esquerda do roteiro), campo &quot;SSH internal network tag&quot;">SSH internal network tag</span><br><b>O que faz:</b> libera SSH no juice-shop só vindo da <code>acme-mgmt-subnet</code>.<br><b>Para que serve:</b> o servidor da loja só aceita administração que vem de dentro, pelo bastion.</li>
+<li><b>Passo 6</b> · IAP › bastion › juice-shop<br><b>O que faz:</b> conecta ao bastion pelo IAP e, de lá, ao juice-shop.<br><b>Para que serve:</b> provar que o caminho de administração funciona do começo ao fim.</li>
+</ul>
+
+<div class="box regra"><b class="t">💡 Na prática, o que o conjunto faz</b>
+Os passos aplicam o padrão de segurança chamado <b>bastion host</b>, com defesa em camadas:
+<ul>
+<li><b>clientes</b> chegam só ao site, pela porta 80;</li>
+<li><b>administradores</b> passam por um único ponto controlado: IAP › bastion › juice-shop;</li>
+<li>todo o resto fica <b>fechado</b>, e cada regra vale só para a VM certa, graças às tags.</li>
+</ul>
+Com isso, a "superfície de ataque" diminui muito: mesmo que alguém descubra o IP do juice-shop, não consegue entrar por SSH vindo da internet. É assim que empresas protegem servidores de produção.</div>
 </div>
 </details>
 <div class="card">
@@ -129,20 +152,6 @@ O roteiro avisa: <b>permissões muito flexíveis são marcadas como incorretas</
 <figcaption>Objetivo: Admin › IAP › bastion › juice-shop por SSH; clientes só por HTTP.</figcaption></figure>
 </div>
 <p class="credito">Imagens do roteiro do lab GSP322 (Google Skills). Clique na imagem para ampliar.</p>
-<details class="antes">
-<summary>🗺️ Quem é quem na rede <span class="dica">clique para abrir</span></summary>
-<div class="corpo"><ul>
-<li><b><code>acme-vpc</code></b>: a rede privada (VPC) do Jeferson no Google Cloud. Todas as VMs do lab ficam nela, e as regras de firewall que você criar devem ser dela.</li>
-<li><b><code>acme-mgmt-subnet</code></b>: sub-rede de <b>gerenciamento</b>. Fica nela só o que a equipe usa para administrar o ambiente, no caso o bastion.</li>
-<li><b><code>acme-app-subnet</code></b>: sub-rede da <b>aplicação</b>. Fica nela o servidor que atende os clientes, o juice-shop.</li>
-<li><b><code>bastion</code></b> (bastion host): a "portaria" da rede. É a única VM em que o administrador entra por SSH; dali ele salta para os outros servidores. Por isso não tem IP público e só aceita SSH vindo do IAP.</li>
-<li><b><code>juice-shop</code></b>: o servidor web da loja. Os clientes acessam o site por HTTP (porta 80). O SSH nele só é aceito quando vem do bastion.</li>
-<li><b>IAP</b> (Identity-Aware Proxy): serviço do Google que confere a identidade do administrador (login e permissões) e só então abre o túnel SSH até o bastion. As conexões chegam sempre da faixa <code>35.235.240.0/20</code>.</li>
-<li><b>Admin</b>: quem administra o ambiente. Entra pelo IAP › bastion › juice-shop.</li>
-<li><b>Customers</b>: os clientes da loja. Só chegam ao juice-shop, e só por HTTP.</li>
-<li><b>Regras de firewall + tags de rede</b>: a regra diz <i>o que</i> está liberado (porta e origem) e a tag diz <i>em qual VM</i> a regra vale. Uma regra só tem efeito na VM que tem a mesma tag.</li>
-</ul></div>
-</details>
 
 <h2>1. Remover as regras excessivamente flexíveis<span class="pts">10 pontos</span></h2>
 <ol>
