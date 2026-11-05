@@ -99,9 +99,9 @@ O <b>Menu de navegação (☰)</b> mostra só os produtos fixados. Se algum item
 <div class="box regra"><b class="t">📝 Como identificar os valores para substituir</b>
 Nesta página, todo valor em <span class="v">amarelo</span> é um <b>placeholder</b>: troque pelo valor do <b>seu</b> lab. Neste lab, o nome do bucket, do tópico, da função, a região e a zona são exibidos <b>diretamente nas instruções do lab no Google Skills</b>, no texto de cada tarefa, depois que você clica em <b>Iniciar laboratório</b>. Passe o mouse (ou toque) sobre o valor em amarelo para ver onde encontrá-lo.
 <ul>
-<li><span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: instruções do lab no Google Skills, no texto da tarefa (aparece depois de clicar em Iniciar laboratório), valor &quot;Bucket Name&quot;">Bucket Name</span>: nome do bucket (tarefa 1);</li>
-<li><span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: instruções do lab no Google Skills, no texto da tarefa (aparece depois de clicar em Iniciar laboratório), valor &quot;Topic Name&quot;">Topic Name</span>: nome do tópico do Pub/Sub (tarefa 2);</li>
-<li><span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: instruções do lab no Google Skills, no texto da tarefa (aparece depois de clicar em Iniciar laboratório), valor &quot;Cloud Run Function Name&quot;">Cloud Run Function Name</span>: nome da função do Cloud Run e do ponto de entrada (tarefa 3);</li>
+<li><span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: instruções do lab no Google Skills, no texto da tarefa (aparece depois de clicar em Iniciar laboratório), valor &quot;Bucket&quot;">Bucket</span>: nome do bucket (tarefa 1);</li>
+<li><span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: instruções do lab no Google Skills, no texto da tarefa (aparece depois de clicar em Iniciar laboratório), valor &quot;Topic&quot;">Topic</span>: nome do tópico do Pub/Sub (tarefa 2);</li>
+<li><span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: instruções do lab no Google Skills, no texto da tarefa (aparece depois de clicar em Iniciar laboratório), valor &quot;Function&quot;">Function</span>: nome da função do Cloud Run e do ponto de entrada (tarefa 3);</li>
 <li><span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: instruções do lab no Google Skills, no texto da tarefa (aparece depois de clicar em Iniciar laboratório), valor &quot;Region&quot;">Region</span> e <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: instruções do lab no Google Skills, no texto da tarefa (aparece depois de clicar em Iniciar laboratório), valor &quot;Zone&quot;">Zone</span>: região e zona de todos os recursos;</li>
 <li><span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: instruções do lab no Google Skills, no texto da tarefa (aparece depois de clicar em Iniciar laboratório), valor &quot;Username 2&quot;">Username 2</span>: e-mail do engenheiro de nuvem anterior (tarefa 4). O <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: instruções do lab no Google Skills, no texto da tarefa (aparece depois de clicar em Iniciar laboratório), valor &quot;Username 1&quot;">Username 1</span> é a sua conta.</li>
 </ul></div>
@@ -125,7 +125,7 @@ Crie tudo na <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu 
 <h2>Tarefa 1: criar o bucket<span class="pts">25 pontos</span></h2>
 <ol>
 <li><span class="caminho">Menu de navegação (☰) › Cloud Storage › Buckets</span> e clique em <span class="ui">Create</span>.</li>
-<li>Em <span class="ui">Get started</span>, no campo <span class="ui">Name your bucket</span>, digite <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: instruções do lab no Google Skills, no texto da tarefa (aparece depois de clicar em Iniciar laboratório), valor &quot;Bucket Name&quot;">Bucket Name</span> e clique em <span class="ui">Continue</span>.</li>
+<li>Em <span class="ui">Get started</span>, no campo <span class="ui">Name your bucket</span>, digite <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: instruções do lab no Google Skills, no texto da tarefa (aparece depois de clicar em Iniciar laboratório), valor &quot;Bucket&quot;">Bucket</span> e clique em <span class="ui">Continue</span>.</li>
 <li>Em <span class="ui">Choose where to store your data</span>: <span class="ui">Location type</span>, selecione a opção <b>Region</b> e, na lista, selecione a <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: instruções do lab no Google Skills, no texto da tarefa (aparece depois de clicar em Iniciar laboratório), valor &quot;Region&quot;">Region</span>. Clique em <span class="ui">Continue</span>.</li>
 <li>Deixe as demais seções como estão.</li>
 <li class="fim">Clique em <span class="btn">Create</span>. Se aparecer o aviso <b>Public access will be prevented</b>, clique em <span class="btn">Confirm</span>.</li>
@@ -135,24 +135,24 @@ Crie tudo na <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu 
 <h2>Tarefa 2: criar o tópico do Pub/Sub<span class="pts">25 pontos</span></h2>
 <ol>
 <li><span class="caminho">Menu de navegação (☰) › View all products › Analytics › Pub/Sub › Topics</span> e clique em <span class="ui">Create topic</span>.</li>
-<li>No campo <span class="ui">Topic ID</span>, digite <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: instruções do lab no Google Skills, no texto da tarefa (aparece depois de clicar em Iniciar laboratório), valor &quot;Topic Name&quot;">Topic Name</span>.</li>
+<li>No campo <span class="ui">Topic ID</span>, digite <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: instruções do lab no Google Skills, no texto da tarefa (aparece depois de clicar em Iniciar laboratório), valor &quot;Topic&quot;">Topic</span>.</li>
 <li>Deixe as demais opções como estão.</li>
 <li class="fim">Clique em <span class="btn">Create</span>.</li>
 </ol>
 <p>Volte às instruções do lab no Google Skills e clique em <span class="btn">Verificar meu progresso</span> da tarefa 2.</p>
 
 <h2>Tarefa 3: criar a função que gera miniaturas<span class="pts">30 pontos</span></h2>
-<p><b>O que as instruções do lab pedem:</b> função do Cloud Run (2ª geração) chamada <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: instruções do lab no Google Skills, no texto da tarefa (aparece depois de clicar em Iniciar laboratório), valor &quot;Cloud Run Function Name&quot;">Cloud Run Function Name</span>, em <b>Node.js 22</b>, acionada sempre que um arquivo é criado no bucket da tarefa 1.</p>
+<p><b>O que as instruções do lab pedem:</b> função do Cloud Run (2ª geração) chamada <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: instruções do lab no Google Skills, no texto da tarefa (aparece depois de clicar em Iniciar laboratório), valor &quot;Function&quot;">Function</span>, em <b>Node.js 22</b>, acionada sempre que um arquivo é criado no bucket da tarefa 1.</p>
 <h3>Criar a função</h3>
 <ol>
 <li><span class="caminho">Menu de navegação (☰) › Cloud Run</span> e clique em <span class="ui">Write a function</span>.</li>
-<li><span class="ui">Service name</span>: <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: instruções do lab no Google Skills, no texto da tarefa (aparece depois de clicar em Iniciar laboratório), valor &quot;Cloud Run Function Name&quot;">Cloud Run Function Name</span>.</li>
+<li><span class="ui">Service name</span>: <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: instruções do lab no Google Skills, no texto da tarefa (aparece depois de clicar em Iniciar laboratório), valor &quot;Function&quot;">Function</span>.</li>
 <li><span class="ui">Region</span>: selecione a opção <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: instruções do lab no Google Skills, no texto da tarefa (aparece depois de clicar em Iniciar laboratório), valor &quot;Region&quot;">Region</span>.</li>
 <li><span class="ui">Runtime</span>: selecione a opção <b>Node.js 22</b>.</li>
 <li>Em <span class="ui">Trigger</span>, clique em <span class="ui">Add trigger</span> e selecione a opção <b>Cloud Storage trigger</b>:
 <ul>
 <li><span class="ui">Event type</span>: selecione a opção <b>google.cloud.storage.object.v1.finalized</b>;</li>
-<li><span class="ui">Bucket</span>: clique em <span class="ui">Browse</span>, selecione <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: instruções do lab no Google Skills, no texto da tarefa (aparece depois de clicar em Iniciar laboratório), valor &quot;Bucket Name&quot;">Bucket Name</span> e clique em <span class="btn">Select</span>;</li>
+<li><span class="ui">Bucket</span>: clique em <span class="ui">Browse</span>, selecione <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: instruções do lab no Google Skills, no texto da tarefa (aparece depois de clicar em Iniciar laboratório), valor &quot;Bucket&quot;">Bucket</span> e clique em <span class="btn">Select</span>;</li>
 <li>se o console pedir para ativar APIs ou conceder papéis, clique em <span class="btn">Enable</span> / <span class="btn">Grant</span> em cada aviso;</li>
 <li>clique em <span class="btn">Save trigger</span>.</li>
 </ul></li>
@@ -161,7 +161,7 @@ Crie tudo na <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu 
 </ol>
 <h3>Colocar o código</h3>
 <ol>
-<li>No campo <span class="ui">Function entry point</span>, digite <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: instruções do lab no Google Skills, no texto da tarefa (aparece depois de clicar em Iniciar laboratório), valor &quot;Cloud Run Function Name&quot;">Cloud Run Function Name</span>.</li>
+<li>No campo <span class="ui">Function entry point</span>, digite <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: instruções do lab no Google Skills, no texto da tarefa (aparece depois de clicar em Iniciar laboratório), valor &quot;Function&quot;">Function</span>.</li>
 <li>Abra o arquivo <code>index.js</code>, apague todo o conteúdo e cole o código de <code>index.js</code> das instruções do lab. Use o botão de copiar das instruções: os nomes do seu lab já vêm preenchidos lá.</li>
 <li>Abra o arquivo <code>package.json</code>, apague todo o conteúdo e cole o código de <code>package.json</code> das instruções do lab.</li>
 <li class="fim">Clique em <span class="btn">Save and redeploy</span> e espere aparecer o ícone verde de concluído.</li>
@@ -171,7 +171,7 @@ Aguarde 2 a 3 minutos (as permissões demoram a propagar) e clique em <span clas
 <h3>Testar a função</h3>
 <ol>
 <li>Baixe a imagem <a href="https://storage.googleapis.com/cloud-training/gsp315/map.jpg" target="_blank" rel="noopener">map.jpg</a> indicada nas instruções do lab (ou use um PNG/JPG seu).</li>
-<li><span class="caminho">Menu de navegação (☰) › Cloud Storage › Buckets</span> e clique no nome <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: instruções do lab no Google Skills, no texto da tarefa (aparece depois de clicar em Iniciar laboratório), valor &quot;Bucket Name&quot;">Bucket Name</span>.</li>
+<li><span class="caminho">Menu de navegação (☰) › Cloud Storage › Buckets</span> e clique no nome <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: instruções do lab no Google Skills, no texto da tarefa (aparece depois de clicar em Iniciar laboratório), valor &quot;Bucket&quot;">Bucket</span>.</li>
 <li>Clique em <span class="ui">Upload</span> › <span class="ui">Upload files</span> e selecione a imagem.</li>
 <li>Clique em <span class="ui">Refresh</span>: aparece também um arquivo com <code>64x64_thumbnail</code> no nome. Não é preciso esperar a miniatura para verificar o progresso.</li>
 </ol>
@@ -192,8 +192,8 @@ Aguarde 2 a 3 minutos (as permissões demoram a propagar) e clique em <span clas
 <summary>⚠️ Erros comuns <span class="dica">clique para abrir</span></summary>
 <div class="corpo"><ul>
 <li>Criar o bucket ou a função em outra região: use sempre a <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: instruções do lab no Google Skills, no texto da tarefa (aparece depois de clicar em Iniciar laboratório), valor &quot;Region&quot;">Region</span> das instruções do lab.</li>
-<li>Digitar o nome errado: copie <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: instruções do lab no Google Skills, no texto da tarefa (aparece depois de clicar em Iniciar laboratório), valor &quot;Bucket Name&quot;">Bucket Name</span>, <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: instruções do lab no Google Skills, no texto da tarefa (aparece depois de clicar em Iniciar laboratório), valor &quot;Topic Name&quot;">Topic Name</span> e <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: instruções do lab no Google Skills, no texto da tarefa (aparece depois de clicar em Iniciar laboratório), valor &quot;Cloud Run Function Name&quot;">Cloud Run Function Name</span> das instruções do lab, letra por letra.</li>
-<li>Esquecer o <span class="ui">Function entry point</span>: ele precisa ser igual ao <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: instruções do lab no Google Skills, no texto da tarefa (aparece depois de clicar em Iniciar laboratório), valor &quot;Cloud Run Function Name&quot;">Cloud Run Function Name</span>.</li>
+<li>Digitar o nome errado: copie <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: instruções do lab no Google Skills, no texto da tarefa (aparece depois de clicar em Iniciar laboratório), valor &quot;Bucket&quot;">Bucket</span>, <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: instruções do lab no Google Skills, no texto da tarefa (aparece depois de clicar em Iniciar laboratório), valor &quot;Topic&quot;">Topic</span> e <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: instruções do lab no Google Skills, no texto da tarefa (aparece depois de clicar em Iniciar laboratório), valor &quot;Function&quot;">Function</span> das instruções do lab, letra por letra.</li>
+<li>Esquecer o <span class="ui">Function entry point</span>: ele precisa ser igual ao <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: instruções do lab no Google Skills, no texto da tarefa (aparece depois de clicar em Iniciar laboratório), valor &quot;Function&quot;">Function</span>.</li>
 <li>Colar o código sem os nomes preenchidos: copie direto das instruções do lab, que já trazem o nome do tópico e da função.</li>
 <li>Miniatura não aparece: confira na aba <b>Triggers</b> da função se o gatilho do Cloud Storage está lá. Se não estiver, recrie o gatilho e envie outra imagem.</li>
 <li>Nomes de botões diferentes dos desta página: a tradução automática do navegador está ligada. Veja "Antes de começar".</li>
