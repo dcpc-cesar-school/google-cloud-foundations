@@ -139,7 +139,7 @@ O roteiro avisa: <b>permissões muito flexíveis são marcadas como incorretas</
 <h2>1. Remover as regras excessivamente flexíveis<span class="pts">10 pontos</span></h2>
 <ol>
 <li><span class="caminho">Menu de navegação (☰) › VPC network › Firewall</span>.</li>
-<li>Na lista, localize a regra <code>open-access</code> da rede <code>acme-vpc</code>. Ela tem <span class="ui">Filters</span> <code>IP ranges: 0.0.0.0/0</code> e <span class="ui">Protocols / ports</span> <code>tcp</code>, ou seja, libera <b>todas as portas TCP</b> (inclusive o SSH, porta 22) para a internet inteira. Por isso é "excessivamente flexível".</li>
+<li>Na lista, localize a regra <code>open-access</code>. Nas colunas, ela mostra <span class="ui">Targets</span> <code>Apply to all</code>, <span class="ui">Protocols / ports</span> <code>tcp</code> e <span class="ui">Network</span> <code>acme-vpc</code>. Ou seja, ela libera <b>todas as portas TCP</b> (inclusive o SSH, porta 22) em todas as VMs da rede, para a internet inteira. Por isso é "excessivamente flexível".</li>
 <li>Marque a caixa da regra e clique em <span class="ui">Delete</span>.</li>
 <li class="fim">Na janela de confirmação, clique em <span class="btn">Delete</span>.</li>
 </ol>
