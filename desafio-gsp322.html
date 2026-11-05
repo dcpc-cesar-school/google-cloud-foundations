@@ -53,6 +53,14 @@ details.erros>summary::before{color:#d93025}
 .card img{display:block;width:100%;max-width:640px;height:auto;margin:0 auto;border-radius:6px}
 .card figcaption{font-size:.88em;color:#5f6368;margin-top:8px;text-align:center}
 .credito{font-size:.78em;color:#80868b;margin:4px 0 14px}
+.codewrap{position:relative}
+.codewrap pre{padding-right:84px}
+.copybtn{position:absolute;top:8px;right:8px;font:600 12px 'Segoe UI',Roboto,Arial,sans-serif;background:#3c4043;color:#fff;border:0;border-radius:4px;padding:4px 10px;cursor:pointer}
+.copybtn:hover{background:#5f6368}
+.copybtn:focus-visible{outline:2px solid #8ab4f8;outline-offset:2px}
+pre .v{background:#fde293;color:#202124;border-color:#f9ab00;padding:0 3px}
+pre .v[data-tip]:hover::after,pre .v[data-tip]:focus::after{content:none;display:none}
+.tipbox{display:none;position:fixed;z-index:1000;max-width:280px;background:#202124;color:#fff;font:12.5px/1.4 'Segoe UI',Roboto,Arial,sans-serif;padding:7px 10px;border-radius:6px;box-shadow:0 2px 8px rgba(0,0,0,.25);pointer-events:none}
 .alt{margin-top:36px;text-align:center;font-size:.8em;color:#9aa0a6}
 .alt a{color:#9aa0a6}
 footer{margin-top:10px;color:#80868b;font-size:.85em;text-align:center}
@@ -231,12 +239,10 @@ O roteiro avisa: <b>permissões muito flexíveis são marcadas como incorretas</
 <li>Na linha do <code>bastion</code>, clique em <span class="ui">SSH</span>. Uma janela abre e se conecta pelo IAP (o bastion não tem IP público). Se pedir, clique em <span class="btn">Authorize</span>.</li>
 </ol>
 <div class="box cmd"><b class="t">Por comando (dentro da janela SSH do bastion)</b>
-Esta é a única parte que exige comando, porque a conexão sai de dentro do bastion. Rode os blocos <b>um de cada vez</b>, trocando <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: Painel do lab (à esquerda do roteiro), campo &quot;Zone&quot;">Zone</span>.
-<p><b>1. Conectar ao juice-shop pelo IP interno:</b></p>
-<pre>gcloud compute ssh juice-shop --internal-ip --zone=Zone</pre>
+Esta é a única parte que exige comando, porque a conexão sai de dentro do bastion. Rode o comando abaixo, trocando <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: Painel do lab (à esquerda do roteiro), campo &quot;Zone&quot;">Zone</span>.
+<p><b>Conectar ao juice-shop pelo IP interno:</b></p>
+<pre>gcloud compute ssh juice-shop --internal-ip --zone=<span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: Painel do lab (à esquerda do roteiro), campo &quot;Zone&quot;">Zone</span></pre>
 <p>Se perguntar <code>Do you want to continue (Y/n)?</code>, digite <code>Y</code> e tecle Enter. Se pedir uma <i>passphrase</i>, só tecle Enter duas vezes (deixe em branco).</p>
-<p><b>2. Conferir que está no juice-shop:</b> o prompt muda para algo como <code>usuario@juice-shop:~$</code>. Se quiser confirmar:</p>
-<pre>hostname</pre>
 </div>
 <p>Com a conexão aberta, volte às instruções do lab no Google Skills e clique em <span class="btn">Verificar meu progresso</span> do passo 6.</p>
 
@@ -253,4 +259,24 @@ Esta é a única parte que exige comando, porque a conexão sai de dentro do bas
 </details>
 <p class="alt">Prefere fazer pelo terminal? <a href="cli-gsp322.html" target="_blank" rel="noopener">Versão por linha de comando</a></p>
 <footer>Estratégia de resolução preparada para a turma. Siga sempre o roteiro do laboratório: as tags de rede e a zona mostradas no lab têm prioridade sobre qualquer exemplo desta página.</footer>
-</div></body></html>
+</div>
+<script>
+(function(){
+var tip=document.createElement('div');tip.className='tipbox';tip.setAttribute('role','tooltip');document.body.appendChild(tip);
+function show(e){var t=e.currentTarget,r=t.getBoundingClientRect();tip.textContent=t.getAttribute('data-tip');tip.style.display='block';var x=Math.min(r.left,window.innerWidth-tip.offsetWidth-8);tip.style.left=Math.max(8,x)+'px';tip.style.top=(r.bottom+6)+'px';}
+function hide(){tip.style.display='none';}
+document.querySelectorAll('pre .v[data-tip]').forEach(function(el){el.addEventListener('mouseenter',show);el.addEventListener('focus',show);el.addEventListener('mouseleave',hide);el.addEventListener('blur',hide);});
+window.addEventListener('scroll',hide,true);
+document.querySelectorAll('pre').forEach(function(pre){
+var w=document.createElement('div');w.className='codewrap';pre.parentNode.insertBefore(w,pre);w.appendChild(pre);
+var b=document.createElement('button');b.type='button';b.className='copybtn';b.textContent='Copiar';b.setAttribute('aria-label','Copiar código');w.appendChild(b);
+b.addEventListener('click',function(){
+var t=pre.innerText;
+function ok(){b.textContent='Copiado ✓';setTimeout(function(){b.textContent='Copiar';},1500);}
+function fb(){var s=window.getSelection(),r=document.createRange();r.selectNodeContents(pre);s.removeAllRanges();s.addRange(r);try{document.execCommand('copy');ok();}catch(e){b.textContent='Selecionado: Ctrl+C';}}
+if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(t).then(ok,fb);}else{fb();}
+});
+});
+})();
+</script>
+</body></html>
