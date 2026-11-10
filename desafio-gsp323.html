@@ -18,7 +18,16 @@ li{margin:5px 0}
 .regra{background:#f8f9fa;border-color:#e8eaed}
 .cmd{background:#fef7e0;border-color:#fde293}
 .alerta{background:#fce8e6;border-color:#f6aea9}
+.normal{background:#e6f4ea;border-color:#a8dab5}
+.espera{background:#e8f0fe;border-color:#aecbfa}
+.box.mini{background:none;border:0;border-radius:0;padding:0 0 0 2px;margin:6px 0 10px;font-size:.93em;font-style:italic}
+.box.mini b{font-style:normal}
+.normal.mini{color:#137333}
+.espera.mini{color:#1967d2}
 .box b.t{display:block;margin-bottom:4px}
+.onde{display:inline-block;font-size:.78em;font-weight:700;border-radius:999px;padding:1px 10px;margin-left:6px;vertical-align:middle}
+.onde.shell{background:#202124;color:#fff}
+.onde.ssh{background:#188038;color:#fff}
 code,.v{font-family:Consolas,'Courier New',monospace;font-size:.92em}
 code{background:#f1f3f4;padding:1px 6px;border-radius:4px}
 .v{background:#fff3cd;padding:1px 6px;border-radius:4px;border:1px dashed #f9ab00}
@@ -41,18 +50,6 @@ details.antes .corpo{padding:0 18px 6px}
 details.erros{background:#fce8e6;border-color:#f6aea9}
 details.erros>summary{border-left-color:#d93025}
 details.erros>summary::before{color:#d93025}
-.card{border:1px solid #dadce0;border-radius:12px;background:#fff;margin:14px 0 4px;overflow:hidden}
-.card>input{position:absolute;opacity:0;pointer-events:none}
-.card-tabs{display:flex;border-bottom:1px solid #dadce0;background:#f8f9fa}
-.card-tabs label{flex:1;text-align:center;padding:10px 8px;cursor:pointer;font-weight:600;color:#5f6368;border-bottom:3px solid transparent}
-.card-tabs label:hover{background:#f1f3f4}
-#c-antes:checked~.card-tabs label[for=c-antes],#c-depois:checked~.card-tabs label[for=c-depois]{color:var(--cor);border-bottom-color:var(--cor);background:#fff}
-#c-antes:focus-visible~.card-tabs label[for=c-antes],#c-depois:focus-visible~.card-tabs label[for=c-depois]{outline:2px solid var(--cor);outline-offset:-2px}
-.card figure{display:none;margin:0;padding:12px}
-#c-antes:checked~.f-antes,#c-depois:checked~.f-depois{display:block}
-.card img{display:block;width:100%;max-width:640px;height:auto;margin:0 auto;border-radius:6px}
-.card figcaption{font-size:.88em;color:#5f6368;margin-top:8px;text-align:center}
-.credito{font-size:.78em;color:#80868b;margin:4px 0 14px}
 .codewrap{position:relative}
 .codewrap pre{padding-right:84px}
 .copybtn{position:absolute;top:8px;right:8px;font:600 12px 'Segoe UI',Roboto,Arial,sans-serif;background:#3c4043;color:#fff;border:0;border-radius:4px;padding:4px 10px;cursor:pointer}
@@ -70,7 +67,7 @@ footer{margin-top:10px;color:#80868b;font-size:.85em;text-align:center}
 <div class="fase">Fase 4 · Selo 8 · 📅 Encontro 4: 10/11</div>
 <h1>🤖 GSP323 · Preparar dados para APIs de ML no Google Cloud</h1>
 <p class="sub">Selo de habilidade: Preparar dados para APIs de ML no Google Cloud</p>
-<div class="chips"><span>4 tarefas</span><span>100 pontos</span><span>BigQuery</span><span>Dataflow</span><span>Spark (Dataproc)</span><span>Speech-to-Text</span><span>Natural Language</span></div>
+<div class="chips"><span>4 tarefas</span><span>100 pontos</span><span>⏱️ cerca de 45 min</span><span>BigQuery</span><span>Dataflow</span><span>Spark (Dataproc)</span><span>Speech-to-Text</span><span>Natural Language</span></div>
 <div class="box regra"><b class="t">🔎 Onde encontrar o lab</b><ul>
 <li><b>Link direto:</b> <a href="https://www.skills.google/paths/36/course_templates/631/labs/629218" target="_blank" rel="noopener">abrir o laboratório com desafio no Google Skills</a>.</li>
 <li><b>Pela busca:</b> entre em <a href="https://www.skills.google" target="_blank" rel="noopener">skills.google</a> e pesquise por <code>GSP323</code> ou pelo nome do selo, <i>Preparar dados para APIs de ML no Google Cloud</i>.</li>
@@ -83,10 +80,12 @@ footer{margin-top:10px;color:#80868b;font-size:.85em;text-align:center}
 <ul>
 <li>Abra o lab em janela anônima e use só o usuário e a senha do laboratório.</li>
 <li>Os valores em <span class="v">amarelo</span> mudam a cada execução: copie do <b>painel do lab</b> ou das <b>instruções do lab no Google Skills</b>, depois de clicar em <b>Iniciar laboratório</b>.</li>
-<li>Faça pelo <b>console</b>. Use comandos apenas onde esta página indicar, e sempre no Cloud Shell do projeto do lab.</li>
+<li>Faça pelo <b>console</b>. Use comandos apenas onde esta página indicar, e sempre no lugar indicado pela etiqueta <span class="onde shell">Cloud Shell</span> ou <span class="onde ssh">SSH do nó -m</span>.</li>
 <li>Ao final de cada tarefa, clique em <span class="btn">Verificar meu progresso</span>. Se não passar, leia a mensagem, corrija e verifique de novo.</li>
 <li>Não clique em <b>Terminar o laboratório</b> antes de todas as tarefas estarem verificadas.</li>
 </ul></div>
+<div class="box espera"><b class="t">⏱️ Quanto tempo leva</b>
+Cerca de <b>45 minutos</b>. O cartão do lab diz "35 minutos", mas o cronômetro dá mais de 1 hora: há folga. Para ganhar tempo, aproveite as esperas: enquanto o job do Dataflow roda, crie o cluster da tarefa 2; enquanto o cluster sobe, faça as tarefas 3 e 4.</div>
 <div class="box alerta"><b class="t">🌐 Desative a tradução automática do navegador</b>
 O console do lab abre em <b>inglês</b>, e esta página usa os nomes dos botões e campos em inglês, <span class="ui">assim</span>. Se o navegador traduzir a página, os nomes deixam de bater com o tutorial e a tradução pode alterar nomes de recursos e comandos que você copia.
 <ul>
@@ -96,6 +95,8 @@ O console do lab abre em <b>inglês</b>, e esta página usa os nomes dos botões
 Faça isso na janela anônima que você usa no lab.</div>
 <div class="box regra"><b class="t">🧭 Produto que não aparece no menu</b>
 O <b>Menu de navegação (☰)</b> mostra só os produtos fixados. Se algum item do caminho não aparecer, clique em <span class="ui">View all products</span> e procure na categoria. Outra opção é digitar o nome do produto na barra de busca no topo do console.</div>
+<div class="box normal"><b class="t">✅ Avisos que podem aparecer e são normais</b>
+Ao longo do lab, o console mostra vários avisos que <b>não</b> indicam erro. Quando aparecerem, siga em frente. Cada um está descrito no passo em que aparece, numa linha em <b style="color:#137333">verde</b> que começa com "✅ É normal". As esperas longas aparecem numa linha em <b style="color:#1967d2">azul</b> que começa com "⏱️ Vai demorar".</div>
 <div class="box regra"><b class="t">📝 Como identificar os valores para substituir</b>
 Nesta página, todo valor em <span class="v">amarelo</span> é um <b>placeholder</b>: troque pelo valor do <b>seu</b> lab. Depois de clicar em <b>Iniciar laboratório</b>, <b>BigQuery Dataset Name</b>, <b>Cloud Storage Bucket Name</b> e <b>Region</b> aparecem no <b>painel do lab</b> (à esquerda das instruções). Os demais aparecem preenchidos no <b>texto das instruções do lab no Google Skills</b>, na tarefa indicada. Passe o mouse (ou toque) sobre o valor em amarelo para ver onde encontrá-lo.
 <ul>
@@ -105,7 +106,8 @@ Nesta página, todo valor em <span class="v">amarelo</span> é um <b>placeholder
 <li><span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: instruções do lab no Google Skills, tabela da tarefa 1, linha &quot;Diretório temporário para o processo de carregamento do BigQuery&quot;">Temporary BigQuery Directory</span> e <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: instruções do lab no Google Skills, tabela da tarefa 1, linha &quot;Local temporário&quot;">Temporary Location</span>: pastas temporárias do job do Dataflow;</li>
 <li><span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: instruções do lab no Google Skills, tarefa 3, no texto &quot;faça upload do arquivo resultante em ...&quot;">Cloud Speech Location</span>: caminho <code>gs://</code> do resultado da tarefa 3;</li>
 <li><span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: instruções do lab no Google Skills, tarefa 4, no texto &quot;faça upload do arquivo resultante em ...&quot;">Cloud Natural Language Location</span>: caminho <code>gs://</code> do resultado da tarefa 4.</li>
-</ul></div>
+</ul>
+<b>Atenção ao Output Table Name:</b> ele aparece com <b>dois formatos</b>. Ao criar a tabela no BigQuery, use só o nome da tabela (ex.: <code>customers_123</code>). No job do Dataflow, use o valor da linha <b>"Tabela de saída do BigQuery"</b> da tabela da tarefa 1, no formato <code>projeto:dataset.tabela</code>.</div>
 <div class="box regra"><b class="t">🔐 Conferir as permissões do projeto (as instruções do lab pedem)</b>
 <ol>
 <li><span class="caminho">Menu de navegação (☰) › IAM & Admin › IAM</span>.</li>
@@ -113,7 +115,7 @@ Nesta página, todo valor em <span class="v">amarelo</span> é um <b>placeholder
 <li>Se faltar o <b>Storage Admin</b>: clique em <span class="ui">Grant access</span>, em <span class="ui">New principals</span> cole a conta acima (o número do projeto está em <span class="caminho">Menu de navegação (☰) › Cloud overview › Dashboard</span>), em <span class="ui">Role</span> selecione a opção <b>Storage Admin</b> e clique em <span class="btn">Save</span>.</li>
 </ol></div>
 <div class="box cmd"><b class="t">Onde o console não basta</b>
-Tarefa 2: as instruções do lab exigem um comando <code>hdfs</code> dentro do cluster. Tarefas 3 e 4: as APIs não têm tela de uso no console; são chamadas por comando no Cloud Shell, e o resultado é enviado ao bucket.</div>
+Tarefa 2: as instruções do lab exigem um comando <code>hdfs</code> <b>dentro do cluster</b>, na janela <span class="onde ssh">SSH do nó -m</span>. Tarefas 3 e 4: as APIs não têm tela de uso no console; são chamadas por comando no <span class="onde shell">Cloud Shell</span>, e o resultado é enviado ao bucket. <b>Não troque os lugares:</b> o <code>hdfs</code> não existe no Cloud Shell, e as APIs não funcionam pelo SSH do cluster.</div>
 </div>
 </details>
 
@@ -127,7 +129,7 @@ Tarefa 2: as instruções do lab exigem um comando <code>hdfs</code> dentro do c
 <li><b>Cloud Storage</b>: o "HD" da nuvem. Guarda arquivos de qualquer tipo (CSV, áudio, JSON) em <b>buckets</b>. No lab, é de onde vêm os dados de entrada e para onde vão os resultados.</li>
 <li><b>BigQuery</b>: o banco de dados para análise. Guarda tabelas enormes e responde a consultas em SQL em segundos. Os dados ficam organizados em <b>datasets</b> (conjuntos de dados) e <b>tabelas</b>.</li>
 <li><b>Dataflow</b>: o "encanamento" de dados. Roda pipelines que leem dados de um lugar, transformam e gravam em outro, criando e desligando as máquinas sozinho. Tem <b>modelos prontos</b> para os casos mais comuns.</li>
-<li><b>Managed Service for Spark (Dataproc)</b>: clusters de <b>Apache Spark</b> prontos em poucos minutos. O Spark divide um processamento grande entre várias máquinas, que trabalham em paralelo.</li>
+<li><b>Managed Service for Apache Spark (Dataproc)</b>: clusters de <b>Apache Spark</b> prontos em poucos minutos. O Spark divide um processamento grande entre várias máquinas, que trabalham em paralelo. No menu do console aparece como <b>Managed Apache Spark</b>.</li>
 <li><b>Speech-to-Text</b>: API de IA que <b>transcreve áudio em texto</b>. Você envia o áudio e recebe a transcrição em JSON.</li>
 <li><b>Natural Language</b>: API de IA que <b>entende texto</b>. Identifica entidades (pessoas, lugares, objetos), sentimento e assunto, e devolve o resultado em JSON.</li>
 </ul>
@@ -135,7 +137,7 @@ Tarefa 2: as instruções do lab exigem um comando <code>hdfs</code> dentro do c
 <h3>🔗 O que cada tarefa faz</h3>
 <ul>
 <li><b>Tarefa 1</b> · Cloud Storage › Dataflow › BigQuery<br><b>O que faz:</b> cria o dataset <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: Painel do lab (à esquerda das instruções), campo &quot;BigQuery Dataset Name&quot;">BigQuery Dataset Name</span> com a tabela <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: instruções do lab no Google Skills, tarefa 1, no texto &quot;com uma tabela chamada ...&quot;">Output Table Name</span> e o bucket <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: Painel do lab (à esquerda das instruções), campo &quot;Cloud Storage Bucket Name&quot;">Cloud Storage Bucket Name</span>; depois, um job do Dataflow lê o CSV <code>lab.csv</code>, aplica a função <code>transform</code> e grava o resultado nessa tabela.<br><b>Para que serve:</b> é um pipeline de <b>ETL</b> (extrair, transformar e carregar): deixa dados brutos prontos para análise com SQL, sem gerenciar servidores.</li>
-<li><b>Tarefa 2</b> · Managed Service for Spark (Dataproc)<br><b>O que faz:</b> cria um cluster na <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: Painel do lab (à esquerda das instruções), campo &quot;Region&quot;">Region</span>, copia o arquivo <code>data.txt</code> para o HDFS e roda o <b>PageRank</b> sobre ele.<br><b>Para que serve:</b> processar grandes volumes de dados <b>em paralelo</b>. O PageRank, que ranqueia páginas pelos links que recebem, é o exemplo clássico.</li>
+<li><b>Tarefa 2</b> · Managed Service for Apache Spark (Dataproc)<br><b>O que faz:</b> cria um cluster na <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: Painel do lab (à esquerda das instruções), campo &quot;Region&quot;">Region</span>, copia o arquivo <code>data.txt</code> para o HDFS e roda o <b>PageRank</b> sobre ele.<br><b>Para que serve:</b> processar grandes volumes de dados <b>em paralelo</b>. O PageRank, que ranqueia páginas pelos links que recebem, é o exemplo clássico.</li>
 <li><b>Tarefa 3</b> · Cloud Storage › Speech-to-Text › Cloud Storage<br><b>O que faz:</b> transcreve o áudio <code>task3.flac</code> e salva a transcrição em JSON em <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: instruções do lab no Google Skills, tarefa 3, no texto &quot;faça upload do arquivo resultante em ...&quot;">Cloud Speech Location</span>.<br><b>Para que serve:</b> transformar áudio (atendimentos, reuniões, vídeos) em texto que pode ser pesquisado e analisado.</li>
 <li><b>Tarefa 4</b> · Natural Language › Cloud Storage<br><b>O que faz:</b> identifica as entidades do texto sobre Odin e salva o resultado em JSON em <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: instruções do lab no Google Skills, tarefa 4, no texto &quot;faça upload do arquivo resultante em ...&quot;">Cloud Natural Language Location</span>.<br><b>Para que serve:</b> descobrir automaticamente "do que o texto fala", para classificar, indexar ou alimentar outras análises.</li>
 </ul>
@@ -151,92 +153,116 @@ No fim, tudo está em formatos que podem ser consultados, cruzados e usados para
 </div>
 </details>
 
-<h2>Tarefa 1: job simples no Dataflow<span class="pts">25 pontos</span></h2>
+<h2>Tarefa 1: job simples no Dataflow</h2>
 <h3>Criar o dataset e a tabela do BigQuery</h3>
 <ol>
 <li><span class="caminho">Menu de navegação (☰) › BigQuery › Studio</span>.</li>
 <li>No painel <span class="ui">Explorer</span>, ao lado do ID do projeto, clique em <span class="ui">⋮</span> › <span class="ui">Create dataset</span>.</li>
 <li><span class="ui">Dataset ID</span>: <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: Painel do lab (à esquerda das instruções), campo &quot;BigQuery Dataset Name&quot;">BigQuery Dataset Name</span>. Deixe o resto como está.</li>
 <li class="fim">Clique em <span class="btn">Create dataset</span>.</li>
-<li>Ao lado do dataset <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: Painel do lab (à esquerda das instruções), campo &quot;BigQuery Dataset Name&quot;">BigQuery Dataset Name</span>, clique em <span class="ui">⋮</span> › <span class="ui">Create table</span>.</li>
-<li><span class="ui">Table</span>: <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: instruções do lab no Google Skills, tarefa 1, no texto &quot;com uma tabela chamada ...&quot;">Output Table Name</span>.</li>
-<li><span class="ui">Schema</span>: siga a dica das instruções do lab (clique em <b>"Clique aqui para ver uma dica"</b>, logo abaixo de "Criar um bucket").</li>
+<li>Ao lado do dataset <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: Painel do lab (à esquerda das instruções), campo &quot;BigQuery Dataset Name&quot;">BigQuery Dataset Name</span>, clique em <span class="ui">⋮</span> › <span class="ui">Create table</span>. Se o menu não abrir, clique no nome do dataset e, na página dele, use <span class="ui">⋮</span> › <span class="ui">Create Table</span>.</li>
+<li><span class="ui">Table</span>: <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: instruções do lab no Google Skills, tarefa 1, no texto &quot;com uma tabela chamada ...&quot;">Output Table Name</span> (só o nome da tabela).</li>
+<li><span class="ui">Schema</span>: ative <span class="ui">Edit as text</span> e cole o esquema da dica das instruções do lab (clique em <b>"Clique aqui para ver uma dica"</b>, logo abaixo de "Criar um bucket").</li>
 <li class="fim">Clique em <span class="btn">Create table</span>.</li>
 </ol>
+<div class="box normal mini">✅ <b>É normal:</b> ao abrir o BigQuery pela primeira vez aparecem um diálogo de boas-vindas e um painel de novidades. Clique em <span class="ui">Done</span> e feche o painel.</div>
 <h3>Criar o bucket</h3>
 <ol>
 <li><span class="caminho">Menu de navegação (☰) › Cloud Storage › Buckets</span> e clique em <span class="ui">Create</span>.</li>
 <li><span class="ui">Name your bucket</span>: <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: Painel do lab (à esquerda das instruções), campo &quot;Cloud Storage Bucket Name&quot;">Cloud Storage Bucket Name</span>. Deixe o resto como está.</li>
-<li class="fim">Clique em <span class="btn">Create</span>. Se aparecer o aviso <b>Public access will be prevented</b>, clique em <span class="btn">Confirm</span>.</li>
+<li class="fim">Clique em <span class="btn">Create</span>.</li>
 </ol>
+<div class="box normal mini">✅ <b>É normal:</b> aparece o aviso <b>Public access will be prevented</b>. Clique em <span class="btn">Confirm</span>.</div>
 <h3>Criar o job do Dataflow</h3>
 <ol>
 <li><span class="caminho">Menu de navegação (☰) › View all products › Analytics › Dataflow › Jobs</span> e clique em <span class="ui">Create job from template</span>.</li>
 <li><span class="ui">Job name</span>: um nome à sua escolha, por exemplo <code>lab-dataflow</code>.</li>
 <li><span class="ui">Regional endpoint</span>: selecione a opção <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: Painel do lab (à esquerda das instruções), campo &quot;Region&quot;">Region</span>.</li>
-<li><span class="ui">Dataflow template</span>: em <b>Process Data in Bulk (batch)</b>, selecione a opção <b>Text Files on Cloud Storage to BigQuery</b>.</li>
+<li><span class="ui">Dataflow template</span>: digite <code>Text Files on Cloud Storage to BigQuery</code> no filtro e, em <b>Process Data in Bulk (batch)</b>, selecione a opção <b>Text Files on Cloud Storage to BigQuery</b> (a <b>primeira</b>, sem "with ..." no final).</li>
+</ol>
+<div class="box alerta"><b class="t">⚠️ Os campos de caminho já têm <code>gs://</code></b>
+Nos campos de arquivo e pasta, o <code>gs://</code> já aparece fixo à esquerda. <b>Cole o caminho sem o <code>gs://</code></b>. Se colar com ele, o campo fica <code>gs:// gs://...</code> e mostra o erro <i>"Bucket names may only contain lowercase letters..."</i>. Para os valores em amarelo, cole o valor das instruções do lab e apague o <code>gs://</code> do começo.</div>
+<ol start="5">
 <li>Preencha os campos com os valores da tabela das instruções do lab:
 <ul>
-<li><span class="ui">Cloud Storage Input File(s)</span>: <code>gs://spls/gsp323/lab.csv</code></li>
-<li><span class="ui">Cloud Storage location of your BigQuery schema file</span>: <code>gs://spls/gsp323/lab.schema</code></li>
-<li><span class="ui">BigQuery output table</span>: <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: instruções do lab, tabela da tarefa 1, linha &quot;Tabela de saída do BigQuery&quot; (formato projeto:dataset.tabela)">Output Table Name</span></li>
-<li><span class="ui">Temporary directory for BigQuery loading process</span>: <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: instruções do lab no Google Skills, tabela da tarefa 1, linha &quot;Diretório temporário para o processo de carregamento do BigQuery&quot;">Temporary BigQuery Directory</span></li>
-<li><span class="ui">Temporary location</span>: <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: instruções do lab no Google Skills, tabela da tarefa 1, linha &quot;Local temporário&quot;">Temporary Location</span></li>
+<li><span class="ui">Cloud Storage Input File(s)</span>: <code>spls/gsp323/lab.csv</code></li>
+<li><span class="ui">Cloud Storage location of your BigQuery schema file</span>: <code>spls/gsp323/lab.schema</code></li>
+<li><span class="ui">BigQuery output table</span>: <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: instruções do lab, tabela da tarefa 1, linha &quot;Tabela de saída do BigQuery&quot; (formato projeto:dataset.tabela)">Output Table Name</span> no formato <code>projeto:dataset.tabela</code> (este campo não tem <code>gs://</code>)</li>
+<li><span class="ui">Temporary directory for BigQuery loading process</span>: <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: instruções do lab no Google Skills, tabela da tarefa 1, linha &quot;Diretório temporário para o processo de carregamento do BigQuery&quot;. Cole sem o gs:// do começo">Temporary BigQuery Directory</span> (sem o <code>gs://</code>)</li>
+<li><span class="ui">Temporary location</span>: <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: instruções do lab no Google Skills, tabela da tarefa 1, linha &quot;Local temporário&quot;. Cole sem o gs:// do começo">Temporary Location</span> (sem o <code>gs://</code>)</li>
 </ul></li>
-<li>Abra <span class="ui">Optional parameters</span>:
+<li>Abra <span class="ui">Optional Parameters</span>:
 <ul>
-<li><span class="ui">JavaScript UDF path in Cloud Storage</span>: <code>gs://spls/gsp323/lab.js</code></li>
+<li><span class="ui">JavaScript UDF path in Cloud Storage</span>: <code>spls/gsp323/lab.js</code></li>
 <li><span class="ui">JavaScript UDF name</span>: <code>transform</code></li>
-<li><span class="ui">Machine type</span>: desmarque <b>Use default machine type</b> e selecione a opção <b>e2-standard-2</b>.</li>
+<li>Desmarque <b>Use default machine type</b>. Em <span class="ui">Series</span>, troque <b>N1</b> por <b>E2</b>. Depois, em <span class="ui">Machine type</span>, selecione a opção <b>e2-standard-2</b>.</li>
 </ul></li>
-<li class="fim">Clique em <span class="btn">Run job</span>. Espere o status mudar para <b>Succeeded</b> (leva alguns minutos).</li>
+<li class="fim">Clique em <span class="btn">Run job</span>.</li>
 </ol>
+<div class="box espera mini">⏱️ <b>Vai demorar alguns minutos (3 a 5) para concluir.</b> Aguarde até as 4 etapas do gráfico ficarem com o status <b>Succeeded</b>. Aproveite para começar a tarefa 2.</div>
+<div class="box normal mini">✅ <b>É normal:</b> logo após o <span class="btn">Run job</span>, a tela mostra "The graph is still being analyzed". Espere o gráfico aparecer.</div>
 <p>Volte às instruções do lab no Google Skills e clique em <span class="btn">Verificar meu progresso</span> da tarefa 1.</p>
 
-<h2>Tarefa 2: job simples do Spark<span class="pts">25 pontos</span></h2>
+<h2>Tarefa 2: job simples do Spark</h2>
 <h3>Criar o cluster</h3>
 <ol>
-<li><span class="caminho">Menu de navegação (☰) › View all products › Analytics › Managed Service for Spark (Dataproc) › Clusters</span> e clique em <span class="ui">Create cluster</span> › <span class="ui">Cluster on Compute Engine</span> › <span class="ui">Create</span>.</li>
-<li><span class="ui">Region</span>: selecione a opção <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: Painel do lab (à esquerda das instruções), campo &quot;Region&quot;">Region</span>.</li>
-<li>Em <span class="ui">Configure nodes</span>:
-<ul>
-<li><b>Manager node</b>: <span class="ui">Series</span> selecione a opção <b>E2</b> · <span class="ui">Machine type</span> selecione a opção <b>e2-standard-2</b> · <span class="ui">Primary disk type</span> <b>Balanced persistent disk</b> · <span class="ui">Primary disk size</span> <code>100</code> GB;</li>
-<li><b>Worker nodes</b>: <span class="ui">Series</span> <b>E2</b> · <span class="ui">Machine type</span> <b>e2-standard-2</b> · <span class="ui">Number of worker nodes</span> <code>2</code> · <span class="ui">Primary disk type</span> <b>Balanced persistent disk</b>.</li>
-</ul></li>
-<li>Em <span class="ui">Customize cluster</span>, desmarque <b>Configure all instances to have only internal IP addresses</b>.</li>
-<li class="fim">Clique em <span class="btn">Create</span>. Espere o status <b>Running</b>.</li>
+<li><span class="caminho">Menu de navegação (☰) › View all products › Analytics › Managed Apache Spark › Clusters</span> e clique em <span class="ui">Create cluster</span> › <span class="ui">Cluster on Compute Engine</span>.</li>
 </ol>
+<div class="box alerta"><b class="t">⚠️ Use o formulário clássico de criação</b>
+Se abrir a tela <b>"Create cluster"</b> com <i>Define your cluster shape</i> (Standard / Development / High availability), ela <b>não oferece a série E2</b> e começa em outra região. Use o formulário clássico, <b>"Create an Apache Spark cluster on Compute Engine"</b>: <a href="https://console.cloud.google.com/dataproc/clustersAdd" target="_blank" rel="noopener">abrir o formulário clássico</a>. Confira no topo do console se o projeto é o do lab.</div>
+<ol start="2">
+<li><span class="ui">Region</span>: selecione a opção <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: Painel do lab (à esquerda das instruções), campo &quot;Region&quot;">Region</span>. <span class="ui">Cluster type</span>: deixe <b>Standard (1 master, N workers)</b>.</li>
+<li>Desça até <span class="ui">Advanced configurations (optional)</span> e clique em <span class="ui">Show configuration options</span>. Abra <span class="ui">Infrastructure</span>.</li>
+<li><b>Manager node</b>, <b>nesta ordem</b>:
+<ul>
+<li><span class="ui">Primary disk type</span>: <b>Balanced Persistent Disk</b> (primeiro, senão a série E2 não aparece);</li>
+<li><span class="ui">Series</span>: <b>E2</b> · <span class="ui">Machine type</span>: <b>e2-standard-2</b>;</li>
+<li><span class="ui">Primary disk size</span>: <code>100</code> GB.</li>
+</ul></li>
+<li><b>Worker nodes</b>, na mesma ordem: <span class="ui">Primary disk type</span> <b>Balanced Persistent Disk</b> · <span class="ui">Series</span> <b>E2</b> · <span class="ui">Machine type</span> <b>e2-standard-2</b> · <span class="ui">Number of worker nodes</span> <code>2</code>.</li>
+<li>Abra <span class="ui">Other</span> e, em <span class="ui">Internal IP only</span>, desmarque <b>Configure all instances to have only internal IP addresses</b>.</li>
+<li class="fim">Clique em <span class="btn">Create</span>.</li>
+</ol>
+<div class="box normal mini">✅ <b>É normal:</b> uma faixa vermelha avisa sobre imagens antigas (1.x e 2.0) que serão desativadas. E, nos nós, uma caixa diz "Looking for older machine type generations?": é ela que explica que o tipo de disco precisa ser trocado primeiro. Nenhum dos dois é erro.</div>
+<div class="box espera mini">⏱️ <b>Vai demorar alguns minutos (2 a 3) para concluir.</b> Aguarde até o status do cluster ficar <b>Running</b> (ícone verde). Enquanto isso, faça as tarefas 3 e 4.</div>
 <h3>Copiar o arquivo para o HDFS</h3>
 <ol>
 <li><span class="caminho">Menu de navegação (☰) › Compute Engine › VM instances</span>.</li>
-<li>Na linha do nó administrador (nome terminado em <code>-m</code>), clique em <span class="ui">SSH</span>. Se pedir, clique em <span class="btn">Authorize</span>.</li>
+<li>Na linha do nó administrador (nome terminado em <code>-m</code>), clique em <span class="ui">SSH</span>. Abre uma <b>janela nova</b> (ou aba) com um terminal. Se pedir, clique em <span class="btn">Authorize</span>.</li>
 </ol>
-<div class="box cmd"><b class="t">Por comando (as instruções do lab exigem)</b>
-Na janela SSH do nó <code>-m</code>, rode:
+<div class="box cmd"><b class="t">Por comando (as instruções do lab exigem) <span class="onde ssh">SSH do nó -m</span></b>
+Na janela SSH, confira se o prompt termina em <code>@...-m:~$</code> e rode:
 <pre>hdfs dfs -cp gs://spls/gsp323/data.txt /data.txt</pre></div>
+<div class="box normal mini">✅ <b>É normal:</b> o comando mostra várias linhas com <code>INFO</code> (métricas, latência). Se não aparecer <code>ERROR</code>, a cópia deu certo. Se aparecer <code>hdfs: command not found</code>, você está no Cloud Shell: rode na janela SSH do nó <code>-m</code>.</div>
 <h3>Enviar o job</h3>
 <ol>
-<li>Volte a <span class="caminho">Managed Service for Spark (Dataproc) › Clusters</span>, clique no nome do cluster e em <span class="ui">Submit job</span>.</li>
-<li><span class="ui">Job type</span>: selecione a opção <b>Spark</b>.</li>
-<li><span class="ui">Main class or jar</span>: <code>org.apache.spark.examples.SparkPageRank</code></li>
+<li>Volte a <span class="caminho">Managed Apache Spark › Clusters</span>, clique no nome do cluster e em <span class="ui">Submit job</span>.</li>
+<li><span class="ui">Job type</span>: selecione a opção <b>Spark (Scala / Java)</b>.</li>
+<li><span class="ui">Main class</span>: <code>org.apache.spark.examples.SparkPageRank</code></li>
 <li><span class="ui">Jar files</span>: <code>file:///usr/lib/spark/examples/jars/spark-examples.jar</code> (tecle Enter)</li>
 <li><span class="ui">Arguments</span>: <code>/data.txt</code> (tecle Enter)</li>
 <li><span class="ui">Max restarts per hour</span>: <code>1</code></li>
-<li class="fim">Clique em <span class="btn">Submit</span>. Espere o status <b>Succeeded</b>.</li>
+<li class="fim">Clique em <span class="btn">Submit</span>.</li>
 </ol>
+<div class="box espera mini">⏱️ <b>Vai demorar 1 a 2 minutos para concluir.</b> Aguarde até o status do job ficar <b>Succeeded</b>. Se a página não atualizar, abra <span class="caminho">Jobs (and Batches)</span> no menu lateral.</div>
+<div class="box normal mini">✅ <b>É normal:</b> na lista de jobs aparece um aviso sobre chaves CMEK. Pode ignorar.</div>
 <p>Volte às instruções do lab no Google Skills e clique em <span class="btn">Verificar meu progresso</span> da tarefa 2.</p>
 
-<h2>Tarefa 3: API Speech-to-Text<span class="pts">25 pontos</span></h2>
+<h2>Tarefa 3: API Speech-to-Text</h2>
 <h3>Criar a chave de API</h3>
 <ol>
 <li><span class="caminho">Menu de navegação (☰) › APIs & Services › Credentials</span>.</li>
-<li>Clique em <span class="ui">Create credentials</span> › <span class="ui">API key</span>.</li>
-<li class="fim">Copie a chave que aparece e clique em <span class="btn">Close</span>.</li>
+<li>Clique em <span class="ui">Create credentials</span> › <span class="ui">API key</span>. Em telas estreitas, o botão fica no <span class="ui">⋮</span> ao lado de "Credentials".</li>
+<li><span class="ui">Select API restrictions</span>: digite <code>Speech</code> no filtro, marque <b>Cloud Speech-to-Text API</b> e clique em <span class="btn">OK</span>. Esse campo é obrigatório.</li>
+<li><span class="ui">Application restrictions</span>: deixe <b>None</b>.</li>
+<li>Clique em <span class="btn">Create</span>.</li>
+<li class="fim">Na tela <b>API key created</b>, copie a chave do campo <span class="ui">Your API key</span> e clique em <span class="btn">Close</span>.</li>
 </ol>
-<div class="box cmd"><b class="t">Por comando (Cloud Shell)</b>
-No topo do console, clique em <span class="ui">Activate Cloud Shell</span> (ícone <b>&gt;_</b>) e em <span class="ui">Continue</span>. Rode os blocos <b>um de cada vez</b>, esperando cada um terminar.
+<div class="box normal mini">✅ <b>É normal:</b> a página Credentials pede para configurar a "OAuth consent screen", e a tela da chave mostra um quadro "Service account required". Nenhum dos dois é necessário neste lab.</div>
+<div class="box cmd"><b class="t">Por comando <span class="onde shell">Cloud Shell</span></b>
+No topo do console, clique em <span class="ui">Activate Cloud Shell</span> (ícone <b>&gt;_</b>). Clique em <span class="ui">Continue</span> e, se pedir, em <span class="ui">Authorize</span>. O prompt termina em <code>@cloudshell:~ (projeto)$</code>. Rode os blocos <b>um de cada vez</b>, esperando cada um terminar.
 <p><b>1. Guardar a chave de API:</b></p>
-<pre>export API_KEY=<span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: a chave de API criada no passo anterior (APIs &amp; Services › Credentials)">SUA_CHAVE</span></pre>
+<pre>export API_KEY=<span class="v" tabindex="0" data-tip="Substitua pela chave criada no passo anterior (campo &quot;Your API key&quot; em APIs &amp; Services › Credentials)">Your API key</span></pre>
 <p><b>2. Criar o arquivo da requisição:</b></p>
 <pre>cat &gt; request.json &lt;&lt;EOF
 {"config": {"encoding": "FLAC", "languageCode": "en-US"},
@@ -245,33 +271,40 @@ EOF</pre>
 <p><b>3. Chamar a API e salvar o resultado:</b></p>
 <pre>curl -s -X POST -H "Content-Type: application/json" --data-binary @request.json \
  "https://speech.googleapis.com/v1/speech:recognize?key=$API_KEY" &gt; result.json</pre>
-<p><b>4. Enviar o resultado ao bucket:</b></p>
+<p><b>4. (Opcional) Conferir o resultado:</b> deve aparecer um <code>"transcript"</code>, e não um <code>"error"</code>.</p>
+<pre>cat result.json</pre>
+<p><b>5. Enviar o resultado ao bucket:</b></p>
 <pre>gcloud storage cp result.json <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: instruções do lab no Google Skills, tarefa 3, no texto &quot;faça upload do arquivo resultante em ...&quot;">Cloud Speech Location</span></pre>
 O arquivo <code>.json</code> é enviado com Content-Type <code>application/json</code>, como as instruções do lab pedem.</div>
 <p>Volte às instruções do lab no Google Skills e clique em <span class="btn">Verificar meu progresso</span> da tarefa 3.</p>
 
-<h2>Tarefa 4: API Natural Language<span class="pts">25 pontos</span></h2>
-<div class="box cmd"><b class="t">Por comando (Cloud Shell)</b>
-Rode os blocos <b>um de cada vez</b>. Se o Cloud Shell perguntar se quer ativar a API, digite <code>y</code> e tecle Enter.
+<h2>Tarefa 4: API Natural Language</h2>
+<div class="box cmd"><b class="t">Por comando <span class="onde shell">Cloud Shell</span></b>
+No <b>mesmo Cloud Shell</b> da tarefa 3 (não na janela SSH do cluster), rode os blocos <b>um de cada vez</b>. Se o Cloud Shell perguntar se quer ativar a API, digite <code>y</code> e tecle Enter.
 <p><b>1. Analisar o texto sobre Odin:</b></p>
 <pre>gcloud ml language analyze-entities --content="Old Norse texts portray Odin as one-eyed and long-bearded, frequently wielding a spear named Gungnir and wearing a cloak and a broad hat." &gt; result.json</pre>
 <p><b>2. Enviar o resultado ao bucket:</b></p>
 <pre>gcloud storage cp result.json <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: instruções do lab no Google Skills, tarefa 4, no texto &quot;faça upload do arquivo resultante em ...&quot;">Cloud Natural Language Location</span></pre></div>
 <p>Volte às instruções do lab no Google Skills e clique em <span class="btn">Verificar meu progresso</span> da tarefa 4.</p>
+<div class="box normal mini">✅ <b>É normal:</b> às vezes o <span class="btn">Verificar meu progresso</span> só fica verde no <b>segundo clique</b>, e o placar no topo demora a atualizar. Se as 4 tarefas estiverem verdes e o placar não mostrar 100, recarregue a página do lab.</div>
 
 <details class="antes erros">
 <summary>⚠️ Erros comuns <span class="dica">clique para abrir</span></summary>
 <div class="corpo"><ul>
 <li>Verificar o progresso antes de o job terminar: Dataflow e Spark levam alguns minutos. Espere o status <b>Succeeded</b>.</li>
+<li>Colar <code>gs://</code> nos campos do Dataflow que já têm o prefixo: o campo fica <code>gs:// gs://...</code> e dá erro. Cole sem o <code>gs://</code>.</li>
+<li>Não achar a série <b>E2</b> no cluster: troque antes o <b>Primary disk type</b> para <b>Balanced Persistent Disk</b>, e use o formulário clássico de criação.</li>
+<li>Rodar o <code>hdfs</code> no Cloud Shell (<code>hdfs: command not found</code>): ele só existe na janela <b>SSH do nó -m</b>.</li>
+<li>Rodar os comandos das tarefas 3 e 4 no SSH do cluster: a verificação não passa. Use o <b>Cloud Shell</b>.</li>
 <li>Esquecer o comando <code>hdfs</code> antes do job do Spark: o job falha por não achar <code>/data.txt</code>.</li>
-<li>Criar o job ou o cluster em outra região: use sempre a <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: Painel do lab (à esquerda das instruções), campo &quot;Region&quot;">Region</span> do painel.</li>
+<li>Criar o job ou o cluster em outra região: use sempre a <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: Painel do lab (à esquerda das instruções), campo &quot;Region&quot;">Region</span> do painel. O formulário de cluster pode vir com outra região selecionada.</li>
 <li>Enviar o resultado para outro caminho: use exatamente <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: instruções do lab no Google Skills, tarefa 3, no texto &quot;faça upload do arquivo resultante em ...&quot;">Cloud Speech Location</span> e <span class="v" tabindex="0" data-tip="Substitua pelo valor do seu lab. Onde achar: instruções do lab no Google Skills, tarefa 4, no texto &quot;faça upload do arquivo resultante em ...&quot;">Cloud Natural Language Location</span>.</li>
 <li>Mudar o texto sobre Odin: copie o comando inteiro desta página ou das instruções do lab.</li>
 <li>Nomes de botões diferentes dos desta página: a tradução automática do navegador está ligada. Veja "Antes de começar".</li>
 </ul></div>
 </details>
 <p class="alt">Prefere fazer pelo terminal? <a href="lab-gsp323-manual.html" target="_blank" rel="noopener">Versão por linha de comando</a></p>
-<footer>Estratégia de resolução preparada para a turma. Siga sempre as instruções do laboratório: os nomes e a região mostrados no painel do lab têm prioridade sobre qualquer exemplo desta página.</footer>
+<footer>Estratégia de resolução preparada para a turma e validada em 10/11/2026. Siga sempre as instruções do laboratório: os nomes e a região mostrados no painel do lab têm prioridade sobre qualquer exemplo desta página.</footer>
 </div>
 <script>
 (function(){
