@@ -232,7 +232,13 @@ export USE_GKE_GCLOUD_AUTH_PLUGIN=True
 gcloud container clusters get-credentials $CLUSTER --internal-ip --project=$PROJECT --zone $ZONE
 kubectl create deployment hello-server --image=gcr.io/google-samples/hello-app:1.0 || true
 kubectl expose deployment hello-server --name orca-hello-service --type LoadBalancer --port 80 --target-port 8080 || true
-kubectl get deployments,services
+kubectl rollout status deployment/hello-server --timeout=180s || true
+for i in \$(seq 1 18); do
+  IP=\$(kubectl get svc orca-hello-service -o jsonpath='{.status.loadBalancer.ingress[0].ip}' 2>/dev/null)
+  [ -n "\$IP" ] && break; sleep 10
+done
+kubectl get deployments,pods,services
+[ -n "\$IP" ] && echo "App respondendo em: http://\$IP" || echo "EXTERNAL-IP ainda pendente; aguarde 1-2 min antes de verificar a tarefa 5."
 EOF
 )
 
