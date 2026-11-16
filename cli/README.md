@@ -14,8 +14,11 @@ aceitar o valor padrão, mas confira sempre os nomes no painel do seu lab.
 | GSP304 | Build and Deploy a Docker Image to a Kubernetes Cluster | `bash <(curl -sL https://raw.githubusercontent.com/dcpc-cesar-school/google-cloud-foundations/main/cli/gsp304.sh)` |
 | GSP305 | Scale Out and Update a Containerized Application on a Kubernetes Cluster | `bash <(curl -sL https://raw.githubusercontent.com/dcpc-cesar-school/google-cloud-foundations/main/cli/gsp305.sh)` |
 | GSP306 | Migrate a MySQL Database to Google Cloud SQL | `bash <(curl -sL https://raw.githubusercontent.com/dcpc-cesar-school/google-cloud-foundations/main/cli/gsp306.sh)` |
+| GSP101 | Deploy and Troubleshoot a Website | `bash <(curl -sL https://raw.githubusercontent.com/dcpc-cesar-school/google-cloud-foundations/main/cli/gsp101.sh)` |
 
 ## Dicas
+
+- Se o script parecer desatualizado (o GitHub guarda o link `raw` em cache por ~5 min), troque `main` pelo código do último commit no link.
 
 - Rode o script no Cloud Shell **do projeto do lab** (o script mostra o projeto antes de executar).
 - Se ele for interrompido, pode rodar de novo: recursos que já existem são ignorados.
