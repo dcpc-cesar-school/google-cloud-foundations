@@ -144,7 +144,9 @@ def set_kwarg(s, key, value, name_hint=None):
                 if not t.endswith(",") and not t.endswith("("):
                     lines[j] = lines[j].rstrip() + ","
                 break
-        body = "\n".join(lines) + "\n%s%s=%s,\n" % (ind, key, value)
+        tail = body[len(body.rstrip()):]
+        tail = tail if "\n" in tail else "\n"
+        body = "\n".join(lines) + "\n%s%s=%s," % (ind, key, value) + tail
     return s[:a] + body + s[b:]
 
 if mode == "search":
@@ -154,10 +156,11 @@ if mode == "search":
 elif mode == "geo":
     src = add_import(src, "from pydantic import BaseModel")
     if "class CountryCapital" not in src:
-        cls = '\n\nclass CountryCapital(BaseModel):\n    capital: str\n\n'
-        m = re.search(r"\n\w+\s*=\s*(?:Llm)?Agent\s*\(", src)
-        pos = m.start() if m else len(src)
-        src = src[:pos] + cls + src[pos:]
+        # logo depois do ultimo import (o Agent pode estar dentro de uma funcao main())
+        lines = src.split("\n")
+        last = max(i for i, l in enumerate(lines) if l.startswith(("import ", "from ")))
+        lines.insert(last + 1, "\n\nclass CountryCapital(BaseModel):\n    capital: str\n")
+        src = "\n".join(lines)
     src = set_kwarg(src, "output_schema", "CountryCapital")
     src = set_kwarg(src, "disallow_transfer_to_parent", "True")
     src = set_kwarg(src, "disallow_transfer_to_peers", "True")
@@ -225,7 +228,8 @@ cat <<EOF
    4) Ainda no navegador, selecione llm_auditor (+ Nova sessao) e envie:
         Cheque se isto é verdade: é possível pegar um trem direto do Havaí para o Japão.
       Confira que o critic e o reviser responderam e verifique a tarefa 5.
-   5) Volte aqui e pressione Ctrl+C para parar o servidor; o script continua.
+   5) Espere ~30s apos a ultima resposta (envio dos logs), volte aqui e pressione
+      Ctrl+C para parar o servidor; o script continua.
 EOF
 pause "Pronto para subir o adk web?"
 trap 'echo; ok "servidor parado"' INT
@@ -236,8 +240,9 @@ trap - INT
 # Tarefa 3 - CLI
 # ----------------------------------------------------------------------------
 echo; info "TAREFA 3: conversando pela CLI (adk run)"
-printf 'Qual é a taxa de câmbio atual do iene japonês para o dólar americano?\nexit\n' \
-  | timeout 180 adk run my_google_search_agent 2>&1 | tail -n 25 | sed 's/^/   /'
+# a pergunta vai na hora; o "exit" so depois de 45s, para os logs chegarem ao Cloud Logging
+{ printf 'Qual é a taxa de câmbio atual do iene japonês para o dólar americano?\n'; sleep 45; printf 'exit\n'; } \
+  | timeout 240 adk run my_google_search_agent 2>&1 | grep -vE "UserWarning|credential_service|super\(\)" | tail -n 20 | sed 's/^/   /'
 warn ">>> Verifique a tarefa 3. Se nao passar, rode 'adk run my_google_search_agent'"
 echo "    e pergunte manualmente sobre a taxa de cambio do Japao."
 
