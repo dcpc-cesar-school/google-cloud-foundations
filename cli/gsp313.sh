@@ -31,11 +31,11 @@ ask() {   # ask VAR "Pergunta" "padrao"
 run() {
   local out
   if out=$("$@" 2>&1); then
-    ok "$*" | cut -c1-160
+    local cmd="$*"; ok "$(head -n1 <<<"$cmd" | cut -c1-110)"
   elif grep -qiE "already exists|alreadyExists" <<<"$out"; then
-    warn "ja existe -> $(echo "$*" | cut -c1-120)"
+    warn "ja existe -> $(head -n1 <<<"$*" | cut -c1-110)"
   else
-    fail "$*"; echo "$out"; return 1
+    fail "$(head -n1 <<<"$*" | cut -c1-110)"; echo "$out" | head -n 5; return 1
   fi
 }
 
@@ -109,7 +109,11 @@ read -r -p "Confirmar e executar? (s/N): " CONFIRM </dev/tty
 gcloud config set project "$PROJECT"        >/dev/null 2>&1
 gcloud config set compute/zone "$ZONE"      >/dev/null 2>&1
 gcloud config set compute/region "$REGION"  >/dev/null 2>&1
-run gcloud services enable compute.googleapis.com
+# A Compute Engine API ja vem ativa no lab (a conta de aluno nao pode ativar APIs).
+if ! gcloud services list --enabled --filter="name:compute.googleapis.com" --format="value(name)" 2>/dev/null | grep -q compute; then
+  warn "Compute Engine API parece inativa; tentando ativar..."
+  gcloud services enable compute.googleapis.com >/dev/null 2>&1 || warn "Sem permissao para ativar APIs (normal no lab). Seguindo."
+fi
 
 # ----------------------------------------------------------------------------
 # Tarefa 1 - Multiplas VMs web + firewall
