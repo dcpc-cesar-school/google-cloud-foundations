@@ -10,6 +10,7 @@ aceitar o valor padrão, mas confira sempre os nomes no painel do seu lab.
 | GSP315 | Set Up an App Dev Environment on Google Cloud | `bash <(curl -sL https://raw.githubusercontent.com/dcpc-cesar-school/google-cloud-foundations/main/cli/gsp315.sh)` |
 | GSP342 | Implement Cloud Security Fundamentals on Google Cloud | `bash <(curl -sL https://raw.githubusercontent.com/dcpc-cesar-school/google-cloud-foundations/main/cli/gsp342.sh)` |
 | GSP301 | Deploy a Compute Instance with a Remote Startup Script | `bash <(curl -sL https://raw.githubusercontent.com/dcpc-cesar-school/google-cloud-foundations/main/cli/gsp301.sh)` |
+| GSP303 | Configure Secure RDP using a Windows Bastion Host | `bash <(curl -sL https://raw.githubusercontent.com/dcpc-cesar-school/google-cloud-foundations/main/cli/gsp303.sh)` |
 
 ## Dicas
 
