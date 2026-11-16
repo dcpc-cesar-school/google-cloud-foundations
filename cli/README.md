@@ -15,6 +15,7 @@ aceitar o valor padrão, mas confira sempre os nomes no painel do seu lab.
 | GSP305 | Scale Out and Update a Containerized Application on a Kubernetes Cluster | `bash <(curl -sL https://raw.githubusercontent.com/dcpc-cesar-school/google-cloud-foundations/main/cli/gsp305.sh)` |
 | GSP306 | Migrate a MySQL Database to Google Cloud SQL | `bash <(curl -sL https://raw.githubusercontent.com/dcpc-cesar-school/google-cloud-foundations/main/cli/gsp306.sh)` |
 | GSP101 | Deploy and Troubleshoot a Website | `bash <(curl -sL https://raw.githubusercontent.com/dcpc-cesar-school/google-cloud-foundations/main/cli/gsp101.sh)` |
+| GSP510 | Manage Kubernetes in Google Cloud | `bash <(curl -sL https://raw.githubusercontent.com/dcpc-cesar-school/google-cloud-foundations/main/cli/gsp510.sh)` |
 
 ## Dicas
 
