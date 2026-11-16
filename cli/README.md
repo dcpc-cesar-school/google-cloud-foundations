@@ -7,6 +7,7 @@ aceitar o valor padrão, mas confira sempre os nomes no painel do seu lab.
 | Lab | Skill badge | Comando |
 |-----|-------------|---------|
 | GSP313 | Implement Load Balancing on Compute Engine | `bash <(curl -sL https://raw.githubusercontent.com/dcpc-cesar-school/google-cloud-foundations/main/cli/gsp313.sh)` |
+| GSP315 | Set Up an App Dev Environment on Google Cloud | `bash <(curl -sL https://raw.githubusercontent.com/dcpc-cesar-school/google-cloud-foundations/main/cli/gsp315.sh)` |
 
 ## Dicas
 
