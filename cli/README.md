@@ -13,6 +13,7 @@ aceitar o valor padrão, mas confira sempre os nomes no painel do seu lab.
 | GSP303 | Configure Secure RDP using a Windows Bastion Host | `bash <(curl -sL https://raw.githubusercontent.com/dcpc-cesar-school/google-cloud-foundations/main/cli/gsp303.sh)` |
 | GSP304 | Build and Deploy a Docker Image to a Kubernetes Cluster | `bash <(curl -sL https://raw.githubusercontent.com/dcpc-cesar-school/google-cloud-foundations/main/cli/gsp304.sh)` |
 | GSP305 | Scale Out and Update a Containerized Application on a Kubernetes Cluster | `bash <(curl -sL https://raw.githubusercontent.com/dcpc-cesar-school/google-cloud-foundations/main/cli/gsp305.sh)` |
+| GSP306 | Migrate a MySQL Database to Google Cloud SQL | `bash <(curl -sL https://raw.githubusercontent.com/dcpc-cesar-school/google-cloud-foundations/main/cli/gsp306.sh)` |
 
 ## Dicas
 
