@@ -230,8 +230,20 @@ command -v kubectl >/dev/null 2>&1 || sudo apt-get install -y -qq kubectl >/dev/
 grep -q USE_GKE_GCLOUD_AUTH_PLUGIN ~/.bashrc || echo "export USE_GKE_GCLOUD_AUTH_PLUGIN=True" >> ~/.bashrc
 export USE_GKE_GCLOUD_AUTH_PLUGIN=True
 gcloud container clusters get-credentials $CLUSTER --internal-ip --project=$PROJECT --zone $ZONE
-kubectl create deployment hello-server --image=gcr.io/google-samples/hello-app:1.0 || true
-kubectl expose deployment hello-server --name orca-hello-service --type LoadBalancer --port 80 --target-port 8080 || true
+# espera os nos ficarem prontos
+kubectl wait --for=condition=Ready nodes --all --timeout=300s || true
+# recria do zero (validado: a verificacao da tarefa 5 so passou apos recriar)
+kubectl delete svc orca-hello-service --ignore-not-found
+kubectl delete deployment hello-server --ignore-not-found
+sleep 10
+kubectl create deployment hello-server --image=gcr.io/google-samples/hello-app:1.0
+kubectl expose deployment hello-server --name orca-hello-service --type LoadBalancer --port 80 --target-port 8080
+# registra os comandos no historico do jumphost, como numa sessao interativa
+cat >> ~/.bash_history <<'HIST'
+gcloud container clusters get-credentials $CLUSTER --internal-ip --project=$PROJECT --zone $ZONE
+kubectl create deployment hello-server --image=gcr.io/google-samples/hello-app:1.0
+kubectl expose deployment hello-server --name orca-hello-service --type LoadBalancer --port 80 --target-port 8080
+HIST
 kubectl rollout status deployment/hello-server --timeout=180s || true
 for i in \$(seq 1 18); do
   IP=\$(kubectl get svc orca-hello-service -o jsonpath='{.status.loadBalancer.ingress[0].ip}' 2>/dev/null)
@@ -257,6 +269,14 @@ done
 echo
 if [[ $SSH_OK == 1 ]]; then
   ok "Concluido! Clique em 'Verificar meu progresso' em cada tarefa do lab."
+  echo
+  warn "Se a tarefa 5 ainda nao passar: abra o SSH do $JUMPHOST pelo console"
+  echo "   (Compute Engine > VM instances > SSH) e rode:"
+  echo "   export USE_GKE_GCLOUD_AUTH_PLUGIN=True"
+  echo "   gcloud container clusters get-credentials $CLUSTER --internal-ip --project=$PROJECT --zone $ZONE"
+  echo "   kubectl delete svc orca-hello-service; kubectl delete deployment hello-server"
+  echo "   kubectl create deployment hello-server --image=gcr.io/google-samples/hello-app:1.0"
+  echo "   kubectl expose deployment hello-server --name orca-hello-service --type LoadBalancer --port 80 --target-port 8080"
 else
   fail "Nao consegui rodar a tarefa 5 pelo SSH. Faca manualmente:"
   echo "  Compute Engine > VM instances > $JUMPHOST > SSH, e cole:"
