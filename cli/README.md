@@ -17,6 +17,7 @@ aceitar o valor padrão, mas confira sempre os nomes no painel do seu lab.
 | GSP101 | Deploy and Troubleshoot a Website | `bash <(curl -sL https://raw.githubusercontent.com/dcpc-cesar-school/google-cloud-foundations/main/cli/gsp101.sh)` |
 | GSP510 | Manage Kubernetes in Google Cloud | `bash <(curl -sL https://raw.githubusercontent.com/dcpc-cesar-school/google-cloud-foundations/main/cli/gsp510.sh)` |
 | GSP540 | Engineer AI Agents with Agent Development Kit (ADK) | `bash <(curl -sL https://raw.githubusercontent.com/dcpc-cesar-school/google-cloud-foundations/main/cli/gsp540.sh)` |
+| GSP328 | Develop Serverless Apps with Cloud Run | `bash <(curl -sL https://raw.githubusercontent.com/dcpc-cesar-school/google-cloud-foundations/main/cli/gsp328.sh)` |
 
 ## Dicas
 
