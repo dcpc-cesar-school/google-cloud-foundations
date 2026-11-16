@@ -222,11 +222,12 @@ patch_agent llm_auditor/agent.py auditor
 echo; info "TAREFA 2: conversa no adk web (manual)"
 cat <<EOF
    1) O servidor vai subir agora. Clique (Ctrl+clique) em http://127.0.0.1:8000
+   (use as perguntas EM INGLES: o verificador procura palavras-chave em ingles nos logs)
    2) Selecione my_google_search_agent e pergunte:
-        Diga alguns dos principais eventos em Tóquio no ano de 2025.
+        Tell me some of the top events happening in Tokyo in 2025.
    3) Confira que ele fez uma pesquisa e clique em 'Verificar meu progresso' (tarefa 2).
    4) Ainda no navegador, selecione llm_auditor (+ Nova sessao) e envie:
-        Cheque se isto é verdade: é possível pegar um trem direto do Havaí para o Japão.
+        Double check this: You can take a direct train from Hawaii to Japan.
       Confira que o critic e o reviser responderam e verifique a tarefa 5.
    5) Espere ~30s apos a ultima resposta (envio dos logs), volte aqui e pressione
       Ctrl+C para parar o servidor; o script continua.
@@ -241,10 +242,10 @@ trap - INT
 # ----------------------------------------------------------------------------
 echo; info "TAREFA 3: conversando pela CLI (adk run)"
 # a pergunta vai na hora; o "exit" so depois de 45s, para os logs chegarem ao Cloud Logging
-{ printf 'Qual é a taxa de câmbio atual do iene japonês para o dólar americano?\n'; sleep 45; printf 'exit\n'; } \
+{ printf 'What is the exchange rate of Japan?\n'; sleep 45; printf 'exit\n'; } \
   | timeout 240 adk run my_google_search_agent 2>&1 | grep -vE "UserWarning|credential_service|super\(\)" | tail -n 20 | sed 's/^/   /'
 warn ">>> Verifique a tarefa 3. Se nao passar, rode 'adk run my_google_search_agent'"
-echo "    e pergunte manualmente sobre a taxa de cambio do Japao."
+echo "    e pergunte em ingles: What is the exchange rate of Japan?"
 
 # ----------------------------------------------------------------------------
 # Tarefa 4 - execucao programatica
