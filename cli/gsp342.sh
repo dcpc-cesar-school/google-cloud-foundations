@@ -52,11 +52,13 @@ preflight() {
     ok "Conta ativa: $acct ($(grep -oE 'roles/(owner|editor)' <<<"$roles" | head -n1))"
     return 0
   fi
-  fail "A conta ativa do Cloud Shell ($acct) NAO e Owner/Editor do projeto $PROJECT."
-  echo "   Provavel causa: Cloud Shell de outro lab/conta aberto na mesma janela."
-  echo "   Solucao: feche as janelas anonimas, abra o console pelo link do lab,"
-  echo "   entre com o Username/Password DESTE lab e rode o script de novo."
-  echo "   (confira com: gcloud auth list)"
+  fail "A conta ativa ($acct) NAO aparece como Owner/Editor do projeto $PROJECT."
+  if [[ -n "$roles" ]]; then echo "   Papeis encontrados: $(tr '\n' ' ' <<<"$roles")"
+  else echo "   Nenhum papel encontrado (ou sem permissao para ler o IAM)."; fi
+  echo "   Causas possiveis:"
+  echo "   1) o lab ainda esta provisionando: aguarde alguns minutos e rode de novo;"
+  echo "   2) Cloud Shell com conta de outro lab: confira com 'gcloud auth list' e"
+  echo "      compare com o Username do painel do lab."
   read -r -p "Continuar mesmo assim? (s/N): " __c </dev/tty
   [[ "$__c" =~ ^[sSyY]$ ]] || exit 1
 }
