@@ -30,14 +30,20 @@ ask() {   # ask VAR "Pergunta" "padrao" [obrigatorio=1]
 
 # Executa um comando; se o recurso ja existir, apenas avisa e segue.
 run() {
-  local out cmd="$*"
-  if out=$("$@" 2>&1); then
-    ok "$(head -n1 <<<"$cmd" | cut -c1-110)"
-  elif grep -qiE "already exists|alreadyExists" <<<"$out"; then
-    warn "ja existe -> $(head -n1 <<<"$cmd" | cut -c1-110)"
-  else
-    fail "$(head -n1 <<<"$cmd" | cut -c1-110)"; echo "$out" | tail -n 8; return 1
-  fi
+  local out cmd="$*" try
+  for try in 1 2 3 4 5 6 7 8; do
+    if out=$("$@" 2>&1); then
+      ok "$(head -n1 <<<"$cmd" | cut -c1-110)"; return 0
+    elif grep -qiE "already exists|alreadyExists" <<<"$out"; then
+      warn "ja existe -> $(head -n1 <<<"$cmd" | cut -c1-110)"; return 0
+    elif grep -qiE "PERMISSION_DENIED|does not have|permission" <<<"$out" && [[ $try -lt 8 ]]; then
+      warn "sem permissao ainda (propagando IAM)... tentativa $try/8, aguardando 20s"
+      sleep 20
+    else
+      break
+    fi
+  done
+  fail "$(head -n1 <<<"$cmd" | cut -c1-110)"; echo "$out" | tail -n 8; return 1
 }
 
 # ----------------------------------------------------------------------------
@@ -105,7 +111,44 @@ read -r -p "Confirmar e executar? (s/N): " CONFIRM </dev/tty
 [[ "$CONFIRM" =~ ^[sSyY]$ ]] || { warn "Cancelado."; exit 0; }
 
 gcloud config set project "$PROJECT"       >/dev/null 2>&1
-preflight
+
+# ----------------------------------------------------------------------------
+# Permissoes: neste lab o aluno NAO e Owner. Ele tem projectIamAdmin, entao
+# pode conceder a si mesmo os papeis que faltam (so dentro do projeto do lab).
+# ----------------------------------------------------------------------------
+ACCT=$(gcloud config get-value account 2>/dev/null)
+MYROLES=$(gcloud projects get-iam-policy "$PROJECT" --flatten="bindings[].members" \
+  --filter="bindings.members:user:$ACCT" --format="value(bindings.role)" 2>/dev/null)
+info "Conta: $ACCT"
+echo "   Papeis atuais: $(tr '\n' ' ' <<<"$MYROLES")"
+if grep -qE "roles/(owner|editor)" <<<"$MYROLES"; then
+  ok "Conta e Owner/Editor; nenhum papel extra necessario."
+elif grep -q "roles/resourcemanager.projectIamAdmin" <<<"$MYROLES"; then
+  NEEDED="roles/iam.roleAdmin roles/iam.serviceAccountAdmin roles/iam.serviceAccountUser roles/compute.instanceAdmin.v1"
+  MISSING=""
+  for R in $NEEDED; do grep -qx "$R" <<<"$MYROLES" || MISSING="$MISSING $R"; done
+  if [[ -n "$MISSING" ]]; then
+    warn "Faltam papeis para criar papel personalizado, conta de servico e usar SSH:"
+    for R in $MISSING; do echo "     - $R"; done
+    read -r -p "Conceder esses papeis a $ACCT neste projeto do lab? (s/N): " G </dev/tty
+    if [[ "$G" =~ ^[sSyY]$ ]]; then
+      for R in $MISSING; do
+        gcloud projects add-iam-policy-binding "$PROJECT" --member="user:$ACCT" --role="$R" \
+          --condition=None >/dev/null 2>&1 && ok "concedido $R" || fail "falhou $R"
+      done
+      info "Aguardando 60s para as permissoes propagarem..."; sleep 60
+    else
+      warn "Sem os papeis, as tarefas 1 e 2 vao falhar."
+    fi
+  else
+    ok "Papeis necessarios ja presentes."
+  fi
+else
+  fail "A conta nao e Owner e nao tem projectIamAdmin. Confira com 'gcloud auth list'"
+  echo "   se esta usando o Username deste lab."
+  read -r -p "Continuar mesmo assim? (s/N): " __c </dev/tty
+  [[ "$__c" =~ ^[sSyY]$ ]] || exit 1
+fi
 gcloud config set compute/zone "$ZONE"     >/dev/null 2>&1
 gcloud config set compute/region "$REGION" >/dev/null 2>&1
 
@@ -198,15 +241,16 @@ EOF
 )
 
 SSH_OK=0
-if gcloud compute ssh "$JUMPHOST" --zone="$ZONE" --quiet --command="$REMOTE_CMD"; then
-  SSH_OK=1
-else
-  warn "SSH direto falhou; tentando via IAP..."
-  gcloud compute firewall-rules create orca-allow-iap-ssh --network="$NETWORK" \
-    --allow=tcp:22 --source-ranges=35.235.240.0/20 >/dev/null 2>&1 || true
-  gcloud compute ssh "$JUMPHOST" --zone="$ZONE" --quiet --tunnel-through-iap \
-    --command="$REMOTE_CMD" && SSH_OK=1
-fi
+for MODE in iap direct iap; do
+  if [[ $MODE == iap ]]; then
+    gcloud compute ssh "$JUMPHOST" --zone="$ZONE" --quiet --tunnel-through-iap \
+      --command="$REMOTE_CMD" && { SSH_OK=1; break; }
+  else
+    gcloud compute ssh "$JUMPHOST" --zone="$ZONE" --quiet \
+      --command="$REMOTE_CMD" && { SSH_OK=1; break; }
+  fi
+  warn "SSH ($MODE) falhou; tentando de novo em 20s..."; sleep 20
+done
 
 echo
 if [[ $SSH_OK == 1 ]]; then
