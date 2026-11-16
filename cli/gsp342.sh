@@ -124,15 +124,16 @@ perm_test() {
     "https://cloudresourcemanager.googleapis.com/v1/projects/$PROJECT:testIamPermissions" \
     -d '{"permissions":["iam.roles.create","iam.serviceAccounts.create","iam.serviceAccounts.actAs","resourcemanager.projects.setIamPolicy","container.clusters.create"]}'
 }
-for TRY in 1 2 3 4 5 6; do
+for TRY in 1 2; do
   PERMS=$(perm_test)
   grep -q '"iam.roles.create"' <<<"$PERMS" && grep -q '"iam.serviceAccounts.create"' <<<"$PERMS" && break
-  [[ $TRY -lt 6 ]] && { warn "Permissoes de IAM ainda nao disponiveis (tentativa $TRY/6). Aguardando 30s..."; sleep 30; }
+  [[ $TRY -lt 2 ]] && { warn "Conferindo permissoes de novo em 20s..."; sleep 20; }
 done
 for P in iam.roles.create iam.serviceAccounts.create iam.serviceAccounts.actAs resourcemanager.projects.setIamPolicy container.clusters.create; do
   if grep -q "\"$P\"" <<<"$PERMS"; then ok "tem $P"; else warn "NAO tem $P"; fi
 done
-if ! grep -q '"iam.roles.create"' <<<"$PERMS"; then
+if ! grep -q '"iam.roles.create"' <<<"$PERMS" \
+   && ! gcloud iam roles describe "$ROLE_ID" --project="$PROJECT" >/dev/null 2>&1; then
   fail "A conta nao pode criar papeis personalizados neste projeto."
   echo "   Resposta da API: $(tr -d '\n ' <<<"$PERMS" | cut -c1-300)"
   read -r -p "Tentar mesmo assim? (s/N): " __c </dev/tty
@@ -143,18 +144,26 @@ fi
 # Tarefa 1 - Papel personalizado
 # ----------------------------------------------------------------------------
 echo; info "TAREFA 1: criando o papel personalizado $ROLE_ID"
+if gcloud iam roles describe "$ROLE_ID" --project="$PROJECT" >/dev/null 2>&1; then
+  ok "Papel $ROLE_ID ja existe no projeto (criado pelo lab ou antes)"
+else
 run gcloud iam roles create "$ROLE_ID" \
   --project="$PROJECT" \
   --title="$ROLE_ID" \
   --description="Permissoes de bucket e objetos do Cloud Storage para o cluster Orca" \
   --permissions="storage.buckets.get,storage.objects.get,storage.objects.list,storage.objects.update,storage.objects.create" \
   --stage=GA
+fi
 
 # ----------------------------------------------------------------------------
 # Tarefa 2 - Conta de servico
 # ----------------------------------------------------------------------------
 echo; info "TAREFA 2: criando a conta de servico $SA_NAME"
-run gcloud iam service-accounts create "$SA_NAME" --display-name="$SA_NAME"
+if gcloud iam service-accounts describe "$SA_EMAIL" >/dev/null 2>&1; then
+  ok "Conta de servico $SA_EMAIL ja existe"
+else
+  run gcloud iam service-accounts create "$SA_NAME" --display-name="$SA_NAME"
+fi
 # espera a conta de servico ficar visivel para o IAM
 for i in $(seq 1 12); do
   gcloud iam service-accounts describe "$SA_EMAIL" >/dev/null 2>&1 && break
