@@ -77,8 +77,11 @@ ask INTERVAL  "endpoints.interval (tarefa 2, ex: 30s)" "" 1
 REPO_LOC=$(gcloud artifacts repositories list --format="value(name)" 2>/dev/null \
   | grep "/repositories/$REPO$" | cut -d/ -f4 | head -n1)
 if [[ -z "$REPO_LOC" ]]; then
-  warn "Repositorio $REPO nao encontrado no Artifact Registry; usando a regiao $REGION."
+  warn "Repositorio $REPO nao existe no Artifact Registry; sera criado em $REGION."
   REPO_LOC=$REGION
+  CREATE_REPO=1
+else
+  CREATE_REPO=0
 fi
 IMG_V2="$REPO_LOC-docker.pkg.dev/$PROJECT/$REPO/hello-app:v2"
 echo
@@ -234,6 +237,10 @@ TARGET_PORT=$(grep -iE "^EXPOSE" hello-app/Dockerfile | awk '{print $2}' | head 
 TARGET_PORT=${TARGET_PORT:-8080}
 ok "porta do container (Dockerfile): $TARGET_PORT"
 
+if [[ "${CREATE_REPO:-0}" == 1 ]]; then
+  run gcloud artifacts repositories create "$REPO" --repository-format=docker --location="$REPO_LOC" \
+    --description="Repositorio do hello-app (criado pelo script)"
+fi
 gcloud auth configure-docker "$REPO_LOC-docker.pkg.dev" --quiet >/dev/null 2>&1
 docker build -t "$IMG_V2" hello-app && ok "imagem montada" || { fail "docker build falhou"; exit 1; }
 PUSHED=0
