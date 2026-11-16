@@ -113,53 +113,31 @@ read -r -p "Confirmar e executar? (s/N): " CONFIRM </dev/tty
 gcloud config set project "$PROJECT"       >/dev/null 2>&1
 
 # ----------------------------------------------------------------------------
-# Permissoes: neste lab o aluno NAO e Owner. Ele tem projectIamAdmin, entao
-# pode conceder a si mesmo os papeis que faltam (so dentro do projeto do lab).
+# Permissoes: testa as permissoes REAIS da conta no projeto (testIamPermissions).
+# A lista de papeis do projeto nao mostra papeis herdados nem condicoes.
 # ----------------------------------------------------------------------------
 ACCT=$(gcloud config get-value account 2>/dev/null)
-MYROLES=$(gcloud projects get-iam-policy "$PROJECT" --flatten="bindings[].members" \
-  --filter="bindings.members:user:$ACCT" --format="value(bindings.role)" 2>/dev/null)
 info "Conta: $ACCT"
-echo "   Papeis atuais: $(tr '\n' ' ' <<<"$MYROLES")"
-if grep -qE "roles/(owner|editor)" <<<"$MYROLES"; then
-  ok "Conta e Owner/Editor; nenhum papel extra necessario."
-elif grep -q "roles/resourcemanager.projectIamAdmin" <<<"$MYROLES"; then
-  NEEDED="roles/iam.roleAdmin roles/iam.serviceAccountAdmin roles/iam.serviceAccountUser roles/compute.instanceAdmin.v1"
-  MISSING=""
-  for R in $NEEDED; do grep -qx "$R" <<<"$MYROLES" || MISSING="$MISSING $R"; done
-  if [[ -n "$MISSING" ]]; then
-    warn "Faltam papeis para criar papel personalizado, conta de servico e usar SSH:"
-    for R in $MISSING; do echo "     - $R"; done
-    read -r -p "Conceder esses papeis a $ACCT neste projeto do lab? (s/N): " G </dev/tty
-    if [[ "$G" =~ ^[sSyY]$ ]]; then
-      GRANT_FAIL=0
-      for R in $MISSING; do
-        if gcloud projects add-iam-policy-binding "$PROJECT" --member="user:$ACCT" --role="$R" \
-             --condition=None >/dev/null 2>&1; then ok "concedido $R"; else fail "falhou $R"; GRANT_FAIL=1; fi
-      done
-      if [[ $GRANT_FAIL == 1 ]]; then
-        fail "O lab bloqueia alteracoes no IAM para esta conta."
-        echo "   Sem isso nao da para criar o papel personalizado nem a conta de servico."
-        echo "   O ambiente deste lab provavelmente veio com defeito: clique em"
-        echo "   'Encerrar laboratorio', inicie de novo e rode este script outra vez."
-        echo "   (Num lab normal a conta do aluno e Owner do projeto.)"
-        exit 1
-      fi
-      info "Aguardando 60s para as permissoes propagarem..."; sleep 60
-    else
-      warn "Sem os papeis, as tarefas 1 e 2 vao falhar."
-    fi
-  else
-    ok "Papeis necessarios ja presentes."
-  fi
-else
-  fail "A conta nao e Owner e nao tem projectIamAdmin. Confira com 'gcloud auth list'"
-  echo "   se esta usando o Username deste lab."
-  read -r -p "Continuar mesmo assim? (s/N): " __c </dev/tty
+perm_test() {
+  curl -s -X POST -H "Authorization: Bearer $(gcloud auth print-access-token 2>/dev/null)" \
+    -H "Content-Type: application/json" \
+    "https://cloudresourcemanager.googleapis.com/v1/projects/$PROJECT:testIamPermissions" \
+    -d '{"permissions":["iam.roles.create","iam.serviceAccounts.create","iam.serviceAccounts.actAs","resourcemanager.projects.setIamPolicy","container.clusters.create"]}'
+}
+for TRY in 1 2 3 4 5 6; do
+  PERMS=$(perm_test)
+  grep -q '"iam.roles.create"' <<<"$PERMS" && grep -q '"iam.serviceAccounts.create"' <<<"$PERMS" && break
+  [[ $TRY -lt 6 ]] && { warn "Permissoes de IAM ainda nao disponiveis (tentativa $TRY/6). Aguardando 30s..."; sleep 30; }
+done
+for P in iam.roles.create iam.serviceAccounts.create iam.serviceAccounts.actAs resourcemanager.projects.setIamPolicy container.clusters.create; do
+  if grep -q "\"$P\"" <<<"$PERMS"; then ok "tem $P"; else warn "NAO tem $P"; fi
+done
+if ! grep -q '"iam.roles.create"' <<<"$PERMS"; then
+  fail "A conta nao pode criar papeis personalizados neste projeto."
+  echo "   Resposta da API: $(tr -d '\n ' <<<"$PERMS" | cut -c1-300)"
+  read -r -p "Tentar mesmo assim? (s/N): " __c </dev/tty
   [[ "$__c" =~ ^[sSyY]$ ]] || exit 1
 fi
-gcloud config set compute/zone "$ZONE"     >/dev/null 2>&1
-gcloud config set compute/region "$REGION" >/dev/null 2>&1
 
 # ----------------------------------------------------------------------------
 # Tarefa 1 - Papel personalizado
