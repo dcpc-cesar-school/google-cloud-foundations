@@ -41,6 +41,27 @@ run() {
 }
 
 # ----------------------------------------------------------------------------
+# Verificacao: a conta ativa do Cloud Shell tem acesso a este projeto?
+# ----------------------------------------------------------------------------
+preflight() {
+  local acct roles
+  acct=$(gcloud config get-value account 2>/dev/null)
+  roles=$(gcloud projects get-iam-policy "$PROJECT" --flatten="bindings[].members" \
+    --filter="bindings.members:user:$acct" --format="value(bindings.role)" 2>/dev/null)
+  if grep -qE "roles/(owner|editor)" <<<"$roles"; then
+    ok "Conta ativa: $acct ($(grep -oE 'roles/(owner|editor)' <<<"$roles" | head -n1))"
+    return 0
+  fi
+  fail "A conta ativa do Cloud Shell ($acct) NAO e Owner/Editor do projeto $PROJECT."
+  echo "   Provavel causa: Cloud Shell de outro lab/conta aberto na mesma janela."
+  echo "   Solucao: feche as janelas anonimas, abra o console pelo link do lab,"
+  echo "   entre com o Username/Password DESTE lab e rode o script de novo."
+  echo "   (confira com: gcloud auth list)"
+  read -r -p "Continuar mesmo assim? (s/N): " __c </dev/tty
+  [[ "$__c" =~ ^[sSyY]$ ]] || exit 1
+}
+
+# ----------------------------------------------------------------------------
 # 0. Parametros
 # ----------------------------------------------------------------------------
 echo -e "${BLUE}"
@@ -82,6 +103,7 @@ read -r -p "Confirmar e executar? (s/N): " CONFIRM </dev/tty
 [[ "$CONFIRM" =~ ^[sSyY]$ ]] || { warn "Cancelado."; exit 0; }
 
 gcloud config set project "$PROJECT"       >/dev/null 2>&1
+preflight
 gcloud config set compute/zone "$ZONE"     >/dev/null 2>&1
 gcloud config set compute/region "$REGION" >/dev/null 2>&1
 
