@@ -9,6 +9,7 @@ aceitar o valor padrão, mas confira sempre os nomes no painel do seu lab.
 | GSP313 | Implement Load Balancing on Compute Engine | `bash <(curl -sL https://raw.githubusercontent.com/dcpc-cesar-school/google-cloud-foundations/main/cli/gsp313.sh)` |
 | GSP315 | Set Up an App Dev Environment on Google Cloud | `bash <(curl -sL https://raw.githubusercontent.com/dcpc-cesar-school/google-cloud-foundations/main/cli/gsp315.sh)` |
 | GSP342 | Implement Cloud Security Fundamentals on Google Cloud | `bash <(curl -sL https://raw.githubusercontent.com/dcpc-cesar-school/google-cloud-foundations/main/cli/gsp342.sh)` |
+| GSP301 | Deploy a Compute Instance with a Remote Startup Script | `bash <(curl -sL https://raw.githubusercontent.com/dcpc-cesar-school/google-cloud-foundations/main/cli/gsp301.sh)` |
 
 ## Dicas
 
