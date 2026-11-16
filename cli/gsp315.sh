@@ -36,7 +36,8 @@ run() {
   elif grep -qiE "already exists|alreadyExists|already own" <<<"$out"; then
     warn "ja existe -> $(head -n1 <<<"$cmd" | cut -c1-110)"
   else
-    fail "$(head -n1 <<<"$cmd" | cut -c1-110)"; echo "$out" | tail -n 8; return 1
+    fail "$(head -n1 <<<"$cmd" | cut -c1-110)"
+    { grep -E "ERROR|error" <<<"$out" || tail -n 8 <<<"$out"; } | head -n 6; return 1
   fi
 }
 
