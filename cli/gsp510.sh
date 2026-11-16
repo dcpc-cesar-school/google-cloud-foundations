@@ -73,7 +73,14 @@ ask REPO      "REPO_NAME (Artifact Registry)"      "$DEF_REPO" 1
 ask SERVICE   "SERVICE_NAME"                       "" 1
 ask INTERVAL  "endpoints.interval (tarefa 2, ex: 30s)" "" 1
 
-IMG_V2="$REGION-docker.pkg.dev/$PROJECT/$REPO/hello-app:v2"
+# a localizacao do repositorio pode ser diferente da regiao do lab
+REPO_LOC=$(gcloud artifacts repositories list --format="value(name)" 2>/dev/null \
+  | grep "/repositories/$REPO$" | cut -d/ -f4 | head -n1)
+if [[ -z "$REPO_LOC" ]]; then
+  warn "Repositorio $REPO nao encontrado no Artifact Registry; usando a regiao $REGION."
+  REPO_LOC=$REGION
+fi
+IMG_V2="$REPO_LOC-docker.pkg.dev/$PROJECT/$REPO/hello-app:v2"
 echo
 echo "--------------------------------------------------------------"
 echo " Projeto : $PROJECT | Regiao: $REGION | Zona: $ZONE"
@@ -227,7 +234,7 @@ TARGET_PORT=$(grep -iE "^EXPOSE" hello-app/Dockerfile | awk '{print $2}' | head 
 TARGET_PORT=${TARGET_PORT:-8080}
 ok "porta do container (Dockerfile): $TARGET_PORT"
 
-gcloud auth configure-docker "$REGION-docker.pkg.dev" --quiet >/dev/null 2>&1
+gcloud auth configure-docker "$REPO_LOC-docker.pkg.dev" --quiet >/dev/null 2>&1
 docker build -t "$IMG_V2" hello-app && ok "imagem montada" || { fail "docker build falhou"; exit 1; }
 PUSHED=0
 for TRY in 1 2 3; do
