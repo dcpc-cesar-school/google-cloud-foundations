@@ -29,4 +29,7 @@ aceitar o valor padrão, mas confira sempre os nomes no painel do seu lab.
 ## Observações por lab
 
 - **GSP342** (Cloud Security Fundamentals): neste lab a conta do aluno **não é Owner**. O papel personalizado e a conta de serviço já vêm criados, e o aluno só pode vincular os papéis do enunciado (condição `allow_only_curriculum_roles`). O cluster é privado: `kubectl` só funciona de dentro do `orca-jumphost`. Validado em 16/11/2026: a tarefa 5 só passou depois de **apagar e recriar** o deployment `hello-server` e o serviço. O script já faz isso.
-- **GSP540** (ADK): o script instala o ADK, cria os `.env` e edita os três `agent.py` (com backup `agent.py.orig`). O login `gcloud auth application-default login` e as conversas no `adk web` (tarefas 2 e 5) são feitos pelo aluno; o script pausa e mostra as perguntas.
+- **GSP540** (ADK): o script instala o ADK, cria os `.env` e edita os três `agent.py` (com backup `agent.py.orig`). O login `gcloud auth application-default login` e as conversas no `adk web` (tarefas 2 e 5) são feitos pelo aluno; o script pausa e mostra as perguntas. Validado em 16/11/2026: **faça as perguntas aos agentes em inglês** (o verificador procura palavras-chave em inglês nos logs do Cloud Logging) e espere ~30 s após cada resposta antes de sair:
+  - Tarefa 2: `Tell me some of the top events happening in Tokyo in 2025.`
+  - Tarefa 3: `What is the exchange rate of Japan?`
+  - Tarefa 5: `Double check this: You can take a direct train from Hawaii to Japan.`
