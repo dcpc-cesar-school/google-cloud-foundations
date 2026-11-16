@@ -16,6 +16,7 @@ aceitar o valor padrão, mas confira sempre os nomes no painel do seu lab.
 | GSP306 | Migrate a MySQL Database to Google Cloud SQL | `bash <(curl -sL https://raw.githubusercontent.com/dcpc-cesar-school/google-cloud-foundations/main/cli/gsp306.sh)` |
 | GSP101 | Deploy and Troubleshoot a Website | `bash <(curl -sL https://raw.githubusercontent.com/dcpc-cesar-school/google-cloud-foundations/main/cli/gsp101.sh)` |
 | GSP510 | Manage Kubernetes in Google Cloud | `bash <(curl -sL https://raw.githubusercontent.com/dcpc-cesar-school/google-cloud-foundations/main/cli/gsp510.sh)` |
+| GSP540 | Engineer AI Agents with Agent Development Kit (ADK) | `bash <(curl -sL https://raw.githubusercontent.com/dcpc-cesar-school/google-cloud-foundations/main/cli/gsp540.sh)` |
 
 ## Dicas
 
@@ -28,3 +29,4 @@ aceitar o valor padrão, mas confira sempre os nomes no painel do seu lab.
 ## Observações por lab
 
 - **GSP342** (Cloud Security Fundamentals): neste lab a conta do aluno **não é Owner**. O papel personalizado e a conta de serviço já vêm criados, e o aluno só pode vincular os papéis do enunciado (condição `allow_only_curriculum_roles`). O cluster é privado: `kubectl` só funciona de dentro do `orca-jumphost`. Validado em 16/11/2026: a tarefa 5 só passou depois de **apagar e recriar** o deployment `hello-server` e o serviço. O script já faz isso.
+- **GSP540** (ADK): o script instala o ADK, cria os `.env` e edita os três `agent.py` (com backup `agent.py.orig`). O login `gcloud auth application-default login` e as conversas no `adk web` (tarefas 2 e 5) são feitos pelo aluno; o script pausa e mostra as perguntas.
