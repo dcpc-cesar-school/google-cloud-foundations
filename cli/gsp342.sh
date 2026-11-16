@@ -132,10 +132,19 @@ elif grep -q "roles/resourcemanager.projectIamAdmin" <<<"$MYROLES"; then
     for R in $MISSING; do echo "     - $R"; done
     read -r -p "Conceder esses papeis a $ACCT neste projeto do lab? (s/N): " G </dev/tty
     if [[ "$G" =~ ^[sSyY]$ ]]; then
+      GRANT_FAIL=0
       for R in $MISSING; do
-        gcloud projects add-iam-policy-binding "$PROJECT" --member="user:$ACCT" --role="$R" \
-          --condition=None >/dev/null 2>&1 && ok "concedido $R" || fail "falhou $R"
+        if gcloud projects add-iam-policy-binding "$PROJECT" --member="user:$ACCT" --role="$R" \
+             --condition=None >/dev/null 2>&1; then ok "concedido $R"; else fail "falhou $R"; GRANT_FAIL=1; fi
       done
+      if [[ $GRANT_FAIL == 1 ]]; then
+        fail "O lab bloqueia alteracoes no IAM para esta conta."
+        echo "   Sem isso nao da para criar o papel personalizado nem a conta de servico."
+        echo "   O ambiente deste lab provavelmente veio com defeito: clique em"
+        echo "   'Encerrar laboratorio', inicie de novo e rode este script outra vez."
+        echo "   (Num lab normal a conta do aluno e Owner do projeto.)"
+        exit 1
+      fi
       info "Aguardando 60s para as permissoes propagarem..."; sleep 60
     else
       warn "Sem os papeis, as tarefas 1 e 2 vao falhar."
